@@ -1,4 +1,4 @@
-import { Link, Stack } from "@chakra-ui/react";
+import { Button, HStack, Link, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
@@ -7,6 +7,7 @@ import { Logo } from "../Svgs/Logo";
 
 const Container = styled.header`
   /* max-width: 490px; */
+  background-color: #0b0d0e;
 `;
 
 function Header() {
@@ -15,32 +16,21 @@ function Header() {
     <Container className="dual-header">
       <Stack
         direction={["row"]}
-        justifyContent={["center"]}
-        paddingTop="2rem"
-        paddingBottom="2rem"
+        justifyContent={["space-between"]}
+        padding="1rem"
+        // paddingBottom={"1rem"}
       >
-        {/* <HStack spacing="2rem" hideBelow="md">
+        <HStack>
           <Link href="/">
-            <Text fontFamily="ppr">WHY</Text>
+            <Logo />
           </Link>
-          <Link href="/">
-            <Text fontFamily="ppr">HOW DOES IT WORK?</Text>
+          <Link href="/" paddingLeft="2rem">
+            <Text>how does it work?</Text>
           </Link>
-        </HStack> */}
-        <Link href="/">
-          <Logo />
-        </Link>
-        {/* <HStack spacing="2rem" hideBelow="md">
-          <Link href="/">
-            <Text fontFamily="ppr">TWITTER</Text>
-          </Link>
-          <Link href="/">
-            <Text fontFamily="ppr">DISCORD</Text>
-          </Link>
-          <Link href="/">
-            <Text fontFamily="ppr">TELEGRAM</Text>
-          </Link>
-        </HStack> */}
+        </HStack>
+        <HStack>
+          <Button>Connect Wallet</Button>
+        </HStack>
       </Stack>
     </Container>
   );
