@@ -1,4 +1,4 @@
-This is a Martian Fun Landing Page
+This is a Martian Fun Web App
 
 ## To run the project
 
