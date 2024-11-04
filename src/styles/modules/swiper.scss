@@ -1,0 +1,130 @@
+.split-view #slide-1 {
+  height: auto;
+  position: sticky;
+  top: 34%;
+}
+
+.swiper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 87px - 56px);
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: fit-content;
+      flex-wrap: wrap;
+      height: 100%;
+      overflow: scroll;
+    }
+
+    img {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 8px;
+      max-height: 40vh;
+      object-fit: contain;
+    }
+
+    &:first-child {
+      img {
+        max-width: 50%;
+        margin-bottom: 55px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    height: 100vh;
+    min-height: 580px;
+    // padding-top: 82px !important;
+
+    // @media (max-height: 600px) {
+    //   padding-top: 82px !important;
+    // }
+
+    .swiper-slide {
+      img {
+        max-width: 60%;
+        max-height: initial;
+        margin-bottom: 0px;
+      }
+
+      &[data-swiper-slide-index='0'] {
+        img {
+          max-width: 40%;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.swiper-nav {
+  position: fixed;
+  top: 50%;
+  left: 2rem;
+  transform: translateY(-50%);
+  z-index: 100;
+  width: calc(100% - 4rem);
+  display: flex;
+  justify-content: space-between;
+
+  div {
+    cursor: pointer;
+    margin: 0 20px;
+
+    &:first-child {
+      transform: scaleX(-1);
+    }
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.swiper-prev,
+.swiper-next {
+  opacity: 1;
+  transition: opacity 0.3s;
+  cursor: pointer;
+  border: 1px solid rgba(white, 0.5);
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    border-color: rgba(white, 1);
+  }
+}
+
+// .swiper-prev {
+//   &[data-current='0'] {
+//     opacity: 0;
+//   }
+// }
+
+// .swiper-next {
+//   &[data-current='4'] {
+//     opacity: 0;
+//   }
+// }
+
+.swiper-pagination {
+  bottom: initial !important;
+  top: 2rem !important;
+  @media (min-width: 768px) {
+    display: none !important;
+  }
+}

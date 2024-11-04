@@ -1,0 +1,23 @@
+export const ApiConfig = {
+  BaseUrl: "https://api.dual.app",
+  endpoints: {
+    joinWaitlist: "/waitlist/join",
+    sendOtp: "/auth/send-otp",
+    verifyOtp: "/auth/verify-phone",
+    swipes: "/v1/swipes",
+    matches: "/v1/matches",
+    chats: "/v1/messages",
+    notifications: "/v1/notifications",
+    get_profile: "/v1/profile",
+    get_preferences: "/v1/preferences",
+    set_date_choice: "/v1/set-date-choice",
+    set_name: "/v1/set-name",
+    set_profile_choice: "/v1/set-profile-choice",
+    set_dating_goals: "/v1/set-dating-goals",
+    set_location: "/v1/set-location",
+    connect_app: "/v1/connect-app",
+    preferences: "/v1/preferences",
+    support: "/v1/support",
+    config: "/v1/config",
+  },
+};
