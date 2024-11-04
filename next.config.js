@@ -43,6 +43,9 @@ module.exports = withBundleAnalyzer({
     });
     return config;
   },
+  eslint: {
+    ignoreDuringBuilds: ["public/static/*"],
+  },
   images: {
     remotePatterns: [
       {

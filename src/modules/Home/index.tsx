@@ -20,6 +20,7 @@ const Container = styled.div`
 const DummyData = [
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -31,6 +32,7 @@ const DummyData = [
   },
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -42,6 +44,7 @@ const DummyData = [
   },
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -53,6 +56,7 @@ const DummyData = [
   },
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -64,6 +68,7 @@ const DummyData = [
   },
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -75,6 +80,7 @@ const DummyData = [
   },
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -86,6 +92,7 @@ const DummyData = [
   },
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -97,6 +104,7 @@ const DummyData = [
   },
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -108,6 +116,7 @@ const DummyData = [
   },
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -119,6 +128,7 @@ const DummyData = [
   },
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -130,6 +140,7 @@ const DummyData = [
   },
   {
     image: "https://bit.ly/dan-abramov",
+    coinAddress: "martian12345",
     createdBy: "123456",
     marketCap: "32k",
     createdAt: 1730708878676,
@@ -171,13 +182,7 @@ function HomeModule() {
           </Button>
           <SimpleGrid columns={3} spacing={10}>
             {DummyData.map((data, idx) => {
-              return (
-                <Card
-                  {...data}
-                  key={idx}
-                  onClick={() => alert(`Clicked ${idx}`)}
-                />
-              );
+              return <Card {...data} key={idx} />;
             })}
           </SimpleGrid>
         </Stack>

@@ -1,4 +1,5 @@
 import { HStack, Image, Stack, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
 
@@ -12,8 +13,9 @@ export type CardProps = {
   name: string;
   ticker: string;
   createdAt: number | string;
+  coinAddress: string;
   description?: string;
-  onClick: any;
+  onClick?: any;
 };
 
 const Container = styled.div`
@@ -27,8 +29,16 @@ const Container = styled.div`
 `;
 
 function Card(props: CardProps) {
+  const navigator = useRouter();
+  const handleClick = () => {
+    if (props.onClick) {
+      props.onClick();
+    } else {
+      navigator.push(props.coinAddress);
+    }
+  };
   return (
-    <Container onClick={props.onClick}>
+    <Container onClick={handleClick}>
       <HStack
         className="card-main"
         justifyContent="start"

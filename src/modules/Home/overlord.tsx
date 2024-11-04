@@ -18,7 +18,7 @@ function OverlordModule() {
         replies="10"
         name="Based frog"
         ticker="$TYBF"
-        onClick={() => alert("coin clicked")}
+        coinAddress="martian12345"
       />
     </Stack>
   );
