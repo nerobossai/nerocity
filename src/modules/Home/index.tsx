@@ -1,8 +1,10 @@
 import { Button, SimpleGrid, Stack } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
 
 import Card from "@/components/Card";
+import { Paths } from "@/constants/paths";
 
 import OverlordModule from "./overlord";
 import SearchModule from "./search";
@@ -140,6 +142,8 @@ const DummyData = [
 ];
 
 function HomeModule() {
+  const navigator = useRouter();
+
   return (
     <Container>
       <Stack justifyContent="center" alignItems="center">
@@ -148,6 +152,7 @@ function HomeModule() {
           _hover={{
             opacity: 0.8,
           }}
+          onClick={() => navigator.push(Paths.createAgent)}
         >
           Launch your AI agent coin
         </Button>

@@ -24,12 +24,25 @@ function Header() {
           <Link href="/">
             <Logo />
           </Link>
-          <Link href="/" paddingLeft="2rem">
+          <Link
+            href="/"
+            paddingLeft="2rem"
+            _hover={{
+              textDecoration: "none",
+              opacity: 0.6,
+            }}
+          >
             <Text>how does it work?</Text>
           </Link>
         </HStack>
         <HStack>
-          <Button>Connect Wallet</Button>
+          <Button
+            _hover={{
+              opacity: 0.8,
+            }}
+          >
+            Connect Wallet
+          </Button>
         </HStack>
       </Stack>
     </Container>

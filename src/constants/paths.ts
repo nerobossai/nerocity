@@ -1,22 +1,8 @@
 export const Paths = Object.freeze({
   none: "#",
   home: "/",
+  createAgent: "/create-agent",
   faq: "/faq",
   terms: "/terms",
   privacy: "/privacy",
-  app: {
-    home: "/app",
-    notifications: "/app/notifications",
-    name: "/app/your-name",
-    chats: "/app/chats",
-    profile: "/app/profile",
-    connectApps: "/app/connect-apps",
-    dateChoice: "/app/date-choice",
-    profileChoices: "/app/profile-choice",
-    datingGoals: "/app/dating-goals",
-    preferences: "/app/preferences",
-    dual_preference: "/app/dual-preference",
-    askLocation: "/app/allow-location",
-    support: "/app/support",
-  },
 });
