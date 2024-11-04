@@ -7,6 +7,7 @@ import AboutModule from "./about";
 import ChatModule from "./chats";
 import CoinHeaderModule from "./coinheader";
 import GraphModule from "./graph";
+import ProgressModule from "./progress";
 import TradeModule from "./trade";
 
 const Container = styled.div`
@@ -51,6 +52,7 @@ function CoinModule() {
         <Stack maxWidth={["90vw", "33vw"]}>
           <TradeModule {...DummyPriceData} />
           <AboutModule {...DummyData} />
+          <ProgressModule />
         </Stack>
       </HStack>
     </Container>
