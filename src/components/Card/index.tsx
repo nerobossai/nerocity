@@ -2,6 +2,8 @@ import { HStack, Image, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import styled from "styled-components";
 
+import { timeDifference } from "@/utils/timeDifference";
+
 export type CardProps = {
   image: string;
   createdBy: string;
@@ -10,23 +12,55 @@ export type CardProps = {
   name: string;
   ticker: string;
   createdAt: number | string;
-  onClick: Function;
+  description?: string;
+  onClick: any;
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  .card-main {
+    transition: background-color 50ms;
+    padding: 1rem;
+  }
+  .card-main:hover {
+    background-color: #211e1e;
+  }
+`;
 
 function Card(props: CardProps) {
   return (
-    <Container>
-      <HStack>
-        <Image src={props.image} alt="ai agent image" />
+    <Container onClick={props.onClick}>
+      <HStack
+        className="card-main"
+        justifyContent="start"
+        alignItems="start"
+        spacing="1rem"
+      >
+        <Image
+          boxSize="8rem"
+          objectFit="cover"
+          src={props.image}
+          alt="ai agent image"
+        />
         <Stack>
-          <Text>Created by @{props.createdBy}</Text>
-          <Text>Market Cap ${props.marketCap}</Text>
-          <Text>Replies {props.replies}</Text>
-          <Text>
+          <HStack justifyContent="space-between" minWidth="17rem">
+            <Text fontSize="12px">Created by @{props.createdBy}</Text>
+            <Text fontWeight="bold" color="blue.100" fontSize="12px">
+              {timeDifference(
+                Date.now(),
+                parseInt(props.createdAt.toString(), 10),
+              )}
+            </Text>
+          </HStack>
+          <Text fontSize="12px" fontWeight="bold" color="green.50">
+            Market Cap ${props.marketCap}
+          </Text>
+          <Text fontSize="12px">Replies {props.replies}</Text>
+          <Text fontWeight="bold" fontSize="20px">
             {props.name} {props.ticker}
           </Text>
+          {props.description && (
+            <Text maxWidth="20rem">{props.description || ""}</Text>
+          )}
         </Stack>
       </HStack>
     </Container>

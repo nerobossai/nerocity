@@ -14,7 +14,7 @@ function OverlordModule() {
         image="https://bit.ly/dan-abramov"
         createdBy="123456"
         marketCap="32k"
-        createdAt={Date.now()}
+        createdAt={1730708878676}
         replies="10"
         name="Based frog"
         ticker="$TYBF"
