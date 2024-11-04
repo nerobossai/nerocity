@@ -12,8 +12,9 @@ const theme = extendTheme({
     Tabs: tabsTheme,
   },
   fonts: {
-    body: "ppeditorial",
-    heading: "ppeditorial",
+    body: "Tsukimi Rounded",
+    heading: "Tsukimi Rounded",
+    text: "Tsukimi Rounded",
   },
 });
 
