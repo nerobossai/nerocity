@@ -1,21 +1,10 @@
 import { HStack, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 
+import type { CardProps } from "@/components/Card";
 import { timeDifference } from "@/utils/timeDifference";
 
-type CoinHeaderProps = {
-  image: string;
-  createdBy: string;
-  marketCap: string;
-  replies: string;
-  name: string;
-  ticker: string;
-  createdAt: number | string;
-  coinAddress: string;
-  description?: string;
-};
-
-function CoinHeaderModule(props: CoinHeaderProps) {
+function CoinHeaderModule(props: CardProps) {
   return (
     <HStack marginTop="1rem" justifyContent="space-between">
       <Text fontSize="24px" fontWeight="bold">
@@ -34,15 +23,15 @@ function CoinHeaderModule(props: CoinHeaderProps) {
           fontSize="12px"
         >
           <Text>Market Cap</Text>
-          <Text>{props.marketCap}</Text>
+          <Text>{props.market_cap}</Text>
         </VStack>
         <VStack textAlign="center" fontSize="12px">
           <Text>Coin Address</Text>
-          <Text>{props.coinAddress}</Text>
+          <Text>{props.id}</Text>
         </VStack>
         <VStack textAlign="center" fontSize="12px">
           <Text>Created By</Text>
-          <Text>{props.createdBy}</Text>
+          <Text>{props.created_by}</Text>
         </VStack>
         <VStack
           textAlign="center"
@@ -55,7 +44,7 @@ function CoinHeaderModule(props: CoinHeaderProps) {
             {" "}
             {timeDifference(
               Date.now(),
-              parseInt(props.createdAt.toString(), 10),
+              parseInt(props.created_at.toString(), 10),
             )}
           </Text>
         </VStack>

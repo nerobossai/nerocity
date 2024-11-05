@@ -1,13 +1,17 @@
-import { HStack, Stack } from "@chakra-ui/react";
+import { HStack, Spinner, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import { Paths } from "@/constants/paths";
+
+import type { AgentResponse } from "../Home/services/homeApiClient";
 import AboutModule from "./about";
 import ChatModule from "./chats";
 import CoinHeaderModule from "./coinheader";
 import GraphModule from "./graph";
 import ProgressModule from "./progress";
+import { coinApiClient } from "./services/coinApiClient";
 import TradeModule from "./trade";
 
 const Container = styled.div`
@@ -36,6 +40,29 @@ const DummyPriceData = {
 
 function CoinModule() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [agentDetails, setAgentDetails] = useState<AgentResponse>();
+
+  const fetchAgent = async () => {
+    try {
+      if (!router.query?.coin) return;
+      setLoading(true);
+      const resp = await coinApiClient.getAgent(router.query.coin as string);
+      console.log(resp);
+      if (!resp?.id) {
+        return await router.replace(Paths.home);
+      }
+      setAgentDetails(resp);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAgent();
+  }, [router]);
 
   return (
     <Container>
@@ -45,13 +72,23 @@ function CoinModule() {
         flexDirection={["column-reverse", "row"]}
       >
         <Stack>
-          <CoinHeaderModule {...DummyData} />
+          {loading ? (
+            <Spinner />
+          ) : agentDetails ? (
+            <CoinHeaderModule {...agentDetails} />
+          ) : null}
+
           <GraphModule />
           <ChatModule />
         </Stack>
         <Stack maxWidth={["90vw", "33vw"]}>
           <TradeModule {...DummyPriceData} />
-          <AboutModule {...DummyData} />
+
+          {loading ? (
+            <Spinner />
+          ) : agentDetails ? (
+            <AboutModule {...agentDetails} />
+          ) : null}
           <ProgressModule />
         </Stack>
       </HStack>

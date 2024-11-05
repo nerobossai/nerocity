@@ -1,17 +1,7 @@
 import { HStack, Image, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 
-export type CardProps = {
-  image: string;
-  createdBy: string;
-  marketCap: string;
-  replies: string;
-  name: string;
-  ticker: string;
-  createdAt: number | string;
-  coinAddress: string;
-  description?: string;
-};
+import type { CardProps } from "@/components/Card";
 
 function AboutModule(props: CardProps) {
   return (

@@ -9,6 +9,7 @@ export const ApiEndpoints = Object.freeze({
   },
   agents: {
     launch: "/agents/launch",
+    agent: "/agents/:agent_id",
   },
   coins: {
     transactions: "/coins/transactions",
