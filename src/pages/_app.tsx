@@ -9,7 +9,7 @@ import {
 import { UnsafeBurnerWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import type { AppProps } from "next/app";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import useUserStore from "@/stores/useUserStore";
 import { tailwindConfig } from "@/styles/global";
@@ -33,6 +33,7 @@ const theme = extendTheme({
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { setAuthenticated, setToken, setUserProfile } = useUserStore();
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     const profile: ProfileObject | null = getProfileFromStorage();
@@ -42,6 +43,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     setUserProfile(profile);
     setAuthenticated(true);
     setToken(profile.token);
+    setIsMounted(true);
   }, []);
 
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
@@ -69,6 +71,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [network],
   );
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <ConnectionProvider endpoint={endpoint}>
