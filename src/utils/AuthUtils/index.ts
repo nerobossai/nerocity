@@ -8,7 +8,7 @@ import { UserProfileKey } from "@/constants/storageKeys";
 import { logger } from "../Logger";
 
 export interface ProfileObject {
-  profile: object;
+  profile: any;
   isAuthenticated: boolean;
   token: string;
 }

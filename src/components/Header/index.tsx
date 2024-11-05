@@ -1,7 +1,16 @@
-import { Button, HStack, Link, Stack, Text } from "@chakra-ui/react";
+import { HStack, Link, Stack, Text } from "@chakra-ui/react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import {
+  WalletModalProvider,
+  WalletMultiButton,
+} from "@solana/wallet-adapter-react-ui";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+
+import { authApiClient } from "@/modules/Home/services/authApiClient";
+import useUserStore from "@/stores/useUserStore";
+import * as AuthUtils from "@/utils/AuthUtils";
 
 import { Logo } from "../Svgs/Logo";
 
@@ -12,6 +21,66 @@ const Container = styled.header`
 
 function Header() {
   const router = useRouter();
+  const {
+    isAuthenticated,
+    profile,
+    reset,
+    token,
+    setUserProfile,
+    setToken,
+    setAuthenticated,
+  } = useUserStore((state) => state);
+  const {
+    autoConnect,
+    wallets,
+    wallet,
+    publicKey,
+    connecting,
+    connected,
+    disconnecting,
+    connect,
+    disconnect,
+    signIn,
+  } = useWallet();
+
+  const handleSignin = async () => {
+    try {
+      if (!signIn) return;
+      if (isAuthenticated) return;
+      const data = await signIn();
+      const resp = await authApiClient.login({
+        public_key: Buffer.from(data.account.publicKey).toString("hex"),
+        signature: Buffer.from(data.signature).toString("hex"),
+        message: Buffer.from(data.signedMessage).toString("hex"),
+      });
+      console.log(resp);
+      const profileObject: AuthUtils.ProfileObject = {
+        profile: resp.user,
+        isAuthenticated: true,
+        token: resp.token,
+      };
+
+      setUserProfile(profileObject.profile);
+      setToken(profileObject.token);
+      setAuthenticated(true);
+
+      // set state
+      const status = AuthUtils.setProfileInStorage(profileObject);
+
+      if (!status) {
+        throw new Error("Something went wrong!");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (connected) {
+      handleSignin();
+    }
+  }, [connected]);
+
   return (
     <Container className="dual-header">
       <Stack
@@ -36,13 +105,15 @@ function Header() {
           </Link>
         </HStack>
         <HStack>
-          <Button
-            _hover={{
-              opacity: 0.8,
-            }}
-          >
-            Connect Wallet
-          </Button>
+          <WalletModalProvider>
+            <WalletMultiButton
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                fontFamily: "Tsukimi Rounded",
+              }}
+            />
+          </WalletModalProvider>
         </HStack>
       </Stack>
     </Container>
