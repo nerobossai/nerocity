@@ -74,6 +74,7 @@
           "jsx-a11y/anchor-is-valid": "warn",
           "jsx-a11y/click-events-have-key-events": "warn",
           "jsx-a11y/no-static-element-interactions": "warn",
+          "@typescript-eslint/no-shadow": "warn",
           "class-methods-use-this": "off" //TODO: remove this once api integration is finished
           // "unused-imports/no-unused-vars": [
           //   "error",

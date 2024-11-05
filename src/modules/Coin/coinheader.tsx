@@ -31,7 +31,7 @@ function CoinHeaderModule(props: CardProps) {
         </VStack>
         <VStack textAlign="center" fontSize="12px">
           <Text>Created By</Text>
-          <Text>{props.created_by}</Text>
+          <Text>@{props.created_by}</Text>
         </VStack>
         <VStack
           textAlign="center"

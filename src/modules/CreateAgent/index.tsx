@@ -92,6 +92,7 @@ function CreateAgentModule() {
         title: "Success",
         description: "Ai Agent Coin launched",
         status: "success",
+        position: "bottom-right",
       });
     } catch (err) {
       console.log(err);
@@ -99,6 +100,7 @@ function CreateAgentModule() {
         title: "Error",
         description: "Something went wrong!",
         status: "error",
+        position: "bottom-right",
       });
     } finally {
       setLoading(false);

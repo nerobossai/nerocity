@@ -19,19 +19,6 @@ const Container = styled.div`
   padding-top: 0rem;
 `;
 
-const DummyData = {
-  image: "https://bit.ly/dan-abramov",
-  coinAddress: "martian12345",
-  createdBy: "123456",
-  marketCap: "32k",
-  createdAt: 1730708878676,
-  replies: "10",
-  name: "Based frog",
-  ticker: "$TYBF",
-  description:
-    "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-};
-
 const DummyPriceData = {
   currentPrice: ".00007",
   holders: 67,
@@ -79,7 +66,11 @@ function CoinModule() {
           ) : null}
 
           <GraphModule />
-          <ChatModule />
+          {loading ? (
+            <Spinner />
+          ) : agentDetails ? (
+            <ChatModule agentId={agentDetails.id} />
+          ) : null}
         </Stack>
         <Stack maxWidth={["90vw", "33vw"]}>
           <TradeModule {...DummyPriceData} />

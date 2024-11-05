@@ -14,4 +14,8 @@ export const ApiEndpoints = Object.freeze({
   coins: {
     transactions: "/coins/transactions",
   },
+  chat: {
+    send: "/chat/send",
+    fetch: "/chat/fetch/:agent_id",
+  },
 });

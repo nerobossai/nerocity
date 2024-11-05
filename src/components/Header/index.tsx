@@ -49,7 +49,7 @@ function Header() {
     try {
       if (!signIn) return;
       const hexPubKey = publicKey?.toBuffer().toString("hex");
-      if (profile.profile.public_key === hexPubKey) {
+      if (profile?.profile?.public_key === hexPubKey) {
         return;
       }
       const data = await signIn();
