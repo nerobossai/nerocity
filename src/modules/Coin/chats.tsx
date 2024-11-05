@@ -25,6 +25,19 @@ function ChatModule(props: { agentId: string }) {
   const [chats, setChats] = useState<ChatsResponse>();
   const [loading, setLoading] = useState(false);
 
+  const fetchChats = async () => {
+    try {
+      setLoading(true);
+      const chats = await coinApiClient.fetchChats(props.agentId);
+      console.log(chats);
+      setChats(chats);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       setPosting(true);
@@ -41,6 +54,7 @@ function ChatModule(props: { agentId: string }) {
         status: "success",
         position: "bottom-right",
       });
+      fetchChats();
     } catch (err) {
       console.log(err);
       toast({
@@ -54,19 +68,6 @@ function ChatModule(props: { agentId: string }) {
     }
   };
 
-  const fetchChats = async () => {
-    try {
-      setLoading(true);
-      const chats = await coinApiClient.fetchChats(props.agentId);
-      console.log(chats);
-      setChats(chats);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     fetchChats();
   }, []);
@@ -74,38 +75,35 @@ function ChatModule(props: { agentId: string }) {
   return (
     <Stack backgroundColor="grey.50" padding="1rem">
       <Text>Chat with agent and users</Text>
-      {loading ? (
-        <Spinner />
-      ) : (
-        (chats?.chats || []).map((data, idx) => {
-          return (
-            <Stack key={data.message_id}>
-              <ChatRowComponent {...data} />
-              <Stack marginLeft="3rem">
-                {data.replies.map((rData, rIdx) => {
-                  return <ChatRowComponent {...rData} key={rData.message_id} />;
-                })}
-                <Button
-                  fontSize="12px"
-                  color="white"
-                  width="20%"
-                  variant="ghosted"
-                  backgroundColor="grey.100"
-                  _hover={{
-                    opacity: 0.8,
-                  }}
-                  onClick={() => {
-                    setSelectedMessageId(data.message_id);
-                    onOpen();
-                  }}
-                >
-                  Reply
-                </Button>
-              </Stack>
+      {(chats?.chats || []).map((data, idx) => {
+        return (
+          <Stack key={data.message_id}>
+            <ChatRowComponent {...data} />
+            <Stack marginLeft="3rem">
+              {data.replies.map((rData, rIdx) => {
+                return <ChatRowComponent {...rData} key={rData.message_id} />;
+              })}
+              <Button
+                fontSize="12px"
+                color="white"
+                width="20%"
+                variant="ghosted"
+                backgroundColor="grey.100"
+                _hover={{
+                  opacity: 0.8,
+                }}
+                onClick={() => {
+                  setSelectedMessageId(data.message_id);
+                  onOpen();
+                }}
+              >
+                Reply
+              </Button>
             </Stack>
-          );
-        })
-      )}
+          </Stack>
+        );
+      })}
+      {loading && <Spinner />}
       <Button
         fontSize="12px"
         color="white"
