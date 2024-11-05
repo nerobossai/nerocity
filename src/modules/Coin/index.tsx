@@ -5,7 +5,10 @@ import styled from "styled-components";
 
 import { Paths } from "@/constants/paths";
 
-import type { AgentResponse } from "../Home/services/homeApiClient";
+import {
+  type AgentResponse,
+  homeApiClient,
+} from "../Home/services/homeApiClient";
 import AboutModule from "./about";
 import ChatModule from "./chats";
 import CoinHeaderModule from "./coinheader";
@@ -29,13 +32,13 @@ function CoinModule() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [agentDetails, setAgentDetails] = useState<AgentResponse>();
+  const [price, setPrice] = useState<string>();
 
   const fetchAgent = async () => {
     try {
       if (!router.query?.coin) return;
       setLoading(true);
       const resp = await coinApiClient.getAgent(router.query.coin as string);
-      console.log(resp);
       if (!resp?.id) {
         return await router.replace(Paths.home);
       }
@@ -47,8 +50,35 @@ function CoinModule() {
     }
   };
 
+  const startPolling = (timeout: number) => {
+    if (!router?.query?.coin) return;
+    return setTimeout(async () => {
+      try {
+        const resp = await coinApiClient.getAgent(router.query.coin as string);
+        if (!resp?.id) {
+          return await router.replace(Paths.home);
+        }
+        const solPrice = await homeApiClient.solPrice();
+        setAgentDetails(resp);
+        const price =
+          (resp.current_virtual_sol_reserves /
+            resp.current_virtual_token_reserves) *
+          solPrice.solana.usd;
+        setPrice(price.toFixed(5).toString());
+        startPolling(timeout);
+      } catch (err) {
+        console.error(err);
+      }
+    }, timeout);
+  };
+
   useEffect(() => {
     fetchAgent();
+    // @ts-ignore will fix this once this method is finished
+    const poll = startPolling(500);
+    return () => {
+      clearTimeout(poll);
+    };
   }, [router]);
 
   return (
@@ -73,7 +103,7 @@ function CoinModule() {
           ) : null}
         </Stack>
         <Stack maxWidth={["90vw", "33vw"]}>
-          <TradeModule {...DummyPriceData} />
+          <TradeModule {...DummyPriceData} currentPrice={price || ""} />
 
           {loading ? (
             <Spinner />

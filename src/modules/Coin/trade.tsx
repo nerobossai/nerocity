@@ -34,7 +34,7 @@ function TradeModule(props: TradeModuleProps) {
           fontSize="12px"
         >
           <Text>Price</Text>
-          <Text>{props.currentPrice}</Text>
+          <Text>${props.currentPrice}</Text>
         </VStack>
         <VStack textAlign="center" fontWeight="bold" fontSize="12px">
           <Text>Holders</Text>

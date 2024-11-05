@@ -55,7 +55,19 @@ export type ErrorResponse = {
   message: string;
 };
 
+export type SolanaPriceResponse = {
+  solana: {
+    usd: number;
+    usd_market_cap: number;
+    usd_24h_vol: number;
+    usd_24h_change: number;
+    last_updated_at: number;
+  };
+};
+
 class ApiClient extends BaseApiClient {
+  cache: any = {};
+
   constructor() {
     super({});
   }
@@ -78,6 +90,22 @@ class ApiClient extends BaseApiClient {
         type: "GET",
         url: ApiEndpoints.public.overlord,
       });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async solPrice(): Promise<SolanaPriceResponse> {
+    try {
+      if ("solprice" in this.cache) {
+        return this.cache.solprice;
+      }
+      const resp = await this.apiCall({
+        type: "GET",
+        url: "https://api.martianwallet.xyz/v1/prices?ids=solana",
+      });
+      this.cache.solprice = resp;
       return resp.data;
     } catch (err: any) {
       return Promise.reject(getErrorMessageFromAxios(err));

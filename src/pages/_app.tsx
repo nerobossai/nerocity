@@ -36,14 +36,21 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const profile: ProfileObject | null = getProfileFromStorage();
+    try {
+      const profile: ProfileObject | null = getProfileFromStorage();
 
-    if (!profile) return;
+      if (!profile) {
+        setIsMounted(true);
+        return;
+      }
 
-    setUserProfile(profile);
-    setAuthenticated(true);
-    setToken(profile.token);
-    setIsMounted(true);
+      setUserProfile(profile);
+      setAuthenticated(true);
+      setToken(profile.token);
+      setIsMounted(true);
+    } catch (err) {
+      setIsMounted(true);
+    }
   }, []);
 
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.

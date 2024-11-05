@@ -162,7 +162,6 @@ function HomeModule() {
     try {
       setFeedLoading(true);
       const resp = await homeApiClient.feed();
-      console.log(resp);
       setFeed(resp.agents);
     } catch (err) {
       console.log(err);

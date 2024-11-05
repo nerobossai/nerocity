@@ -23,7 +23,7 @@ function CoinHeaderModule(props: CardProps) {
           fontSize="12px"
         >
           <Text>Market Cap</Text>
-          <Text>{props.market_cap}</Text>
+          <Text>${props.market_cap}</Text>
         </VStack>
         <VStack textAlign="center" fontSize="12px">
           <Text>Coin Address</Text>
