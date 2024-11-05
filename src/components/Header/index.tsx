@@ -112,8 +112,8 @@ function Header() {
           <WalletModalProvider>
             <WalletMultiButton
               style={{
-                backgroundColor: "white",
-                color: "black",
+                backgroundColor: "#262A2E",
+                color: "white",
                 fontFamily: "Tsukimi Rounded",
               }}
             />
