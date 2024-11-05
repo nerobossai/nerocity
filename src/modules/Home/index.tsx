@@ -1,6 +1,6 @@
-import { Button, SimpleGrid, Stack } from "@chakra-ui/react";
+import { Button, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Card from "@/components/Card";
@@ -8,6 +8,7 @@ import { Paths } from "@/constants/paths";
 
 import OverlordModule from "./overlord";
 import SearchModule from "./search";
+import { homeApiClient } from "./services/homeApiClient";
 
 const Container = styled.div`
   width: 100%;
@@ -154,6 +155,25 @@ const DummyData = [
 
 function HomeModule() {
   const navigator = useRouter();
+  const [feedLoading, setFeedLoading] = useState(false);
+  const [feed, setFeed] = useState<any>([]);
+
+  const fetchFeed = async () => {
+    try {
+      setFeedLoading(true);
+      const resp = await homeApiClient.feed();
+      console.log(resp);
+      setFeed(resp.agents);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setFeedLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeed();
+  }, []);
 
   return (
     <Container>
@@ -169,23 +189,27 @@ function HomeModule() {
         </Button>
         <OverlordModule />
         <SearchModule />
-        <Stack marginTop="2rem">
-          <Button
-            marginLeft="1rem"
-            maxWidth="15vw"
-            colorScheme="blue"
-            _hover={{
-              opacity: 0.8,
-            }}
-          >
-            sort: by market cap
-          </Button>
-          <SimpleGrid columns={3} spacing={10}>
-            {DummyData.map((data, idx) => {
-              return <Card {...data} key={idx} />;
-            })}
-          </SimpleGrid>
-        </Stack>
+        {feedLoading ? (
+          <Spinner />
+        ) : (
+          <Stack marginTop="2rem">
+            <Button
+              marginLeft="1rem"
+              maxWidth="15vw"
+              colorScheme="blue"
+              _hover={{
+                opacity: 0.8,
+              }}
+            >
+              sort: by market cap
+            </Button>
+            <SimpleGrid columns={3} spacing={10}>
+              {feed.map((data: any) => {
+                return <Card {...data} key={data.id} />;
+              })}
+            </SimpleGrid>
+          </Stack>
+        )}
       </Stack>
     </Container>
   );

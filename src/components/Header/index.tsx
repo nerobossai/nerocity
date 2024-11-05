@@ -1,3 +1,5 @@
+"use client";
+
 import { HStack, Link, Stack, Text } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import {
@@ -46,14 +48,16 @@ function Header() {
   const handleSignin = async () => {
     try {
       if (!signIn) return;
-      if (isAuthenticated) return;
+      const hexPubKey = publicKey?.toBuffer().toString("hex");
+      if (profile.profile.public_key === hexPubKey) {
+        return;
+      }
       const data = await signIn();
       const resp = await authApiClient.login({
         public_key: Buffer.from(data.account.publicKey).toString("hex"),
         signature: Buffer.from(data.signature).toString("hex"),
         message: Buffer.from(data.signedMessage).toString("hex"),
       });
-      console.log(resp);
       const profileObject: AuthUtils.ProfileObject = {
         profile: resp.user,
         isAuthenticated: true,

@@ -72,7 +72,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets}>
+      <WalletProvider wallets={wallets} autoConnect>
         <ChakraProvider theme={theme}>
           <Component {...pageProps} />
         </ChakraProvider>

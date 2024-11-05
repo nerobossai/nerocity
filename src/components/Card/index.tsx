@@ -6,15 +6,24 @@ import styled from "styled-components";
 import { timeDifference } from "@/utils/timeDifference";
 
 export type CardProps = {
-  image: string;
-  createdBy: string;
-  marketCap: string;
-  replies: string;
+  created_by: string;
+  id: string;
   name: string;
   ticker: string;
-  createdAt: number | string;
-  coinAddress: string;
   description?: string;
+  market_cap: string;
+  created_at: number;
+  replies: string;
+  image: string;
+  fee_basis_points?: number;
+  initial_real_token_reserves?: number;
+  initial_virtual_sol_reserves?: number;
+  initial_virtual_token_reserves?: number;
+  token_total_supply?: number;
+  current_real_token_reserves?: number;
+  current_virtual_sol_reserves?: number;
+  current_virtual_token_reserves?: number;
+  current_token_total_supply?: number;
   onClick?: any;
 };
 
@@ -34,7 +43,7 @@ function Card(props: CardProps) {
     if (props.onClick) {
       props.onClick();
     } else {
-      navigator.push(props.coinAddress);
+      navigator.push(props.id);
     }
   };
   return (
@@ -53,16 +62,16 @@ function Card(props: CardProps) {
         />
         <Stack>
           <HStack justifyContent="space-between" minWidth="17rem">
-            <Text fontSize="12px">Created by @{props.createdBy}</Text>
+            <Text fontSize="12px">Created by @{props.created_by}</Text>
             <Text fontWeight="bold" color="blue.100" fontSize="12px">
               {timeDifference(
                 Date.now(),
-                parseInt(props.createdAt.toString(), 10),
+                parseInt(props.created_at.toString(), 10),
               )}
             </Text>
           </HStack>
           <Text fontSize="12px" fontWeight="bold" color="green.50">
-            Market Cap ${props.marketCap}
+            Market Cap ${props.market_cap}
           </Text>
           <Text fontSize="12px">Replies {props.replies}</Text>
           <Text fontWeight="bold" fontSize="20px">

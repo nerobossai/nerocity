@@ -12,13 +12,13 @@ function OverlordModule() {
       </Text>
       <Card
         image="https://bit.ly/dan-abramov"
-        createdBy="123456"
-        marketCap="32k"
-        createdAt={1730708878676}
+        created_by="123456"
+        market_cap="32k"
+        created_at={1730708878676}
         replies="10"
         name="Based frog"
         ticker="$TYBF"
-        coinAddress="martian12345"
+        id="martian12345"
       />
     </Stack>
   );
