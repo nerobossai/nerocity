@@ -201,7 +201,7 @@ function HomeModule() {
                 opacity: 0.8,
               }}
             >
-              sort: by market cap
+              sort: created at
             </Button>
             <SimpleGrid columns={3} spacing={10}>
               {feed.map((data: any) => {
