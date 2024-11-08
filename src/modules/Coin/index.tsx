@@ -103,7 +103,15 @@ function CoinModule() {
           ) : null}
         </Stack>
         <Stack maxWidth={["90vw", "33vw"]}>
-          <TradeModule {...DummyPriceData} currentPrice={price || ""} />
+          {loading ? (
+            <Spinner />
+          ) : agentDetails ? (
+            <TradeModule
+              {...DummyPriceData}
+              currentPrice={price || "0"}
+              tokenDetails={agentDetails}
+            />
+          ) : null}
 
           {loading ? (
             <Spinner />

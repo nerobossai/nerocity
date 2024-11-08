@@ -4,19 +4,45 @@ import {
   Input,
   InputGroup,
   InputRightAddon,
+  Spinner,
   Stack,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+import type {
+  AgentResponse,
+  SolanaPriceResponse,
+} from "../Home/services/homeApiClient";
+import { homeApiClient } from "../Home/services/homeApiClient";
 
 export type TradeModuleProps = {
   currentPrice: string;
   holders: number | string;
+  tokenDetails: AgentResponse;
 };
 
 function TradeModule(props: TradeModuleProps) {
   const [active, setActive] = useState("buy");
+  const [solPrice, setSolPrice] = useState<SolanaPriceResponse>();
+  const [loading, setLoading] = useState(false);
+
+  const fetchPrice = async () => {
+    try {
+      setLoading(true);
+      const resp = await homeApiClient.solPrice();
+      setSolPrice(resp);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPrice();
+  }, []);
 
   return (
     <Stack marginTop="1rem">
@@ -80,7 +106,7 @@ function TradeModule(props: TradeModuleProps) {
             focusBorderColor="grey.50"
           />
           <InputRightAddon backgroundColor="grey.100" border={0}>
-            SOL
+            {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`}
           </InputRightAddon>
         </InputGroup>
         <HStack justifyContent="space-between">
@@ -88,7 +114,14 @@ function TradeModule(props: TradeModuleProps) {
             $2.97
           </Text>
           <Text fontSize="10px" fontWeight="bold">
-            1 SOL = $126
+            1 {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`} ={" "}
+            {loading ? (
+              <Spinner />
+            ) : active === "buy" ? (
+              `$${solPrice?.solana.usd}` || "$164.84"
+            ) : (
+              `$${props.currentPrice}`
+            )}
           </Text>
         </HStack>
         <InputGroup>
@@ -98,11 +131,14 @@ function TradeModule(props: TradeModuleProps) {
             focusBorderColor="grey.50"
           />
           <InputRightAddon backgroundColor="grey.100" border={0}>
-            $TYBF
+            {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`}
           </InputRightAddon>
         </InputGroup>
         <Text textAlign="end" fontSize="10px" fontWeight="bold">
-          1 TYBF = $0.000023
+          1 {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`} = $
+          {active === "sell"
+            ? `${solPrice?.solana.usd}` || "$164.84"
+            : props.currentPrice}
         </Text>
         <Button>Place Trade</Button>
       </Stack>

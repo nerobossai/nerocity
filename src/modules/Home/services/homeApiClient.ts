@@ -105,7 +105,7 @@ class ApiClient extends BaseApiClient {
         type: "GET",
         url: "https://api.martianwallet.xyz/v1/prices?ids=solana",
       });
-      this.cache.solprice = resp;
+      this.cache.solprice = resp.data;
       return resp.data;
     } catch (err: any) {
       return Promise.reject(getErrorMessageFromAxios(err));
