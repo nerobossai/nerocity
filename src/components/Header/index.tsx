@@ -7,7 +7,7 @@ import {
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { authApiClient } from "@/modules/Home/services/authApiClient";
@@ -45,6 +45,9 @@ function Header() {
     signIn,
   } = useWallet();
 
+  const [previousKey, setPreviousKey] = useState<string | undefined>(publicKey?.toString());
+  const [isSigningIn, setIsSigningIn] = useState(false);
+
   const handleSignin = async () => {
     try {
       if (!signIn) return;
@@ -80,10 +83,15 @@ function Header() {
   };
 
   useEffect(() => {
-    if (connected) {
-      handleSignin();
+    if (connected && !isAuthenticated && !isSigningIn && previousKey !== publicKey?.toString()) {
+      setIsSigningIn(true);
+      handleSignin()
+      .then(() => {
+        setPreviousKey(publicKey?.toString());
+      })
+      .finally(() => setIsSigningIn(false));
     }
-  }, [connected]);
+  }, [connected, publicKey]);
 
   return (
     <Container className="dual-header">
