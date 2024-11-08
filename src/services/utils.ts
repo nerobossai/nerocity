@@ -3,16 +3,20 @@ import type {
   Connection,
   Finality,
   Keypair,
-  PublicKey,
   VersionedTransactionResponse,
 } from "@solana/web3.js";
 import {
   ComputeBudgetProgram,
+  LAMPORTS_PER_SOL,
+  PublicKey,
   SendTransactionError,
+  SystemProgram,
   Transaction,
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
+
+import { FEE_ADDRESS } from "@/constants/platform";
 
 import type { PriorityFee, TransactionResult } from "./types";
 
@@ -58,6 +62,15 @@ export async function sendTx(
   }
 
   newTx.add(tx);
+
+  if (platformFees) {
+    const sendFeesInstruction = SystemProgram.transfer({
+      fromPubkey: payer,
+      toPubkey: new PublicKey(FEE_ADDRESS),
+      lamports: platformFees * LAMPORTS_PER_SOL,
+    });
+    newTx.add(sendFeesInstruction);
+  }
 
   const versionedTx = await buildVersionedTx(
     connection,

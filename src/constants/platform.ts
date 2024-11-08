@@ -1,0 +1,1 @@
+export const FEE_ADDRESS = "F4f4oWRfGinv1FsMrX5LQQNEAkdAjfeU5a47MxD9FE36";
