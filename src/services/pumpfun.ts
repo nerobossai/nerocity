@@ -105,11 +105,14 @@ export class PumpFunSDK {
       newTx.add(buyTx);
     }
 
+    const platformFeesInSol = 0;
+
     const createResults = await sendTx(
       this.connection,
       newTx,
       creator.publicKey,
       [creator, mint],
+      platformFeesInSol,
       priorityFees,
       commitment,
       finality,
@@ -134,11 +137,14 @@ export class PumpFunSDK {
       commitment,
     );
 
+    const platformFeesInSol = 0;
+
     const buyResults = await sendTx(
       this.connection,
       buyTx,
       buyer.publicKey,
       [buyer],
+      platformFeesInSol,
       priorityFees,
       commitment,
       finality,
@@ -163,11 +169,14 @@ export class PumpFunSDK {
       commitment,
     );
 
+    const platformFeesInSol = 0;
+
     const sellResults = await sendTx(
       this.connection,
       sellTx,
       seller.publicKey,
       [seller],
+      platformFeesInSol,
       priorityFees,
       commitment,
       finality,
