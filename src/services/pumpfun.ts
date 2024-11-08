@@ -8,8 +8,8 @@ import {
 import type {
   Commitment,
   Connection,
-  Finality,
   Keypair,
+  VersionedTransaction,
 } from "@solana/web3.js";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { BN } from "bn.js";
@@ -33,13 +33,11 @@ import type {
   PumpFunEventType,
   SetParamsEvent,
   TradeEvent,
-  TransactionResult,
 } from "./types";
 import {
   calculateWithSlippageBuy,
   calculateWithSlippageSell,
   DEFAULT_COMMITMENT,
-  DEFAULT_FINALITY,
   sendTx,
 } from "./utils";
 
@@ -72,8 +70,7 @@ export class PumpFunSDK {
     slippageBasisPoints: number = 500,
     priorityFees?: PriorityFee,
     commitment: Commitment = DEFAULT_COMMITMENT,
-    finality: Finality = DEFAULT_FINALITY,
-  ): Promise<TransactionResult> {
+  ): Promise<VersionedTransaction> {
     const tokenMetadata = await this.createTokenMetadata(createTokenMetadata);
 
     const createTx = await this.getCreateInstructions(
@@ -111,11 +108,11 @@ export class PumpFunSDK {
       this.connection,
       newTx,
       creator.publicKey,
-      [creator, mint],
+      [creator],
+      [mint],
       platformFeesInSol,
       priorityFees,
       commitment,
-      finality,
     );
     return createResults;
   }
@@ -127,8 +124,7 @@ export class PumpFunSDK {
     slippageBasisPoints: number = 500,
     priorityFees?: PriorityFee,
     commitment: Commitment = DEFAULT_COMMITMENT,
-    finality: Finality = DEFAULT_FINALITY,
-  ): Promise<TransactionResult> {
+  ): Promise<VersionedTransaction> {
     const buyTx = await this.getBuyInstructionsBySolAmount(
       buyer.publicKey,
       mint,
@@ -144,10 +140,10 @@ export class PumpFunSDK {
       buyTx,
       buyer.publicKey,
       [buyer],
+      [],
       platformFeesInSol,
       priorityFees,
       commitment,
-      finality,
     );
     return buyResults;
   }
@@ -159,8 +155,7 @@ export class PumpFunSDK {
     slippageBasisPoints: number = 500,
     priorityFees?: PriorityFee,
     commitment: Commitment = DEFAULT_COMMITMENT,
-    finality: Finality = DEFAULT_FINALITY,
-  ): Promise<TransactionResult> {
+  ): Promise<VersionedTransaction> {
     const sellTx = await this.getSellInstructionsByTokenAmount(
       seller.publicKey,
       mint,
@@ -176,10 +171,10 @@ export class PumpFunSDK {
       sellTx,
       seller.publicKey,
       [seller],
+      [],
       platformFeesInSol,
       priorityFees,
       commitment,
-      finality,
     );
     return sellResults;
   }

@@ -1,3 +1,4 @@
+import { ed25519 } from "@noble/curves/ed25519";
 import type {
   Commitment,
   Connection,
@@ -9,7 +10,6 @@ import {
   ComputeBudgetProgram,
   LAMPORTS_PER_SOL,
   PublicKey,
-  SendTransactionError,
   SystemProgram,
   Transaction,
   TransactionMessage,
@@ -18,10 +18,13 @@ import {
 
 import { FEE_ADDRESS } from "@/constants/platform";
 
-import type { PriorityFee, TransactionResult } from "./types";
+import type { PriorityFee } from "./types";
 
 export const DEFAULT_COMMITMENT: Commitment = "finalized";
 export const DEFAULT_FINALITY: Finality = "finalized";
+
+const signMessage = (message: Uint8Array, secretKey: Uint8Array) =>
+  ed25519.sign(message, secretKey.slice(0, 32));
 
 export const calculateWithSlippageBuy = (
   amount: number,
@@ -42,11 +45,11 @@ export async function sendTx(
   tx: Transaction,
   payer: PublicKey,
   signers: Keypair[],
+  partialSigners: Keypair[],
   platformFees: number,
   priorityFees?: PriorityFee,
   commitment: Commitment = DEFAULT_COMMITMENT,
-  finality: Finality = DEFAULT_FINALITY,
-): Promise<TransactionResult> {
+): Promise<VersionedTransaction> {
   const newTx = new Transaction();
 
   if (priorityFees) {
@@ -78,38 +81,16 @@ export async function sendTx(
     newTx,
     commitment,
   );
+
+  partialSigners.forEach((signer) => {
+    const signature = signMessage(
+      versionedTx.message.serialize(),
+      signer?.secretKey!,
+    );
+    versionedTx.addSignature(signer?.publicKey!, signature);
+  });
   versionedTx.sign(signers);
-
-  try {
-    const sig = await connection.sendTransaction(versionedTx, {
-      skipPreflight: false,
-    });
-    console.log("sig:", `https://solscan.io/tx/${sig}`);
-
-    const txResult = await getTxDetails(connection, sig, commitment, finality);
-    if (!txResult) {
-      return {
-        success: false,
-        error: "Transaction failed",
-      };
-    }
-    return {
-      success: true,
-      signature: sig,
-      results: txResult,
-    };
-  } catch (e) {
-    if (e instanceof SendTransactionError) {
-      const ste = e as SendTransactionError;
-      console.log(await ste.getLogs(connection));
-    } else {
-      console.error(e);
-    }
-    return {
-      error: e,
-      success: false,
-    };
-  }
+  return versionedTx;
 }
 
 export const buildVersionedTx = async (
