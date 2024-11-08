@@ -21,10 +21,9 @@ function AboutModule(props: CardProps) {
       <Text>
         When the market cap reaches $69k all the liquidity from the bonding
         curve will be deposited into Raydium and burned. <br /> <br /> There are{" "}
-        {props.current_virtual_token_reserves || 0} tokens still available for
-        sale in the bonding curve, and there is{" "}
-        {(props.current_virtual_sol_reserves || 1 * 10 ** 9) / 10 ** 9} SOL in
-        the bonding curve.
+        {props.current_real_token_reserves || 0} tokens still available for sale
+        in the bonding curve, and there is {props.current_virtual_sol_reserves}{" "}
+        SOL in the bonding curve.
       </Text>
     </Stack>
   );

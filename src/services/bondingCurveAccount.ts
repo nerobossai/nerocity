@@ -16,6 +16,8 @@ export class BondingCurveAccount {
 
   public complete: boolean;
 
+  public initialTokenReserve: number;
+
   constructor(
     discriminator: number,
     virtualTokenReserves: number,
@@ -24,6 +26,7 @@ export class BondingCurveAccount {
     realSolReserves: number,
     tokenTotalSupply: number,
     complete: boolean,
+    initialTokenReserve: number = 793100000000000,
   ) {
     this.discriminator = discriminator;
     this.virtualTokenReserves = virtualTokenReserves;
@@ -32,6 +35,7 @@ export class BondingCurveAccount {
     this.realSolReserves = realSolReserves;
     this.tokenTotalSupply = tokenTotalSupply;
     this.complete = complete;
+    this.initialTokenReserve = initialTokenReserve;
   }
 
   getBuyPrice(amount: number): number {
