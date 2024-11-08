@@ -21,6 +21,15 @@ export type AgentResponse = {
   current_virtual_sol_reserves: number;
   current_virtual_token_reserves: number;
   current_token_total_supply: number;
+  token_metadata: {
+    name: string;
+    symbol: string;
+    description: string;
+    image: string;
+    showName: true;
+    createdOn: string;
+  };
+  mint_public_key: string;
 };
 
 export type FeedSuccessResponse = {
@@ -46,6 +55,15 @@ export type FeedSuccessResponse = {
       current_virtual_sol_reserves: number;
       current_virtual_token_reserves: number;
       current_token_total_supply: number;
+      token_metadata: {
+        name: string;
+        symbol: string;
+        description: string;
+        image: string;
+        showName: true;
+        createdOn: string;
+      };
+      mint_public_key: string;
     },
   ];
 };

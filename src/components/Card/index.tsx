@@ -75,7 +75,7 @@ function Card(props: CardProps) {
           </Text>
           <Text fontSize="12px">Replies {props.replies}</Text>
           <Text fontWeight="bold" fontSize="20px">
-            {props.name} {props.ticker}
+            {props.name} ${props.ticker}
           </Text>
           {props.description && (
             <Text maxWidth="20rem">{props.description || ""}</Text>
