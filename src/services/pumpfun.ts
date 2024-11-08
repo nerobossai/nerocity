@@ -1,3 +1,4 @@
+// import type { Provider } from "@coral-xyz/anchor";
 import type { Provider } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import {
@@ -7,13 +8,15 @@ import {
 } from "@solana/spl-token";
 import type {
   Commitment,
-  Connection,
   Keypair,
   VersionedTransaction,
 } from "@solana/web3.js";
-import { PublicKey, Transaction } from "@solana/web3.js";
+import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { BN } from "bn.js";
 
+import { RPC_NODE_URL } from "@/constants/platform";
+
+import { ENDPOINT } from "./baseApiClient";
 import { BondingCurveAccount } from "./bondingCurveAccount";
 import {
   toCompleteEvent,
@@ -32,6 +35,7 @@ import type {
   PumpFunEventHandlers,
   PumpFunEventType,
   SetParamsEvent,
+  TokenMetadata,
   TradeEvent,
 } from "./types";
 import {
@@ -63,18 +67,21 @@ export class PumpFunSDK {
   }
 
   async createAndBuy(
-    creator: Keypair,
+    creator: PublicKey,
     mint: Keypair,
     createTokenMetadata: CreateTokenMetadata,
     buyAmountSol: number,
     slippageBasisPoints: number = 500,
     priorityFees?: PriorityFee,
     commitment: Commitment = DEFAULT_COMMITMENT,
-  ): Promise<VersionedTransaction> {
+  ): Promise<{
+    createResults: VersionedTransaction;
+    tokenMetadata: TokenMetadata;
+  }> {
     const tokenMetadata = await this.createTokenMetadata(createTokenMetadata);
 
     const createTx = await this.getCreateInstructions(
-      creator.publicKey,
+      creator,
       createTokenMetadata.name,
       createTokenMetadata.symbol,
       tokenMetadata.metadataUri,
@@ -92,7 +99,7 @@ export class PumpFunSDK {
       );
 
       const buyTx = await this.getBuyInstructions(
-        creator.publicKey,
+        creator,
         mint.publicKey,
         globalAccount.feeRecipient,
         buyAmount,
@@ -107,18 +114,18 @@ export class PumpFunSDK {
     const createResults = await sendTx(
       this.connection,
       newTx,
-      creator.publicKey,
-      [creator],
+      creator,
+      [],
       [mint],
       platformFeesInSol,
       priorityFees,
       commitment,
     );
-    return createResults;
+    return { createResults, tokenMetadata: tokenMetadata.metadata };
   }
 
   async buy(
-    buyer: Keypair,
+    buyer: PublicKey,
     mint: PublicKey,
     buyAmountSol: number,
     slippageBasisPoints: number = 500,
@@ -126,7 +133,7 @@ export class PumpFunSDK {
     commitment: Commitment = DEFAULT_COMMITMENT,
   ): Promise<VersionedTransaction> {
     const buyTx = await this.getBuyInstructionsBySolAmount(
-      buyer.publicKey,
+      buyer,
       mint,
       buyAmountSol,
       slippageBasisPoints,
@@ -138,8 +145,8 @@ export class PumpFunSDK {
     const buyResults = await sendTx(
       this.connection,
       buyTx,
-      buyer.publicKey,
-      [buyer],
+      buyer,
+      [],
       [],
       platformFeesInSol,
       priorityFees,
@@ -149,7 +156,7 @@ export class PumpFunSDK {
   }
 
   async sell(
-    seller: Keypair,
+    seller: PublicKey,
     mint: PublicKey,
     sellTokenAmount: number,
     slippageBasisPoints: number = 500,
@@ -157,7 +164,7 @@ export class PumpFunSDK {
     commitment: Commitment = DEFAULT_COMMITMENT,
   ): Promise<VersionedTransaction> {
     const sellTx = await this.getSellInstructionsByTokenAmount(
-      seller.publicKey,
+      seller,
       mint,
       sellTokenAmount,
       slippageBasisPoints,
@@ -169,8 +176,8 @@ export class PumpFunSDK {
     const sellResults = await sendTx(
       this.connection,
       sellTx,
-      seller.publicKey,
-      [seller],
+      seller,
+      [],
       [],
       platformFeesInSol,
       priorityFees,
@@ -411,7 +418,7 @@ export class PumpFunSDK {
     formData.append("telegram", create.telegram || "");
     formData.append("website", create.website || "");
     formData.append("showName", "true");
-    const request = await fetch("https://pump.fun/api/ipfs", {
+    const request = await fetch(`${ENDPOINT}/public/upload-metadata`, {
       method: "POST",
       body: formData,
     });
@@ -476,3 +483,7 @@ export class PumpFunSDK {
     this.program.removeEventListener(eventId);
   }
 }
+
+export const pumpFunSdk = new PumpFunSDK({
+  connection: new Connection(RPC_NODE_URL),
+});

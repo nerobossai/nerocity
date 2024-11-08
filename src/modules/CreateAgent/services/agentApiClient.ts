@@ -1,5 +1,6 @@
 import { ApiEndpoints } from "@/constants/endpoints";
 import { BaseApiClient } from "@/services/baseApiClient";
+import type { TokenMetadata } from "@/services/types";
 import { getErrorMessageFromAxios } from "@/utils/getErrorMessage";
 
 export type LaunchAgentBody = {
@@ -7,6 +8,8 @@ export type LaunchAgentBody = {
   ticker: string;
   description: string;
   image: string;
+  mintPublicKey: string;
+  tokenMetadata: TokenMetadata;
 };
 
 export type LaunchSuccessResponse = {

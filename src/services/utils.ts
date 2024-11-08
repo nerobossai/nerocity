@@ -89,7 +89,6 @@ export async function sendTx(
     );
     versionedTx.addSignature(signer?.publicKey!, signature);
   });
-  versionedTx.sign(signers);
   return versionedTx;
 }
 
