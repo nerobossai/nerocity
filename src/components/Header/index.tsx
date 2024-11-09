@@ -120,7 +120,7 @@ function Header() {
               opacity: 0.6,
             }}
           >
-            <Text>how does it work?</Text>
+            <Text className="sm:text-md text-[12px]">how does it work?</Text>
           </Link>
         </HStack>
         <HStack>

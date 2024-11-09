@@ -8,8 +8,8 @@ import Header from "@/components/Header";
 
 const Container = styled.div<{ $noHeaderOnMobile?: boolean }>`
   width: 100%;
-  height: 100%;
   color: white;
+  min-height: 100vh;
 `;
 
 interface IPropType {

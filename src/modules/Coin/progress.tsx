@@ -3,7 +3,7 @@ import React from "react";
 
 function ProgressModule(props: { completionPercent: number }) {
   return (
-    <Stack fontSize="12px" marginTop="1rem">
+    <Stack fontSize="12px" marginTop="1rem" width="100%">
       <Progress
         colorScheme="green"
         height="2rem"

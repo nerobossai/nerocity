@@ -120,7 +120,7 @@ const CandlestickChart = (props: CandlestickChartProps) => {
   }, []);
 
   return (
-    <Stack {...props}>
+    <Stack {...props} flex="1">
       {/* Symbol and price details */}
       <HStack>
         <h2>{symbol}</h2>

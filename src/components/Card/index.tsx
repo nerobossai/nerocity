@@ -25,6 +25,7 @@ export type CardProps = {
   current_virtual_token_reserves?: number;
   current_token_total_supply?: number;
   onClick?: any;
+  completionPercent?: number;
 };
 
 const Container = styled.div`

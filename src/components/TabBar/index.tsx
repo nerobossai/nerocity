@@ -1,20 +1,20 @@
 import { Box, Flex, Grid, Icon, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
-import {
-  FaChartLine,
-  FaComments,
-  FaExchangeAlt,
-  FaInfoCircle,
-} from "react-icons/fa";
+import React from "react";
+import { BiComment } from "react-icons/bi";
+import { FaChartLine, FaExchangeAlt, FaInfoCircle } from "react-icons/fa";
 
-function TabBar() {
-  const [selectedTab, setSelectedTab] = useState("Info");
-
+function TabBar({
+  selectedTab,
+  setSelectedTab,
+}: {
+  selectedTab: string;
+  setSelectedTab: (v: string) => void;
+}) {
   const tabs = [
     { name: "Info", icon: FaInfoCircle },
     { name: "Charts", icon: FaChartLine },
     { name: "Buy/Sell", icon: FaExchangeAlt },
-    { name: "Comments", icon: FaComments },
+    { name: "Comments", icon: BiComment },
   ];
 
   return (

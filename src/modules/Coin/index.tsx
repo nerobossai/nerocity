@@ -1,4 +1,10 @@
-import { HStack, Spinner, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Spinner,
+  Stack,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -38,6 +44,9 @@ function CoinModule() {
   const [completionPercent, setCompletionPercent] = useState<number>(0);
   const [tokenHolders, setTokenHolders] = useState<string>("0");
   const [candlestickData, setCandlestickData] = useState<CandlestickResponse>();
+  const [selectedTab, setSelectedTab] = useState("Info");
+
+  const isLargeScreen = useBreakpointValue({ base: false, md: true });
 
   const startPolling = (
     timeout: number,
@@ -122,6 +131,93 @@ function CoinModule() {
     };
   }, [router]);
 
+  if (loading) {
+    return (
+      <Box
+        width="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="80vh"
+      >
+        <Spinner />
+      </Box>
+    );
+  }
+
+  if (!isLargeScreen && agentDetails) {
+    if (selectedTab === "Info") {
+      return (
+        <Box width="100%" display="flex" height="80vh" flexDirection="column">
+          <CoinHeaderModule
+            {...agentDetails}
+            market_cap={marketCap || "0"}
+            completionPercent={completionPercent}
+          />
+          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        </Box>
+      );
+    }
+    if (selectedTab === "Charts") {
+      return (
+        <Box
+          width="100%"
+          display="flex"
+          height="80vh"
+          flexDirection="column"
+          padding="1rem"
+        >
+          <CandlestickChart
+            marginTop="0.5rem"
+            fontSize="12px"
+            data={candlestickData || []}
+            symbol={agentDetails.ticker}
+            priceData={{
+              open: null,
+              low: null,
+              high: null,
+              close: null,
+            }}
+          />
+          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        </Box>
+      );
+    } else if (selectedTab === "Buy/Sell") {
+      return (
+        <Box
+          width="100%"
+          display="flex"
+          height="80vh"
+          flexDirection="column"
+          padding="1rem"
+        >
+          <Box flex="1" />
+          <Box display="flex" flexDirection="column-reverse">
+            <TradeModule
+              currentPrice={price || "0"}
+              tokenDetails={agentDetails}
+              holders={tokenHolders}
+            />
+          </Box>
+          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        </Box>
+      );
+    } else if (selectedTab === "Comments") {
+      return (
+        <Box
+          width="100%"
+          display="flex"
+          height="80vh"
+          flexDirection="column"
+          padding="1rem"
+        >
+          <ChatModule agentId={agentDetails.id} />
+          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        </Box>
+      );
+    }
+  }
+
   return (
     <Container>
       <HStack
@@ -137,6 +233,7 @@ function CoinModule() {
               <CoinHeaderModule
                 {...agentDetails}
                 market_cap={marketCap || "0"}
+                completionPercent={completionPercent}
               />
               <CandlestickChart
                 marginTop="0.5rem"
@@ -183,7 +280,6 @@ function CoinModule() {
           ) : null}
         </Stack>
       </HStack>
-      <TabBar />
     </Container>
   );
 }
