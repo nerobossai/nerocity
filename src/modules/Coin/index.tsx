@@ -111,7 +111,9 @@ function CoinModule() {
     // @ts-ignore will fix this once this method is finished
     const poll = startPolling(1000);
     return () => {
-      poll && clearTimeout(poll);
+      if (poll) {
+        clearTimeout(poll);
+      }
     };
   }, [router]);
 

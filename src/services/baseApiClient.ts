@@ -5,8 +5,8 @@ import { userStore } from "@/stores/useUserStore";
 
 export const ENDPOINT =
   process.env.NODE_ENV === "development"
-    ? "http://54.166.253.87:7801"
-    : "http://54.166.253.87:7801";
+    ? "https://aibj3eljy6.execute-api.us-east-1.amazonaws.com"
+    : "https://aibj3eljy6.execute-api.us-east-1.amazonaws.com";
 
 interface BaseApiClientProps {
   baseURL?: string;
