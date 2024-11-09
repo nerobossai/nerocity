@@ -8,7 +8,9 @@ import Card from "@/components/Card";
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 
+import OverlordModule from "./overlord";
 import SearchModule from "./search";
+import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
 
 const Container = styled.div`
@@ -158,6 +160,7 @@ function HomeModule() {
   const navigator = useRouter();
   const [feedLoading, setFeedLoading] = useState(false);
   const [feed, setFeed] = useState<any>([]);
+  const [overlord, setOverlord] = useState<AgentResponse>();
 
   const fetchFeed = async () => {
     try {
@@ -179,6 +182,10 @@ function HomeModule() {
           }
         }),
       );
+      const sortedAgents = [...resp.agents].sort(
+        (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap),
+      );
+      setOverlord(sortedAgents[0]);
       setFeed(resp.agents);
     } catch (err) {
       console.log(err);
@@ -203,7 +210,7 @@ function HomeModule() {
         >
           Launch your AI agent coin
         </Button>
-        {/* <OverlordModule /> */}
+        {overlord && <OverlordModule overlord={overlord} />}
         <SearchModule />
         {feedLoading ? (
           <Spinner />
