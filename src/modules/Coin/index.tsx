@@ -46,15 +46,17 @@ function CoinModule() {
 
     return setTimeout(async () => {
       try {
-        await executePollingLogic(agent);
-        startPolling(timeout, agent); // Continue polling with updated agent if necessary
+        const ag = await executePollingLogic(agent);
+        startPolling(timeout, ag); // Continue polling with updated agent if necessary
       } catch (err) {
         console.error(err);
       }
     }, timeout);
   };
 
-  const executePollingLogic = async (agent?: AgentResponse) => {
+  const executePollingLogic = async (
+    agent?: AgentResponse,
+  ): Promise<AgentResponse | undefined> => {
     let ag: AgentResponse;
 
     if (!agent) {
@@ -62,7 +64,7 @@ function CoinModule() {
       const resp = await coinApiClient.getAgent(router.query.coin as string);
       if (!resp?.id) {
         await router.replace(Paths.home);
-        return;
+        return agent;
       }
       const data = await getTokenHolders(resp.mint_public_key);
       setTokenHolders(data);
@@ -106,6 +108,7 @@ function CoinModule() {
 
     const prices = await homeApiClient.candlestickData(ag.mint_public_key);
     setCandlestickData(prices);
+    return ag;
   };
 
   useEffect(() => {
