@@ -95,7 +95,7 @@ function CoinModule() {
     setMarketCap(marketcap);
     setPrice(price.toExponential(1).toString());
     setCompletionPercent(
-      (((tmp.initialTokenReserve - tmp.realTokenReserves) * 10 ** 6) /
+      ((tmp.initialTokenReserve - tmp.realTokenReserves) /
         tmp.initialTokenReserve) *
         100,
     );
