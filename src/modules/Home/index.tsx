@@ -1,9 +1,10 @@
-import { Button, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Card from "@/components/Card";
+import TabBar from "@/components/TabBar";
 import { Paths } from "@/constants/paths";
 
 import OverlordModule from "./overlord";
@@ -13,9 +14,8 @@ import { homeApiClient } from "./services/homeApiClient";
 const Container = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  padding: 1rem;
 `;
 
 const DummyData = [
@@ -177,24 +177,40 @@ function HomeModule() {
   return (
     <Container>
       <Stack justifyContent="center" alignItems="center">
-        <Button
-          colorScheme="green"
-          _hover={{
-            opacity: 0.8,
-          }}
-          onClick={() => navigator.push(Paths.createAgent)}
-        >
-          Launch your AI agent coin
-        </Button>
+        <Box className="hidden md:block">
+          <Button
+            colorScheme="green"
+            _hover={{
+              opacity: 0.8,
+            }}
+            onClick={() => navigator.push(Paths.createAgent)}
+          >
+            Launch your AI agent coin
+          </Button>
+        </Box>
         <OverlordModule />
+        <Box className="flex w-full justify-center py-4 md:hidden">
+          <Button
+            colorScheme="green"
+            _hover={{
+              opacity: 0.8,
+            }}
+            onClick={() => navigator.push(Paths.createAgent)}
+          >
+            Launch your AI agent coin
+          </Button>
+        </Box>
         <SearchModule />
         {feedLoading ? (
           <Spinner />
         ) : (
-          <Stack marginTop="2rem">
+          <Stack
+            marginTop="2rem"
+            fontSize={{ base: "16px", sm: "12px" }}
+            alignItems={{ base: "flex-start", md: "center", padding: "1rem" }}
+          >
             <Button
-              marginLeft="1rem"
-              maxWidth="15vw"
+              fontSize={{ base: "sm", md: "md", lg: "lg" }}
               colorScheme="blue"
               _hover={{
                 opacity: 0.8,
@@ -202,14 +218,19 @@ function HomeModule() {
             >
               sort: created at
             </Button>
-            <SimpleGrid columns={3} spacing={10}>
-              {feed.map((data: any) => {
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 3 }}
+              spacing={10}
+              margin={{ sm: "20px" }}
+            >
+              {DummyData.map((data: any) => {
                 return <Card {...data} key={data.id} />;
               })}
             </SimpleGrid>
           </Stack>
         )}
       </Stack>
+      <TabBar />
     </Container>
   );
 }
