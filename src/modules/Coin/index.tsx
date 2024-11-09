@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import TabBar from "@/components/TabBar";
 import { Paths } from "@/constants/paths";
 
 import {
@@ -113,6 +114,7 @@ function CoinModule() {
           <ProgressModule />
         </Stack>
       </HStack>
+      <TabBar />
     </Container>
   );
 }

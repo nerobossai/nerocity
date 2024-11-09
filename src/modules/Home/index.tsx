@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Card from "@/components/Card";
-import TabBar from "@/components/TabBar";
 import { Paths } from "@/constants/paths";
 
 import OverlordModule from "./overlord";
@@ -207,7 +206,8 @@ function HomeModule() {
           <Stack
             marginTop="2rem"
             fontSize={{ base: "16px", sm: "12px" }}
-            alignItems={{ base: "flex-start", md: "center", padding: "1rem" }}
+            alignItems={{ base: "flex-start", md: "center", lg: "center" }}
+            padding="1rem"
           >
             <Button
               fontSize={{ base: "sm", md: "md", lg: "lg" }}
@@ -215,22 +215,23 @@ function HomeModule() {
               _hover={{
                 opacity: 0.8,
               }}
+              maxW={{ md: "200px", lg: "250px" }}
             >
               sort: created at
             </Button>
             <SimpleGrid
               columns={{ base: 1, md: 2, lg: 3 }}
               spacing={10}
-              margin={{ sm: "20px" }}
+              padding={0}
+              margin={{ base: "0px", md: "20px" }}
             >
-              {DummyData.map((data: any) => {
+              {feed.map((data: any) => {
                 return <Card {...data} key={data.id} />;
               })}
             </SimpleGrid>
           </Stack>
         )}
       </Stack>
-      <TabBar />
     </Container>
   );
 }
