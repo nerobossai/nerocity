@@ -45,6 +45,7 @@ function CoinModule() {
         let ag: AgentResponse;
 
         if (!agent) {
+          setLoading(true);
           const resp = await coinApiClient.getAgent(
             router.query.coin as string,
           );
@@ -56,6 +57,7 @@ function CoinModule() {
           });
           ag = resp;
           setAgentDetails(ag);
+          setLoading(false);
         } else {
           ag = agent;
         }
@@ -98,6 +100,8 @@ function CoinModule() {
         startPolling(timeout, ag);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     }, timeout);
   };
@@ -160,13 +164,15 @@ function CoinModule() {
           {loading ? (
             <Spinner />
           ) : agentDetails ? (
-            <AboutModule
-              {...agentDetails}
-              current_real_token_reserves={realTokenReserve}
-              current_virtual_sol_reserves={realSolReserve}
-            />
+            <>
+              <AboutModule
+                {...agentDetails}
+                current_real_token_reserves={realTokenReserve}
+                current_virtual_sol_reserves={realSolReserve}
+              />
+              <ProgressModule completionPercent={completionPercent} />
+            </>
           ) : null}
-          <ProgressModule completionPercent={completionPercent} />
         </Stack>
       </HStack>
     </Container>
