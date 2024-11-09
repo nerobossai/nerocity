@@ -48,7 +48,6 @@ export async function sendTx(
   connection: Connection,
   tx: Transaction,
   payer: PublicKey,
-  signers: Keypair[],
   partialSigners: Keypair[],
   platformFees: number,
   priorityFees?: PriorityFee,
