@@ -55,10 +55,10 @@ function CoinModule() {
   };
 
   const executePollingLogic = async (agent?: AgentResponse) => {
-    setLoading(true);
     let ag: AgentResponse;
 
     if (!agent) {
+      setLoading(true);
       const resp = await coinApiClient.getAgent(router.query.coin as string);
       if (!resp?.id) {
         await router.replace(Paths.home);
@@ -68,6 +68,7 @@ function CoinModule() {
       setTokenHolders(data);
       ag = resp;
       setAgentDetails(ag);
+      setLoading(false);
     } else {
       ag = agent;
     }
