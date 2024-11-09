@@ -21,6 +21,15 @@ export type AgentResponse = {
   current_virtual_sol_reserves: number;
   current_virtual_token_reserves: number;
   current_token_total_supply: number;
+  token_metadata: {
+    name: string;
+    symbol: string;
+    description: string;
+    image: string;
+    showName: true;
+    createdOn: string;
+  };
+  mint_public_key: string;
 };
 
 export type FeedSuccessResponse = {
@@ -46,6 +55,15 @@ export type FeedSuccessResponse = {
       current_virtual_sol_reserves: number;
       current_virtual_token_reserves: number;
       current_token_total_supply: number;
+      token_metadata: {
+        name: string;
+        symbol: string;
+        description: string;
+        image: string;
+        showName: true;
+        createdOn: string;
+      };
+      mint_public_key: string;
     },
   ];
 };
@@ -64,6 +82,19 @@ export type SolanaPriceResponse = {
     last_updated_at: number;
   };
 };
+
+export type CandlestickResponse = {
+  mint: string;
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  slot: number;
+  is_5_min: boolean;
+  is_1_min: boolean;
+}[];
 
 class ApiClient extends BaseApiClient {
   cache: any = {};
@@ -105,7 +136,19 @@ class ApiClient extends BaseApiClient {
         type: "GET",
         url: "https://api.martianwallet.xyz/v1/prices?ids=solana",
       });
-      this.cache.solprice = resp;
+      this.cache.solprice = resp.data;
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async candlestickData(mint: string): Promise<CandlestickResponse> {
+    try {
+      const resp = await this.apiCall({
+        type: "GET",
+        url: ApiEndpoints.public.candlestick.replace(":mint", mint),
+      });
       return resp.data;
     } catch (err: any) {
       return Promise.reject(getErrorMessageFromAxios(err));

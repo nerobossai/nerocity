@@ -1,10 +1,12 @@
 import { Button, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Card from "@/components/Card";
 import { Paths } from "@/constants/paths";
+import { pumpFunSdk } from "@/services/pumpfun";
 
 import OverlordModule from "./overlord";
 import SearchModule from "./search";
@@ -162,6 +164,22 @@ function HomeModule() {
     try {
       setFeedLoading(true);
       const resp = await homeApiClient.feed();
+      await Promise.all(
+        resp.agents.map(async (data, idx) => {
+          const tmp = await pumpFunSdk.getBondingCurveAccount(
+            new PublicKey(data.mint_public_key),
+          );
+          const solPrice = await homeApiClient.solPrice();
+          if (resp.agents[idx]) {
+            resp.agents[idx].market_cap = (
+              ((tmp?.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) *
+              solPrice.solana.usd
+            )
+              .toFixed(3)
+              .toString();
+          }
+        }),
+      );
       setFeed(resp.agents);
     } catch (err) {
       console.log(err);

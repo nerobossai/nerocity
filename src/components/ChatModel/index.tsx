@@ -1,6 +1,5 @@
 import {
   Button,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,6 +9,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Textarea,
 } from "@chakra-ui/react";
 import React from "react";
 
@@ -37,13 +37,12 @@ function ChatModelComponent(props: ChatModelProps) {
         <ModalBody>
           <Stack>
             <Text>Comment</Text>
-            <Input
+            <Textarea
               backgroundColor="grey.100"
               border={0}
               focusBorderColor="grey.50"
               width="30vw"
               height="20vh"
-              textAlign="start"
               onChange={(e) => props.onChangeMessage(e.target.value)}
             />
           </Stack>
