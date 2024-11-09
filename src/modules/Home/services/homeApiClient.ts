@@ -83,6 +83,19 @@ export type SolanaPriceResponse = {
   };
 };
 
+export type CandlestickResponse = {
+  mint: string;
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  slot: number;
+  is_5_min: boolean;
+  is_1_min: boolean;
+}[];
+
 class ApiClient extends BaseApiClient {
   cache: any = {};
 
@@ -124,6 +137,18 @@ class ApiClient extends BaseApiClient {
         url: "https://api.martianwallet.xyz/v1/prices?ids=solana",
       });
       this.cache.solprice = resp.data;
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async candlestickData(mint: string): Promise<CandlestickResponse> {
+    try {
+      const resp = await this.apiCall({
+        type: "GET",
+        url: ApiEndpoints.public.candlestick.replace(":mint", mint),
+      });
       return resp.data;
     } catch (err: any) {
       return Promise.reject(getErrorMessageFromAxios(err));

@@ -11,8 +11,12 @@ function ProgressModule(props: { completionPercent: number }) {
         borderRadius="20px"
         max={100}
       >
-        <ProgressLabel fontSize="12px" marginLeft="1rem">
-          {props.completionPercent}%
+        <ProgressLabel
+          fontSize="12px"
+          marginLeft="1rem"
+          color={props.completionPercent > 55 ? "white" : "black"}
+        >
+          {props.completionPercent.toFixed(1)}%
         </ProgressLabel>
       </Progress>
       <HStack justifyContent="space-between">

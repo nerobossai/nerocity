@@ -1,8 +1,10 @@
-import { HStack, Text, VStack } from "@chakra-ui/react";
+import { HStack, Link, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 
 import type { CardProps } from "@/components/Card";
+import { getSolScanLink } from "@/utils";
 import { timeDifference } from "@/utils/timeDifference";
+import { truncateString } from "@/utils/truncateString";
 
 function CoinHeaderModule(props: CardProps) {
   return (
@@ -27,7 +29,9 @@ function CoinHeaderModule(props: CardProps) {
         </VStack>
         <VStack textAlign="center" fontSize="12px">
           <Text>Coin Address</Text>
-          <Text>{props.id}</Text>
+          <Link href={getSolScanLink(props.id)} target="_blank">
+            <Text>{truncateString(props.id)}</Text>
+          </Link>
         </VStack>
         <VStack textAlign="center" fontSize="12px">
           <Text>Created By</Text>

@@ -8,14 +8,15 @@ import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 import { getTokenHolders } from "@/utils/getTokenHolders";
 
-import {
-  type AgentResponse,
-  homeApiClient,
+import type {
+  AgentResponse,
+  CandlestickResponse,
 } from "../Home/services/homeApiClient";
+import { homeApiClient } from "../Home/services/homeApiClient";
 import AboutModule from "./about";
 import ChatModule from "./chats";
 import CoinHeaderModule from "./coinheader";
-import GraphModule from "./graph";
+import CandlestickChart from "./graph";
 import ProgressModule from "./progress";
 import { coinApiClient } from "./services/coinApiClient";
 import TradeModule from "./trade";
@@ -24,12 +25,6 @@ const Container = styled.div`
   padding: 2rem;
   padding-top: 0rem;
 `;
-
-const DummyPriceData = {
-  currentPrice: ".00007",
-  holders: 67,
-  trades: [],
-};
 
 function CoinModule() {
   const router = useRouter();
@@ -41,6 +36,7 @@ function CoinModule() {
   const [realSolReserve, setRealSolReserve] = useState<number>();
   const [completionPercent, setCompletionPercent] = useState<number>(0);
   const [tokenHolders, setTokenHolders] = useState<string>("0");
+  const [candlestickData, setCandlestickData] = useState<CandlestickResponse>();
 
   const startPolling = (timeout: number, agent?: AgentResponse) => {
     if (!router?.query?.coin) return;
@@ -74,8 +70,7 @@ function CoinModule() {
 
         const solPrice = await homeApiClient.solPrice();
         const price =
-          (((await tmp?.getSellPrice(1, 0)) || 0) / LAMPORTS_PER_SOL) *
-          solPrice.solana.usd;
+          (((await tmp?.getSellPrice(1, 0)) || 0) / 100) * solPrice.solana.usd;
 
         const marketcap = (
           ((tmp?.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) *
@@ -87,8 +82,8 @@ function CoinModule() {
         setMarketCap(marketcap);
         setPrice(price.toExponential(1).toString());
         setCompletionPercent(
-          ((tmp.initialTokenReserve! - tmp.realTokenReserves!) /
-            tmp.initialTokenReserve!) *
+          (((tmp.initialTokenReserve - tmp.realTokenReserves) * 10 ** 6) /
+            tmp.initialTokenReserve) *
             100,
         );
         setRealTokenReserve(
@@ -97,6 +92,9 @@ function CoinModule() {
         setRealSolReserve(
           Math.floor((tmp?.realSolReserves || 0) / LAMPORTS_PER_SOL),
         );
+
+        const prices = await homeApiClient.candlestickData(ag.mint_public_key);
+        setCandlestickData(prices);
         startPolling(timeout, ag);
       } catch (err) {
         console.error(err);
@@ -106,7 +104,7 @@ function CoinModule() {
 
   useEffect(() => {
     // @ts-ignore will fix this once this method is finished
-    const poll = startPolling(500);
+    const poll = startPolling(1000);
     return () => {
       clearTimeout(poll);
     };
@@ -115,7 +113,7 @@ function CoinModule() {
   return (
     <Container>
       <HStack
-        justifyContent="space-between"
+        justifyContent="space-evenly"
         alignItems="start"
         flexDirection={["column-reverse", "row"]}
       >
@@ -123,10 +121,25 @@ function CoinModule() {
           {loading ? (
             <Spinner />
           ) : agentDetails ? (
-            <CoinHeaderModule {...agentDetails} market_cap={marketCap || "0"} />
+            <>
+              <CoinHeaderModule
+                {...agentDetails}
+                market_cap={marketCap || "0"}
+              />
+              <CandlestickChart
+                marginTop="0.5rem"
+                fontSize="12px"
+                data={candlestickData || []}
+                symbol={agentDetails.ticker}
+                priceData={{
+                  open: null,
+                  low: null,
+                  high: null,
+                  close: null,
+                }}
+              />
+            </>
           ) : null}
-
-          <GraphModule />
           {loading ? (
             <Spinner />
           ) : agentDetails ? (
