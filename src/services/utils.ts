@@ -30,14 +30,18 @@ export const calculateWithSlippageBuy = (
   amount: number,
   basisPoints: number,
 ) => {
-  return amount + (amount * basisPoints) / 10000;
+  const a = amount / LAMPORTS_PER_SOL;
+  const b = basisPoints / 100;
+  return a * (1 + b) * LAMPORTS_PER_SOL;
 };
 
 export const calculateWithSlippageSell = (
   amount: number,
   basisPoints: number,
 ) => {
-  return amount - (amount * basisPoints) / 10000;
+  const a = amount / LAMPORTS_PER_SOL;
+  const b = basisPoints / 100;
+  return a * (1 - b) * LAMPORTS_PER_SOL;
 };
 
 export async function sendTx(

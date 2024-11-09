@@ -128,7 +128,7 @@ export class PumpFunSDK {
     buyer: PublicKey,
     mint: PublicKey,
     buyAmountSol: number,
-    slippageBasisPoints: number = 500,
+    slippageBasisPoints: number = 100,
     priorityFees?: PriorityFee,
     commitment: Commitment = DEFAULT_COMMITMENT,
   ): Promise<VersionedTransaction> {
@@ -159,7 +159,7 @@ export class PumpFunSDK {
     seller: PublicKey,
     mint: PublicKey,
     sellTokenAmount: number,
-    slippageBasisPoints: number = 500,
+    slippageBasisPoints: number = 100,
     priorityFees?: PriorityFee,
     commitment: Commitment = DEFAULT_COMMITMENT,
   ): Promise<VersionedTransaction> {
@@ -227,7 +227,7 @@ export class PumpFunSDK {
     buyer: PublicKey,
     mint: PublicKey,
     buyAmountSol: number,
-    slippageBasisPoints: number = 500,
+    slippageBasisPoints: number = 100,
     commitment: Commitment = DEFAULT_COMMITMENT,
   ) {
     const bondingCurveAccount = await this.getBondingCurveAccount(
@@ -243,6 +243,8 @@ export class PumpFunSDK {
       buyAmountSol,
       slippageBasisPoints,
     );
+
+    console.log(buyAmount, buyAmountWithSlippage);
 
     const globalAccount = await this.getGlobalAccount(commitment);
 
@@ -289,7 +291,7 @@ export class PumpFunSDK {
 
     transaction.add(
       await this.program.methods
-        .buy(new BN(amount.toString()), new BN(solAmount.toString()))
+        .buy(new BN(amount), new BN(solAmount))
         .accounts({
           feeRecipient,
           mint,
@@ -308,7 +310,7 @@ export class PumpFunSDK {
     seller: PublicKey,
     mint: PublicKey,
     sellTokenAmount: number,
-    slippageBasisPoints: number = 500,
+    slippageBasisPoints: number = 100,
     commitment: Commitment = DEFAULT_COMMITMENT,
   ) {
     const bondingCurveAccount = await this.getBondingCurveAccount(
@@ -359,7 +361,7 @@ export class PumpFunSDK {
 
     transaction.add(
       await this.program.methods
-        .sell(new BN(amount.toString()), new BN(minSolOutput.toString()))
+        .sell(new BN(amount), new BN(minSolOutput))
         .accounts({
           feeRecipient,
           mint,

@@ -47,20 +47,14 @@ export class BondingCurveAccount {
       return 0;
     }
 
-    // Calculate the product of virtual reserves
-    const n = this.virtualSolReserves * this.virtualTokenReserves;
+    console.log(
+      this.virtualTokenReserves.toString(),
+      this.virtualSolReserves.toString(),
+    );
 
-    // Calculate the new virtual sol reserves after the purchase
-    const i = this.virtualSolReserves + amount;
-
-    // Calculate the new virtual token reserves after the purchase
-    const r = n / i + 1;
-
-    // Calculate the amount of tokens to be purchased
-    const s = this.virtualTokenReserves - r;
-
-    // Return the minimum of the calculated tokens and real token reserves
-    return s < this.realTokenReserves ? s : this.realTokenReserves;
+    return Math.floor(
+      (amount * this.virtualTokenReserves) / this.virtualSolReserves,
+    );
   }
 
   getSellPrice(amount: number, feeBasisPoints: number): number {
