@@ -7,6 +7,8 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { Keypair } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -15,6 +17,8 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 import styled from "styled-components";
 
 import { Paths } from "@/constants/paths";
+import { pumpFunSdk } from "@/services/pumpfun";
+import type { CreateTokenMetadata } from "@/services/types";
 import { tailwindConfig } from "@/styles/global";
 
 import { agentApiClient } from "./services/agentApiClient";
@@ -47,6 +51,8 @@ const DropContainer = styled.div`
 function CreateAgentModule() {
   const toast = useToast();
   const navigator = useRouter();
+  const { publicKey, sendTransaction } = useWallet();
+  const { connection } = useConnection();
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [progressMessage, setProgressMessage] = useState<string>("");
   const [dropDisabled, setDropDisabled] = useState<boolean>(false);
@@ -54,24 +60,11 @@ function CreateAgentModule() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const uploadFile = async ({ files }: { files: Blob[] }) => {
-    try {
-      setProgressMessage("File is uploading");
-      setUploadProgress(110);
-    } catch (err: any) {
-      toast({
-        title: "Error",
-        description: err.message,
-        status: "error",
-      });
-      setUploadProgress(0);
-    }
-  };
+  const [files, setFiles] = useState<File[]>();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setDropDisabled(true);
-    uploadFile({ files: acceptedFiles });
+    setFiles(acceptedFiles);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -80,12 +73,55 @@ function CreateAgentModule() {
 
   const handleSubmit = async () => {
     try {
+      if (!publicKey) {
+        toast({
+          title: "Error",
+          description: "Please connect wallet first",
+          status: "error",
+          position: "bottom-right",
+        });
+        return;
+      }
+
+      if (!files || files.length === 0) {
+        toast({
+          title: "Error",
+          description: "Please select image",
+          status: "error",
+          position: "bottom-right",
+        });
+        return;
+      }
+
       setLoading(true);
-      const resp = await agentApiClient.launch({
+
+      const tokenMint = Keypair.generate();
+
+      const createTokenMetadata: CreateTokenMetadata = {
+        name,
+        symbol: ticker,
+        description,
+        file: files[0]!,
+        // twitter: string;
+        // telegram?: string;
+        // website?: string;
+      };
+
+      const { createResults, tokenMetadata } = await pumpFunSdk.createAndBuy(
+        publicKey,
+        tokenMint,
+        createTokenMetadata,
+        0,
+      );
+      const txnResp = await sendTransaction(createResults, connection);
+      // send txn to wallet for signing
+      await agentApiClient.launch({
         name,
         description,
         ticker,
-        image: "https://cdn.martianwallet.xyz/assets/pfp.jpg",
+        image: tokenMetadata.image,
+        mintPublicKey: tokenMint.publicKey.toString(),
+        tokenMetadata,
       });
       navigator.replace(Paths.home);
       toast({
@@ -147,14 +183,24 @@ function CreateAgentModule() {
           <Text>Image</Text>
           <DropContainer {...getRootProps()}>
             <input {...getInputProps()} />
-            <AiOutlineFileAdd size={40} />
-            <div className="noselect">
-              <Text fontSize={["sm", "lg", "xl"]} fontWeight={250}>
-                {isDragActive
-                  ? "Drop the file here ..."
-                  : `Drop file here, or click to select file`}
-              </Text>
-            </div>
+            {files && files?.length > 0 ? (
+              <div className="noselect">
+                <Text fontSize={["sm", "lg", "xl"]} fontWeight={250}>
+                  {files[0]?.name}
+                </Text>
+              </div>
+            ) : (
+              <>
+                <AiOutlineFileAdd size={40} />
+                <div className="noselect">
+                  <Text fontSize={["sm", "lg", "xl"]} fontWeight={250}>
+                    {isDragActive
+                      ? "Drop the file here ..."
+                      : `Drop file here, or click to select file`}
+                  </Text>
+                </div>
+              </>
+            )}
           </DropContainer>
         </VStack>
         <VStack alignItems="start" justifyContent="start" paddingBottom="1rem">

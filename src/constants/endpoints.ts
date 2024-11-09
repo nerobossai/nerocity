@@ -2,6 +2,7 @@ export const ApiEndpoints = Object.freeze({
   public: {
     feed: "/public/feed",
     overlord: "/public/overlord",
+    candlestick: "/public/candlestick/:mint",
   },
   auth: {
     login: "/auth/login",

@@ -3,10 +3,10 @@ import axios from "axios";
 
 import { userStore } from "@/stores/useUserStore";
 
-const ENDPOINT =
+export const ENDPOINT =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:7801"
-    : "https://api.martian.fun";
+    ? "https://aibj3eljy6.execute-api.us-east-1.amazonaws.com"
+    : "https://aibj3eljy6.execute-api.us-east-1.amazonaws.com";
 
 interface BaseApiClientProps {
   baseURL?: string;

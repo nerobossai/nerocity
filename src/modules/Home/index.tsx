@@ -1,13 +1,16 @@
-import { Box, Button, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
+import { Button, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Card from "@/components/Card";
 import { Paths } from "@/constants/paths";
+import { pumpFunSdk } from "@/services/pumpfun";
 
 import OverlordModule from "./overlord";
 import SearchModule from "./search";
+import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
 
 const Container = styled.div`
@@ -156,11 +159,32 @@ function HomeModule() {
   const navigator = useRouter();
   const [feedLoading, setFeedLoading] = useState(false);
   const [feed, setFeed] = useState<any>([]);
+  const [overlord, setOverlord] = useState<AgentResponse>();
 
   const fetchFeed = async () => {
     try {
       setFeedLoading(true);
       const resp = await homeApiClient.feed();
+      await Promise.all(
+        resp.agents.map(async (data, idx) => {
+          const tmp = await pumpFunSdk.getBondingCurveAccount(
+            new PublicKey(data.mint_public_key),
+          );
+          const solPrice = await homeApiClient.solPrice();
+          if (resp.agents[idx]) {
+            resp.agents[idx].market_cap = (
+              ((tmp?.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) *
+              solPrice.solana.usd
+            )
+              .toFixed(3)
+              .toString();
+          }
+        }),
+      );
+      const sortedAgents = [...resp.agents].sort(
+        (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap),
+      );
+      setOverlord(sortedAgents[0]);
       setFeed(resp.agents);
     } catch (err) {
       console.log(err);
@@ -176,29 +200,16 @@ function HomeModule() {
   return (
     <Container>
       <Stack justifyContent="center" alignItems="center">
-        <Box className="hidden md:block">
-          <Button
-            colorScheme="green"
-            _hover={{
-              opacity: 0.8,
-            }}
-            onClick={() => navigator.push(Paths.createAgent)}
-          >
-            Launch your AI agent coin
-          </Button>
-        </Box>
-        <OverlordModule />
-        <Box className="flex w-full justify-center py-4 md:hidden">
-          <Button
-            colorScheme="green"
-            _hover={{
-              opacity: 0.8,
-            }}
-            onClick={() => navigator.push(Paths.createAgent)}
-          >
-            Launch your AI agent coin
-          </Button>
-        </Box>
+        <Button
+          colorScheme="green"
+          _hover={{
+            opacity: 0.8,
+          }}
+          onClick={() => navigator.push(Paths.createAgent)}
+        >
+          Launch your AI agent coin
+        </Button>
+        {overlord && <OverlordModule overlord={overlord} />}
         <SearchModule />
         {feedLoading ? (
           <Spinner />

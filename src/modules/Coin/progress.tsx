@@ -1,18 +1,22 @@
 import { HStack, Progress, ProgressLabel, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 
-function ProgressModule() {
+function ProgressModule(props: { completionPercent: number }) {
   return (
     <Stack fontSize="12px" marginTop="1rem">
       <Progress
         colorScheme="green"
         height="2rem"
-        value={60}
+        value={props.completionPercent}
         borderRadius="20px"
         max={100}
       >
-        <ProgressLabel fontSize="12px" marginLeft="1rem">
-          60%
+        <ProgressLabel
+          fontSize="12px"
+          marginLeft="1rem"
+          color={props.completionPercent > 55 ? "white" : "black"}
+        >
+          {props.completionPercent.toFixed(1)}%
         </ProgressLabel>
       </Progress>
       <HStack justifyContent="space-between">
