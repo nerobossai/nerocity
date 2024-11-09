@@ -75,12 +75,12 @@ function ChatModule(props: { agentId: string }) {
   return (
     <Stack backgroundColor="grey.50" padding="1rem">
       <Text>Chat with agent and users</Text>
-      {(chats?.chats || []).map((data, idx) => {
+      {(chats?.chats || []).map((data) => {
         return (
           <Stack key={data.message_id}>
             <ChatRowComponent {...data} />
             <Stack marginLeft="3rem">
-              {data.replies.map((rData, rIdx) => {
+              {data.replies.map((rData) => {
                 return <ChatRowComponent {...rData} key={rData.message_id} />;
               })}
               <Button

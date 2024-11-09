@@ -45,7 +45,9 @@ function Header() {
     signIn,
   } = useWallet();
 
-  const [previousKey, setPreviousKey] = useState<string | undefined>(publicKey?.toString());
+  const [previousKey, setPreviousKey] = useState<string | undefined>(
+    publicKey?.toString(),
+  );
   const [isSigningIn, setIsSigningIn] = useState(false);
 
   const handleSignin = async () => {
@@ -83,13 +85,18 @@ function Header() {
   };
 
   useEffect(() => {
-    if (connected && !isAuthenticated && !isSigningIn && previousKey !== publicKey?.toString()) {
+    if (
+      connected &&
+      !isAuthenticated &&
+      !isSigningIn &&
+      previousKey !== publicKey?.toString()
+    ) {
       setIsSigningIn(true);
       handleSignin()
-      .then(() => {
-        setPreviousKey(publicKey?.toString());
-      })
-      .finally(() => setIsSigningIn(false));
+        .then(() => {
+          setPreviousKey(publicKey?.toString());
+        })
+        .finally(() => setIsSigningIn(false));
     }
   }, [connected, publicKey]);
 

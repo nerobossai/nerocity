@@ -38,79 +38,80 @@ function CoinModule() {
   const [tokenHolders, setTokenHolders] = useState<string>("0");
   const [candlestickData, setCandlestickData] = useState<CandlestickResponse>();
 
-  const startPolling = (timeout: number, agent?: AgentResponse) => {
-    if (!router?.query?.coin) return;
+  const startPolling = (
+    timeout: number,
+    agent?: AgentResponse,
+  ): NodeJS.Timeout | null => {
+    if (!router?.query?.coin) return null;
+
     return setTimeout(async () => {
       try {
-        let ag: AgentResponse;
-
-        if (!agent) {
-          setLoading(true);
-          const resp = await coinApiClient.getAgent(
-            router.query.coin as string,
-          );
-          if (!resp?.id) {
-            return await router.replace(Paths.home);
-          }
-          getTokenHolders(resp.mint_public_key).then((data) => {
-            setTokenHolders(data);
-          });
-          ag = resp;
-          setAgentDetails(ag);
-          setLoading(false);
-        } else {
-          ag = agent;
-        }
-
-        const tmp = await pumpFunSdk.getBondingCurveAccount(
-          new PublicKey(ag.mint_public_key),
-        );
-
-        if (!tmp) {
-          return;
-        }
-
-        const solPrice = await homeApiClient.solPrice();
-        const price =
-          (((await tmp?.getSellPrice(1, 0)) || 0) / 100) * solPrice.solana.usd;
-
-        const marketcap = (
-          ((tmp?.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) *
-          solPrice.solana.usd
-        )
-          .toFixed(3)
-          .toString();
-
-        setMarketCap(marketcap);
-        setPrice(price.toExponential(1).toString());
-        setCompletionPercent(
-          (((tmp.initialTokenReserve - tmp.realTokenReserves) * 10 ** 6) /
-            tmp.initialTokenReserve) *
-            100,
-        );
-        setRealTokenReserve(
-          parseInt(((tmp?.realTokenReserves || 0) / 10 ** 6).toString(10), 10),
-        );
-        setRealSolReserve(
-          Math.floor((tmp?.realSolReserves || 0) / LAMPORTS_PER_SOL),
-        );
-
-        const prices = await homeApiClient.candlestickData(ag.mint_public_key);
-        setCandlestickData(prices);
-        startPolling(timeout, ag);
+        await executePollingLogic(agent);
+        startPolling(timeout, agent); // Continue polling with updated agent if necessary
       } catch (err) {
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     }, timeout);
+  };
+
+  const executePollingLogic = async (agent?: AgentResponse) => {
+    setLoading(true);
+    let ag: AgentResponse;
+
+    if (!agent) {
+      const resp = await coinApiClient.getAgent(router.query.coin as string);
+      if (!resp?.id) {
+        await router.replace(Paths.home);
+        return;
+      }
+      const data = await getTokenHolders(resp.mint_public_key);
+      setTokenHolders(data);
+      ag = resp;
+      setAgentDetails(ag);
+    } else {
+      ag = agent;
+    }
+
+    const tmp = await pumpFunSdk.getBondingCurveAccount(
+      new PublicKey(ag.mint_public_key),
+    );
+
+    if (!tmp) return;
+
+    const solPrice = await homeApiClient.solPrice();
+    const price =
+      (((await tmp.getSellPrice(1, 0)) || 0) / 100) * solPrice.solana.usd;
+
+    const marketcap = (
+      ((tmp.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) *
+      solPrice.solana.usd
+    )
+      .toFixed(3)
+      .toString();
+
+    setMarketCap(marketcap);
+    setPrice(price.toExponential(1).toString());
+    setCompletionPercent(
+      (((tmp.initialTokenReserve - tmp.realTokenReserves) * 10 ** 6) /
+        tmp.initialTokenReserve) *
+        100,
+    );
+    setRealTokenReserve(
+      parseInt(((tmp.realTokenReserves || 0) / 10 ** 6).toString(10), 10),
+    );
+    setRealSolReserve(
+      Math.floor((tmp.realSolReserves || 0) / LAMPORTS_PER_SOL),
+    );
+
+    const prices = await homeApiClient.candlestickData(ag.mint_public_key);
+    setCandlestickData(prices);
   };
 
   useEffect(() => {
     // @ts-ignore will fix this once this method is finished
     const poll = startPolling(1000);
     return () => {
-      clearTimeout(poll);
+      poll && clearTimeout(poll);
     };
   }, [router]);
 
