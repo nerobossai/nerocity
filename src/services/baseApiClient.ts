@@ -5,8 +5,8 @@ import { userStore } from "@/stores/useUserStore";
 
 export const ENDPOINT =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:7801"
-    : "https://api.martian.fun";
+    ? "http://54.166.253.87:7801"
+    : "http://54.166.253.87:7801";
 
 interface BaseApiClientProps {
   baseURL?: string;
