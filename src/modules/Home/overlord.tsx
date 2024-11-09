@@ -27,7 +27,12 @@ function OverlordModule(props: { overlord: AgentResponse }) {
 
   return (
     <Stack justifyContent="center" alignItems="center">
-      <Text color="red.600" fontWeight="bold" fontSize="1.5rem" padding="1rem">
+      <Text
+        color="red.600"
+        fontWeight="bold"
+        fontSize="1.5rem"
+        className="p-1 md:p-4"
+      >
         AI Overlord
       </Text>
       <Card {...props.overlord} />

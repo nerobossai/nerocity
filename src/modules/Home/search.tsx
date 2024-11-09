@@ -9,7 +9,7 @@ const Container = styled.div`
 
 function SearchModule() {
   return (
-    <Container>
+    <Container className="hidden sm:block">
       <InputGroup>
         <Input
           textAlign="center"

@@ -16,9 +16,8 @@ import { homeApiClient } from "./services/homeApiClient";
 const Container = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  padding: 1rem;
 `;
 
 const DummyData = [
@@ -215,18 +214,28 @@ function HomeModule() {
         {feedLoading ? (
           <Spinner />
         ) : (
-          <Stack marginTop="2rem">
+          <Stack
+            marginTop="2rem"
+            fontSize={{ base: "16px", sm: "12px" }}
+            alignItems={{ base: "flex-start", md: "center", lg: "center" }}
+            padding="1rem"
+          >
             <Button
-              marginLeft="1rem"
-              maxWidth="15vw"
+              fontSize={{ base: "sm", md: "md", lg: "lg" }}
               colorScheme="blue"
               _hover={{
                 opacity: 0.8,
               }}
+              maxW={{ md: "200px", lg: "250px" }}
             >
               sort: created at
             </Button>
-            <SimpleGrid columns={3} spacing={10}>
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 3 }}
+              spacing={10}
+              padding={0}
+              margin={{ base: "0px", md: "20px" }}
+            >
               {feed.map((data: any) => {
                 return <Card {...data} key={data.id} />;
               })}

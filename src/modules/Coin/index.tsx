@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import TabBar from "@/components/TabBar";
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 import { getTokenHolders } from "@/utils/getTokenHolders";
@@ -182,6 +183,7 @@ function CoinModule() {
           ) : null}
         </Stack>
       </HStack>
+      <TabBar />
     </Container>
   );
 }
