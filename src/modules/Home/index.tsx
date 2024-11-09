@@ -8,7 +8,6 @@ import Card from "@/components/Card";
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 
-import OverlordModule from "./overlord";
 import SearchModule from "./search";
 import { homeApiClient } from "./services/homeApiClient";
 
@@ -204,7 +203,7 @@ function HomeModule() {
         >
           Launch your AI agent coin
         </Button>
-        <OverlordModule />
+        {/* <OverlordModule /> */}
         <SearchModule />
         {feedLoading ? (
           <Spinner />

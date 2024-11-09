@@ -60,7 +60,7 @@ function CreateAgentModule() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-  const [files, setFiles] = useState<Blob[]>();
+  const [files, setFiles] = useState<File[]>();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setDropDisabled(true);
@@ -183,14 +183,24 @@ function CreateAgentModule() {
           <Text>Image</Text>
           <DropContainer {...getRootProps()}>
             <input {...getInputProps()} />
-            <AiOutlineFileAdd size={40} />
-            <div className="noselect">
-              <Text fontSize={["sm", "lg", "xl"]} fontWeight={250}>
-                {isDragActive
-                  ? "Drop the file here ..."
-                  : `Drop file here, or click to select file`}
-              </Text>
-            </div>
+            {files && files?.length > 0 ? (
+              <div className="noselect">
+                <Text fontSize={["sm", "lg", "xl"]} fontWeight={250}>
+                  {files[0]?.name}
+                </Text>
+              </div>
+            ) : (
+              <>
+                <AiOutlineFileAdd size={40} />
+                <div className="noselect">
+                  <Text fontSize={["sm", "lg", "xl"]} fontWeight={250}>
+                    {isDragActive
+                      ? "Drop the file here ..."
+                      : `Drop file here, or click to select file`}
+                  </Text>
+                </div>
+              </>
+            )}
           </DropContainer>
         </VStack>
         <VStack alignItems="start" justifyContent="start" paddingBottom="1rem">
