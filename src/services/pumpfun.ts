@@ -119,9 +119,9 @@ export class PumpFunSDK {
     let platformFeesInSol;
     try {
       const solPrice = await homeApiClient.solPrice();
-      platformFeesInSol = 2 * (1 / solPrice.solana.usd) * LAMPORTS_PER_SOL;
+      platformFeesInSol = 2 * (1 / solPrice.solana.usd);
     } catch (err) {
-      platformFeesInSol = 0.01 * LAMPORTS_PER_SOL;
+      platformFeesInSol = 0.01;
     }
 
     const createResults = await sendTx(
@@ -152,7 +152,7 @@ export class PumpFunSDK {
       commitment,
     );
 
-    const platformFeesInSol = (2 / 100) * buyAmountSol;
+    const platformFeesInSol = ((2 / 100) * buyAmountSol) / LAMPORTS_PER_SOL;
 
     const buyResults = await sendTx(
       this.connection,
