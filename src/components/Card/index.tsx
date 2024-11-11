@@ -1,10 +1,4 @@
-import {
-  HStack,
-  Image,
-  Stack,
-  Text,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { HStack, Image, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
@@ -40,7 +34,6 @@ const Container = styled.div`
     padding: 1rem;
     cursor: pointer;
     height: 100%;
-    width: 100%;
   }
   .card-main:hover {
     background-color: #211e1e;
@@ -56,20 +49,13 @@ function Card(props: CardProps) {
       navigator.push(props.id);
     }
   };
-
-  const direction = useBreakpointValue<"row" | "column">({
-    base: "column",
-    md: "row",
-  });
-
   return (
     <Container onClick={handleClick}>
-      <Stack
+      <HStack
         className="card-main"
         justifyContent="start"
         alignItems="start"
         spacing="1rem"
-        direction={direction}
       >
         <Image
           boxSize="8rem"
@@ -78,11 +64,7 @@ function Card(props: CardProps) {
           alt="ai agent image"
         />
         <Stack width="100%">
-          <HStack
-            justifyContent="space-between"
-            minWidth={{ base: "0", md: "12rem"}}
-            flexDirection={{base:"row", sm: "column"}}
-          >
+          <HStack justifyContent="space-between" minWidth="17rem">
             <Text fontSize="12px">Created by @{props.created_by}</Text>
             <Text fontWeight="bold" color="blue.100" fontSize="12px">
               {timeDifference(
@@ -96,15 +78,13 @@ function Card(props: CardProps) {
           </Text>
           <Text fontSize="12px">Replies {props.replies}</Text>
           <Text fontWeight="bold" fontSize="20px">
-            {props.name} ${`${props.ticker}`}
+            {props.name} ${props.ticker}
           </Text>
           {props.description && (
-            <Text maxWidth="20rem" fontSize={{ base: "10px", md: "14px" }}>
-              {props.description || ""}
-            </Text>
+            <Text maxWidth="20rem" fontSize={{ base: "10px", md: "14px" }}>{props.description || ""}</Text>
           )}
         </Stack>
-      </Stack>
+      </HStack>
     </Container>
   );
 }
