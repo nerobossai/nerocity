@@ -114,6 +114,7 @@ function CreateAgentModule() {
         0,
       );
       const txnResp = await sendTransaction(createResults, connection);
+      connection.confirmTransaction(txnResp, "confirmed");
       // send txn to wallet for signing
       await agentApiClient.launch({
         name,
@@ -134,7 +135,7 @@ function CreateAgentModule() {
       console.log(err);
       toast({
         title: "Error",
-        description: "Something went wrong!",
+        description: "unable to create Agent, check txn status in solscan",
         status: "error",
         position: "bottom-right",
       });
