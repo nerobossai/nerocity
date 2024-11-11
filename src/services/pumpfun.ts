@@ -69,7 +69,10 @@ export class PumpFunSDK {
   async createAndBuy(
     creator: PublicKey,
     mint: Keypair,
-    createTokenMetadata: CreateTokenMetadata,
+    tokenMetadata: {
+      metadata: TokenMetadata;
+      metadataUri: string;
+    },
     buyAmountSol: number,
     slippageBasisPoints: number = 500,
     priorityFees?: PriorityFee,
@@ -78,12 +81,10 @@ export class PumpFunSDK {
     createResults: VersionedTransaction;
     tokenMetadata: TokenMetadata;
   }> {
-    const tokenMetadata = await this.createTokenMetadata(createTokenMetadata);
-
     const createTx = await this.getCreateInstructions(
       creator,
-      createTokenMetadata.name,
-      createTokenMetadata.symbol,
+      tokenMetadata.metadata.name,
+      tokenMetadata.metadata.symbol,
       tokenMetadata.metadataUri,
       mint,
     );

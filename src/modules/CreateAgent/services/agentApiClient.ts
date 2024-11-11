@@ -10,6 +10,7 @@ export type LaunchAgentBody = {
   image: string;
   mintPublicKey: string;
   tokenMetadata: TokenMetadata;
+  telegram?: string;
 };
 
 export type LaunchSuccessResponse = {
@@ -36,6 +37,28 @@ export type ErrorResponse = {
   message: string;
 };
 
+export type TwitterOauthBody = {
+  name: string;
+  ticker: string;
+  description: string;
+  image: string;
+  tokenMetadata: { metadata: TokenMetadata; metadataUri: string };
+  telegram?: string;
+};
+
+export type TwitterOauthResponse = {
+  authUrl: string;
+};
+
+export type TwitterValidateOauthBody = {
+  oauthToken: string;
+  oauthVerifier: string;
+};
+
+export type TwitterValidateOauthResponse = TwitterOauthBody & {
+  twtToken: string;
+};
+
 class ApiClient extends BaseApiClient {
   constructor() {
     super({});
@@ -46,6 +69,36 @@ class ApiClient extends BaseApiClient {
       const resp = await this.secureApiCall({
         type: "POST",
         url: ApiEndpoints.agents.launch,
+        body,
+      });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async getTwitterOauthLink(
+    body: TwitterOauthBody,
+  ): Promise<TwitterOauthResponse> {
+    try {
+      const resp = await this.secureApiCall({
+        type: "POST",
+        url: ApiEndpoints.agents.twitteroauth1,
+        body,
+      });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async validateOauth(
+    body: TwitterValidateOauthBody,
+  ): Promise<TwitterValidateOauthResponse> {
+    try {
+      const resp = await this.secureApiCall({
+        type: "POST",
+        url: ApiEndpoints.agents.validateoauth1,
         body,
       });
       return resp.data;
