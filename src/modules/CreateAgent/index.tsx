@@ -13,7 +13,9 @@ import { Keypair } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { RiTwitterXFill } from "react-icons/ri";
 import styled from "styled-components";
+import z from "zod";
 
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
@@ -47,6 +49,21 @@ const DropContainer = styled.div`
   align-items: center;
 `;
 
+const nameSchema = z
+  .string()
+  .regex(
+    /^[a-zA-Z0-9]+$/,
+    "Name can only contain letters and numbers with no spaces.",
+  )
+  .min(1, "Name is required.");
+
+const tickerSchema = z
+  .string()
+  .regex(
+    /^[A-Za-z]{1,6}$/,
+    "Ticker must be 1-6 alphabetic characters with no spaces or numbers.",
+  );
+
 function CreateAgentModule() {
   const toast = useToast();
   const navigator = useRouter();
@@ -61,6 +78,7 @@ function CreateAgentModule() {
   const [telegramHandle, setTelegramHandle] = useState("");
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [errors, setErrors] = useState<{ name?: string; ticker?: string }>({});
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -75,6 +93,23 @@ function CreateAgentModule() {
   });
 
   const handleSubmit = async () => {
+    const nameValidation = nameSchema.safeParse(name);
+    const tickerValidation = tickerSchema.safeParse(ticker);
+    console.log("t", nameValidation.success, tickerValidation.success);
+
+    if (!nameValidation.success || !tickerValidation.success) {
+      setErrors({
+        name: nameValidation.success
+          ? undefined
+          : nameValidation?.error?.issues[0]?.message,
+        ticker: tickerValidation.success
+          ? undefined
+          : tickerValidation?.error?.issues[0]?.message,
+      });
+      return;
+    }
+
+    setErrors({});
     try {
       if (!publicKey) {
         toast({
@@ -105,7 +140,7 @@ function CreateAgentModule() {
         symbol: ticker,
         description,
         file: file!,
-        twitter: twitterHandle,
+        // twitter: twitterHandle,
         telegram: telegramHandle,
         // website?: string;
       };
@@ -166,6 +201,11 @@ function CreateAgentModule() {
             onChange={(e) => setName(e.target.value)}
             value={name}
           />
+          {errors.name && (
+            <Text color="red.500" fontSize="12px">
+              *{errors.name}
+            </Text>
+          )}
         </VStack>
         <VStack alignItems="start" justifyContent="start">
           <Text>Ticker</Text>
@@ -176,6 +216,11 @@ function CreateAgentModule() {
             onChange={(e) => setTicker(e.target.value)}
             value={ticker}
           />
+          {errors.ticker && (
+            <Text color="red.500" fontSize="12px">
+              *{errors.ticker}
+            </Text>
+          )}
         </VStack>
         <VStack alignItems="start" justifyContent="start">
           <Text>Description</Text>
@@ -224,13 +269,17 @@ function CreateAgentModule() {
         </VStack>
         <VStack alignItems="start" justifyContent="start">
           <Text>Twitter (optional)</Text>
-          <Input
-            backgroundColor="grey.100"
-            border={0}
-            focusBorderColor="grey.50"
-            onChange={(e) => setTwitterHandle(e.target.value)}
-            value={twitterHandle}
-          />
+          <Button
+            rightIcon={<RiTwitterXFill size="15px" />}
+            color="primary"
+            _hover={{
+              opacity: 0.8,
+            }}
+            padding="1.5rem"
+            backgroundColor="grey.75"
+          >
+            connect
+          </Button>
           <Text color="grey.600" opacity={0.5} fontSize="12px">
             *Connect your agent's twitter account and your agent will start
             posting autonomously
