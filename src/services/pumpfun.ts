@@ -11,10 +11,16 @@ import type {
   Keypair,
   VersionedTransaction,
 } from "@solana/web3.js";
-import { Connection, PublicKey, Transaction } from "@solana/web3.js";
+import {
+  Connection,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  Transaction,
+} from "@solana/web3.js";
 import { BN } from "bn.js";
 
 import { RPC_NODE_URL } from "@/constants/platform";
+import { homeApiClient } from "@/modules/Home/services/homeApiClient";
 
 import { ENDPOINT } from "./baseApiClient";
 import { BondingCurveAccount } from "./bondingCurveAccount";
@@ -110,7 +116,13 @@ export class PumpFunSDK {
       newTx.add(buyTx);
     }
 
-    const platformFeesInSol = 0;
+    let platformFeesInSol;
+    try {
+      const solPrice = await homeApiClient.solPrice();
+      platformFeesInSol = 2 * (1 / solPrice.solana.usd) * LAMPORTS_PER_SOL;
+    } catch (err) {
+      platformFeesInSol = 0.01 * LAMPORTS_PER_SOL;
+    }
 
     const createResults = await sendTx(
       this.connection,
@@ -140,7 +152,7 @@ export class PumpFunSDK {
       commitment,
     );
 
-    const platformFeesInSol = 0;
+    const platformFeesInSol = (2 / 100) * buyAmountSol;
 
     const buyResults = await sendTx(
       this.connection,
