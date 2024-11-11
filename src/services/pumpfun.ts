@@ -119,8 +119,9 @@ export class PumpFunSDK {
     let platformFeesInSol;
     try {
       const solPrice = await homeApiClient.solPrice();
-      platformFeesInSol = 2 * (1 / solPrice.solana.usd);
+      platformFeesInSol = 2 * parseFloat((1 / solPrice.solana.usd).toFixed(3));
     } catch (err) {
+      console.log(err);
       platformFeesInSol = 0.01;
     }
 
