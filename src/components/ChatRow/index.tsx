@@ -24,7 +24,7 @@ function ChatRowComponent(props: any) {
         </Text>
         <Text opacity={0.8}>{props.message}</Text>
       </HStack>
-      <Text>
+      <Text className="text-[8px] sm:text-xs">
         {dateFormat(
           new Date(parseInt(props.timestamp, 10)),
           "HH:MM TT, dS mmm yyyy",

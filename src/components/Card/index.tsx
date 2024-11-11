@@ -32,6 +32,7 @@ const Container = styled.div`
   .card-main {
     transition: background-color 50ms;
     padding: 1rem;
+    cursor: pointer;
   }
   .card-main:hover {
     background-color: #211e1e;

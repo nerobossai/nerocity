@@ -13,6 +13,7 @@ const Index = () => {
         meta={
           <Meta title={AppConfig.title} description={AppConfig.description} />
         }
+        nofooter
       >
         <CoinModule />
       </Main>

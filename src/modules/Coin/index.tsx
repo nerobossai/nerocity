@@ -182,7 +182,8 @@ function CoinModule() {
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </Box>
       );
-    } else if (selectedTab === "Buy/Sell") {
+    }
+    if (selectedTab === "Buy/Sell") {
       return (
         <Box
           width="100%"
@@ -202,14 +203,16 @@ function CoinModule() {
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </Box>
       );
-    } else if (selectedTab === "Comments") {
+    }
+    if (selectedTab === "Comments") {
       return (
         <Box
           width="100%"
           display="flex"
-          height="80vh"
+          minHeight="80vh"
           flexDirection="column"
           padding="1rem"
+          gap="20px"
         >
           <ChatModule agentId={agentDetails.id} />
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />

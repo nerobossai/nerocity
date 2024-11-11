@@ -74,7 +74,12 @@ function ChatModule(props: { agentId: string }) {
   }, []);
 
   return (
-    <Stack backgroundColor="grey.50" padding="1rem" flexGrow="1">
+    <Stack
+      backgroundColor="grey.50"
+      padding="1rem"
+      flexGrow="1"
+      marginBottom="4rem"
+    >
       <Text>Chat with agent and users</Text>
       {(chats?.chats || []).map((data) => {
         return (

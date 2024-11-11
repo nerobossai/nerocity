@@ -1,4 +1,4 @@
-import { Button, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -205,6 +205,7 @@ function HomeModule() {
           _hover={{
             opacity: 0.8,
           }}
+          marginTop="20px"
           onClick={() => navigator.push(Paths.createAgent)}
         >
           Launch your AI agent coin
@@ -212,12 +213,20 @@ function HomeModule() {
         {overlord && <OverlordModule overlord={overlord} />}
         <SearchModule />
         {feedLoading ? (
-          <Spinner />
+          <Box
+            width="100%"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="60vh"
+          >
+            <Spinner />
+          </Box>
         ) : (
           <Stack
             marginTop="2rem"
             fontSize={{ base: "16px", sm: "12px" }}
-            alignItems={{ base: "flex-start", md: "center", lg: "center" }}
+            alignItems="flex-start"
             padding="1rem"
           >
             <Button
@@ -227,6 +236,7 @@ function HomeModule() {
                 opacity: 0.8,
               }}
               maxW={{ md: "200px", lg: "250px" }}
+              margin={{ base: "0px", md: "20px" }}
             >
               sort: created at
             </Button>

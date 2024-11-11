@@ -34,26 +34,27 @@ function ChatModelComponent(props: ChatModelProps) {
       >
         <ModalHeader>Add a comment</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody width="95%">
           <Stack>
             <Text>Comment</Text>
             <Textarea
               backgroundColor="grey.100"
               border={0}
               focusBorderColor="grey.50"
-              width="30vw"
-              height="20vh"
+              width="100%"
+              minHeight="20vh"
               onChange={(e) => props.onChangeMessage(e.target.value)}
             />
           </Stack>
         </ModalBody>
 
-        <ModalFooter>
+        <ModalFooter width="70%" margin="15px">
           <Button
             isLoading={props.isLoading}
             fontSize="12px"
             fontWeight="bold"
             onClick={props.onSubmit}
+            width="100%"
           >
             Post Comment
           </Button>
