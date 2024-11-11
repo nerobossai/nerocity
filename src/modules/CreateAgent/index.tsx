@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Center,
   Input,
@@ -12,9 +13,9 @@ import { Keypair } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { AiOutlineFileAdd } from "react-icons/ai";
-import { FaSquareXTwitter } from "react-icons/fa6";
+import { RiTwitterXFill } from "react-icons/ri";
 import styled from "styled-components";
+import z from "zod";
 
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
@@ -48,6 +49,21 @@ const DropContainer = styled.div`
   align-items: center;
 `;
 
+const nameSchema = z
+  .string()
+  .regex(
+    /^[a-zA-Z0-9]+$/,
+    "Name can only contain letters and numbers with no spaces.",
+  )
+  .min(1, "Name is required.");
+
+const tickerSchema = z
+  .string()
+  .regex(
+    /^[A-Za-z]{1,6}$/,
+    "Ticker must be 1-6 alphabetic characters with no spaces or numbers.",
+  );
+
 function CreateAgentModule() {
   const toast = useToast();
   const navigator = useRouter();
@@ -55,23 +71,45 @@ function CreateAgentModule() {
   const { connection } = useConnection();
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [progressMessage, setProgressMessage] = useState<string>("");
-  const [dropDisabled, setDropDisabled] = useState<boolean>(false);
   const [ticker, setTicker] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [twitterHandle, setTwitterHandle] = useState("");
+  const [telegramHandle, setTelegramHandle] = useState("");
   const [loading, setLoading] = useState(false);
-  const [files, setFiles] = useState<File[]>();
+  const [file, setFile] = useState<File | null>(null);
+  const [errors, setErrors] = useState<{ name?: string; ticker?: string }>({});
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    setDropDisabled(true);
-    setFiles(acceptedFiles);
+    if (acceptedFiles.length > 0) {
+      setFile(acceptedFiles[0] ?? null);
+    }
   }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    disabled: dropDisabled,
+    disabled: false,
+    multiple: false,
   });
 
   const handleSubmit = async () => {
+    const nameValidation = nameSchema.safeParse(name);
+    const tickerValidation = tickerSchema.safeParse(ticker);
+    console.log("t", nameValidation.success, tickerValidation.success);
+
+    if (!nameValidation.success || !tickerValidation.success) {
+      setErrors({
+        name: nameValidation.success
+          ? undefined
+          : nameValidation?.error?.issues[0]?.message,
+        ticker: tickerValidation.success
+          ? undefined
+          : tickerValidation?.error?.issues[0]?.message,
+      });
+      return;
+    }
+
+    setErrors({});
     try {
       if (!publicKey) {
         toast({
@@ -83,7 +121,7 @@ function CreateAgentModule() {
         return;
       }
 
-      if (!files || files.length === 0) {
+      if (!file) {
         toast({
           title: "Error",
           description: "Please select image",
@@ -101,9 +139,9 @@ function CreateAgentModule() {
         name,
         symbol: ticker,
         description,
-        file: files[0]!,
-        // twitter: string;
-        // telegram?: string;
+        file: file!,
+        // twitter: twitterHandle,
+        telegram: telegramHandle,
         // website?: string;
       };
 
@@ -146,7 +184,12 @@ function CreateAgentModule() {
 
   return (
     <Container>
-      <Stack backgroundColor="grey.50" padding="1rem" borderRadius="1rem">
+      <Stack
+        backgroundColor="grey.50"
+        padding="2rem"
+        borderRadius="1rem"
+        gap="20px"
+      >
         <Text fontSize="24px" fontWeight="bold" textAlign="center">
           Create an agent
         </Text>
@@ -159,6 +202,11 @@ function CreateAgentModule() {
             onChange={(e) => setName(e.target.value)}
             value={name}
           />
+          {errors.name && (
+            <Text color="red.500" fontSize="12px">
+              *{errors.name}
+            </Text>
+          )}
         </VStack>
         <VStack alignItems="start" justifyContent="start">
           <Text>Ticker</Text>
@@ -169,6 +217,11 @@ function CreateAgentModule() {
             onChange={(e) => setTicker(e.target.value)}
             value={ticker}
           />
+          {errors.ticker && (
+            <Text color="red.500" fontSize="12px">
+              *{errors.ticker}
+            </Text>
+          )}
         </VStack>
         <VStack alignItems="start" justifyContent="start">
           <Text>Description</Text>
@@ -180,55 +233,87 @@ function CreateAgentModule() {
             value={description}
           />
         </VStack>
-        <VStack alignItems="start" justifyContent="start">
-          <Text>Image</Text>
-          <DropContainer {...getRootProps()}>
-            <input {...getInputProps()} />
-            {files && files?.length > 0 ? (
-              <div className="noselect">
-                <Text fontSize={["sm", "lg", "xl"]} fontWeight={250}>
-                  {files[0]?.name}
-                </Text>
-              </div>
-            ) : (
-              <>
-                <AiOutlineFileAdd size={40} />
-                <div className="noselect">
-                  <Text fontSize={["sm", "lg", "xl"]} fontWeight={250}>
-                    {isDragActive
-                      ? "Drop the file here ..."
-                      : `Drop file here, or click to select file`}
-                  </Text>
-                </div>
-              </>
+        <VStack alignItems="start">
+          <Text>Add Image</Text>
+          <Box
+            display="flex"
+            alignItems="center"
+            backgroundColor="grey.100"
+            p={2}
+            borderRadius="md"
+            {...getRootProps()}
+            width="100%"
+          >
+            <Button
+              as="span"
+              colorScheme="teal"
+              size="sm"
+              height="45px"
+              padding="2rem"
+              backgroundColor="grey.75"
+              _hover={{ backgroundColor: "grey.75" }}
+              cursor="pointer"
+            >
+              Choose file
+            </Button>
+            <input
+              id="file-upload"
+              style={{ display: "none" }}
+              {...getInputProps()}
+            />
+            {file && (
+              <Text ml={3} p={2} borderRadius="md" fontSize="sm">
+                {file.name}
+              </Text>
             )}
-          </DropContainer>
+          </Box>
         </VStack>
-        <VStack alignItems="start" justifyContent="start" paddingBottom="1rem">
-          <Text color="grey.600" opacity={0.5}>
-            Connect your agent's twitter account and your agent will start
+        <VStack alignItems="start" justifyContent="start">
+          <Text>Twitter (optional)</Text>
+          <Button
+            rightIcon={<RiTwitterXFill size="15px" />}
+            color="primary"
+            _hover={{
+              opacity: 0.8,
+            }}
+            padding="1.5rem"
+            backgroundColor="grey.75"
+          >
+            connect
+          </Button>
+          <Text color="grey.600" opacity={0.5} fontSize="12px">
+            *Connect your agent's twitter account and your agent will start
             posting autonomously
           </Text>
-          <Button
+        </VStack>
+        {/* <Button
             leftIcon={<FaSquareXTwitter size="25px" />}
             _hover={{
               opacity: 0.8,
             }}
           >
             Connect Twitter
-          </Button>
+        </Button> */}
+        <VStack alignItems="start" justifyContent="start" paddingBottom="1rem">
+          <Text>Telegram (optional)</Text>
+          <Input
+            backgroundColor="grey.100"
+            border={0}
+            focusBorderColor="grey.50"
+            onChange={(e) => setTelegramHandle(e.target.value)}
+            value={telegramHandle}
+          />
         </VStack>
         <Center>
           <Button
-            colorScheme="blue"
-            width="30vw"
+            width={{ base: "auto", md: "20vw" }}
             _hover={{
               opacity: 0.8,
             }}
             isLoading={loading}
             onClick={handleSubmit}
           >
-            Create Agent
+            Create my Agent
           </Button>
         </Center>
       </Stack>

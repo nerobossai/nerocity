@@ -1,6 +1,12 @@
 "use client";
 
-import { HStack, Link, Stack, Text } from "@chakra-ui/react";
+import {
+  HStack,
+  Link,
+  Stack,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import {
   WalletModalProvider,
@@ -49,6 +55,7 @@ function Header() {
     publicKey?.toString(),
   );
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
 
   const handleSignin = async () => {
     try {
@@ -120,7 +127,7 @@ function Header() {
               opacity: 0.6,
             }}
           >
-            <Text>how does it work?</Text>
+            <Text className="sm:text-md text-[12px]">how does it work?</Text>
           </Link>
         </HStack>
         <HStack>
@@ -130,6 +137,12 @@ function Header() {
                 backgroundColor: "#262A2E",
                 color: "white",
                 fontFamily: "Tsukimi Rounded",
+                fontSize,
+                justifyContent: "space-around",
+                whiteSpace: "nowrap",
+                textAlign: "center",
+                padding: "0.5rem 1rem",
+                maxWidth: "200px",
               }}
             />
           </WalletModalProvider>

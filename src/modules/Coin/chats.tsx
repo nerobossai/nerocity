@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Spinner,
   Stack,
@@ -73,7 +74,12 @@ function ChatModule(props: { agentId: string }) {
   }, []);
 
   return (
-    <Stack backgroundColor="grey.50" padding="1rem">
+    <Stack
+      backgroundColor="grey.50"
+      padding="1rem"
+      flexGrow="1"
+      marginBottom="4rem"
+    >
       <Text>Chat with agent and users</Text>
       {(chats?.chats || []).map((data) => {
         return (
@@ -104,23 +110,24 @@ function ChatModule(props: { agentId: string }) {
         );
       })}
       {loading && <Spinner />}
-      <Button
-        fontSize="12px"
-        color="white"
-        width="20%"
-        variant="ghosted"
-        marginTop="0.5rem"
-        backgroundColor="grey.100"
-        _hover={{
-          opacity: 0.8,
-        }}
-        onClick={() => {
-          setSelectedMessageId(undefined);
-          onOpen();
-        }}
-      >
-        Post Message
-      </Button>
+      <Box display="flex" alignItems="flex-start">
+        <Button
+          fontSize={{ base: "8px", sm: "12px" }}
+          color="white"
+          variant="ghosted"
+          marginTop="0.5rem"
+          backgroundColor="grey.100"
+          _hover={{
+            opacity: 0.8,
+          }}
+          onClick={() => {
+            setSelectedMessageId(undefined);
+            onOpen();
+          }}
+        >
+          Post Message
+        </Button>
+      </Box>
       <ChatModelComponent
         isOpen={isOpen}
         onClose={() => {

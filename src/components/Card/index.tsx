@@ -25,12 +25,14 @@ export type CardProps = {
   current_virtual_token_reserves?: number;
   current_token_total_supply?: number;
   onClick?: any;
+  completionPercent?: number;
 };
 
 const Container = styled.div`
   .card-main {
     transition: background-color 50ms;
     padding: 1rem;
+    cursor: pointer;
   }
   .card-main:hover {
     background-color: #211e1e;

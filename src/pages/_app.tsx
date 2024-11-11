@@ -9,6 +9,7 @@ import {
 import { UnsafeBurnerWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 import { useEffect, useMemo, useState } from "react";
 
 import useUserStore from "@/stores/useUserStore";
@@ -87,6 +88,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <ChakraProvider theme={theme}>
+          <Head>
+            <link
+              href="https://fonts.googleapis.com/css2?family=Tsukimi+Rounded:wght@300;400;500;600;700&display=swap"
+              rel="stylesheet"
+            />
+          </Head>
           <Component {...pageProps} />
         </ChakraProvider>
       </WalletProvider>

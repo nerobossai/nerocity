@@ -1,4 +1,4 @@
-import { Button, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -16,9 +16,8 @@ import { homeApiClient } from "./services/homeApiClient";
 const Container = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  padding: 1rem;
 `;
 
 const DummyData = [
@@ -206,6 +205,7 @@ function HomeModule() {
           _hover={{
             opacity: 0.8,
           }}
+          marginTop="20px"
           onClick={() => navigator.push(Paths.createAgent)}
         >
           Launch your AI agent coin
@@ -213,20 +213,39 @@ function HomeModule() {
         {overlord && <OverlordModule overlord={overlord} />}
         <SearchModule />
         {feedLoading ? (
-          <Spinner />
+          <Box
+            width="100%"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="60vh"
+          >
+            <Spinner />
+          </Box>
         ) : (
-          <Stack marginTop="2rem">
+          <Stack
+            marginTop="2rem"
+            fontSize={{ base: "16px", sm: "12px" }}
+            alignItems="flex-start"
+            padding="1rem"
+          >
             <Button
-              marginLeft="1rem"
-              maxWidth="15vw"
+              fontSize={{ base: "sm", md: "md", lg: "lg" }}
               colorScheme="blue"
               _hover={{
                 opacity: 0.8,
               }}
+              maxW={{ md: "200px", lg: "250px" }}
+              margin={{ base: "0px", md: "20px" }}
             >
               sort: created at
             </Button>
-            <SimpleGrid columns={3} spacing={10}>
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 3 }}
+              spacing={10}
+              padding={0}
+              margin={{ base: "0px", md: "20px" }}
+            >
               {feed.map((data: any) => {
                 return <Card {...data} key={data.id} />;
               })}

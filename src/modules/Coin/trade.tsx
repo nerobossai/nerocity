@@ -141,7 +141,7 @@ function TradeModule(props: TradeModuleProps) {
   }, []);
 
   return (
-    <Stack marginTop="1rem">
+    <Stack marginTop="1rem" flexGrow="1">
       <HStack
         spacing="3rem"
         padding="1rem"
