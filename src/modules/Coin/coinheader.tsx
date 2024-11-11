@@ -35,7 +35,7 @@ function CoinHeaderModule(props: CardProps) {
             {props.name}
           </Text>
           <Text fontSize="24px" fontWeight="bold">
-            {props.ticker}
+            {`$${props.ticker}`}
           </Text>
         </HStack>
 
@@ -106,7 +106,7 @@ function CoinHeaderModule(props: CardProps) {
   return (
     <HStack marginTop="1rem" justifyContent="space-between">
       <Text fontSize="24px" fontWeight="bold">
-        {props.name} {props.ticker}
+        {props.name} {`$${props.ticker}`}
       </Text>
       <HStack
         spacing="5rem"

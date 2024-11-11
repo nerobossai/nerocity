@@ -108,10 +108,11 @@ function HomeModule() {
               sort: created at
             </Button>
             <SimpleGrid
-              columns={{ base: 1, md: 2, lg: 3 }}
+              columns={{ base: 1, md: 1, lg: 3 }}
               spacing={10}
               padding={0}
-              margin={{ base: "0px", md: "20px" }}
+              marginBottom={{ base: "40px", md: "40px" }}
+              marginLeft={{ base: "0", md: "20px" }}
             >
               {feed.map((data: any) => {
                 return parseFloat(data.market_cap) >= 0 ? (

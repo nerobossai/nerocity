@@ -1,4 +1,10 @@
-import { HStack, Image, Stack, Text } from "@chakra-ui/react";
+import {
+  HStack,
+  Image,
+  Stack,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
@@ -38,6 +44,7 @@ const Container = styled.div`
     transition: background-color 50ms;
     padding: 1rem;
     cursor: pointer;
+    height: 100%;
   }
   .card-main:hover {
     background-color: #211e1e;
@@ -53,13 +60,20 @@ function Card(props: CardProps) {
       navigator.push(props.id);
     }
   };
+
+  const direction = useBreakpointValue<"row" | "column">({
+    base: "column",
+    md: "row",
+  });
+
   return (
     <Container onClick={handleClick}>
-      <HStack
+      <Stack
         className="card-main"
         justifyContent="start"
         alignItems="start"
         spacing="1rem"
+        direction={direction}
       >
         <Image
           boxSize="8rem"
@@ -84,7 +98,7 @@ function Card(props: CardProps) {
           </Text>
           <Text fontSize="12px">Replies {props.replies}</Text>
           <Text fontWeight="bold" fontSize="20px">
-            {props.name} ${props.ticker}
+            {props.name} ${`$${props.ticker}`}
           </Text>
           {props.description && (
             <Text
@@ -95,7 +109,7 @@ function Card(props: CardProps) {
             </Text>
           )}
         </Stack>
-      </HStack>
+      </Stack>
     </Container>
   );
 }
