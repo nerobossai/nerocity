@@ -148,7 +148,13 @@ function CoinModule() {
   if (!isLargeScreen && agentDetails) {
     if (selectedTab === "Info") {
       return (
-        <Box width="100%" display="flex" height="80vh" flexDirection="column">
+        <Box
+          width="100%"
+          display="flex"
+          height="80vh"
+          flexDirection="column"
+          padding="1rem"
+        >
           <CoinHeaderModule
             {...agentDetails}
             market_cap={marketCap || "0"}

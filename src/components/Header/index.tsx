@@ -20,6 +20,7 @@ import { authApiClient } from "@/modules/Home/services/authApiClient";
 import useUserStore from "@/stores/useUserStore";
 import * as AuthUtils from "@/utils/AuthUtils";
 
+import HelpComponent from "../Help";
 import { Logo } from "../Svgs/Logo";
 
 const Container = styled.header`
@@ -55,6 +56,7 @@ function Header() {
     publicKey?.toString(),
   );
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [openHelp, setOpenHelp] = useState(false);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
 
   const handleSignin = async () => {
@@ -119,16 +121,14 @@ function Header() {
           <Link href="/">
             <Logo />
           </Link>
-          <Link
-            href="/"
-            paddingLeft="2rem"
-            _hover={{
-              textDecoration: "none",
-              opacity: 0.6,
-            }}
+          <Text
+            className="sm:text-md pointer text-[12px]"
+            cursor="pointer"
+            onClick={() => setOpenHelp(true)}
           >
-            <Text className="sm:text-md text-[12px]">how does it work?</Text>
-          </Link>
+            how does it work?
+          </Text>
+          <HelpComponent isOpen={openHelp} onClose={() => setOpenHelp(false)} />
         </HStack>
         <HStack>
           <WalletModalProvider>
