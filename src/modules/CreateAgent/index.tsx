@@ -175,6 +175,7 @@ function CreateAgentModule() {
         image: tokenMetadata.image,
         mintPublicKey: tokenMint.publicKey.toString(),
         tokenMetadata,
+        twtToken,
       });
       navigator.replace(Paths.home);
       toast({
