@@ -11,6 +11,7 @@ export type LaunchAgentBody = {
   mintPublicKey: string;
   tokenMetadata: TokenMetadata;
   telegram?: string;
+  twtToken?: string;
 };
 
 export type LaunchSuccessResponse = {
