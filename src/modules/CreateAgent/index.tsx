@@ -24,6 +24,7 @@ import { tailwindConfig } from "@/styles/global";
 import { logger } from "@/utils/Logger";
 
 import { agentApiClient } from "./services/agentApiClient";
+import { trackAgentCreation } from "./services/analytics";
 
 const Container = styled.div`
   width: 100%;
@@ -176,6 +177,17 @@ function CreateAgentModule() {
         mintPublicKey: tokenMint.publicKey.toString(),
         tokenMetadata,
         twtToken,
+      });
+      trackAgentCreation({
+        agent_address: tokenMint.publicKey.toString(),
+        timestamp: Date.now(),
+        agent_details: {
+          name,
+          description,
+          ticker,
+          image: tokenMetadata.image,
+          tokenMetadata,
+        },
       });
       navigator.replace(Paths.home);
       toast({

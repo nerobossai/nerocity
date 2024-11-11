@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import { trackWalletConnect } from "@/modules/Home/services/analytics";
 import { authApiClient } from "@/modules/Home/services/authApiClient";
 import useUserStore from "@/stores/useUserStore";
 import * as AuthUtils from "@/utils/AuthUtils";
@@ -84,6 +85,10 @@ function Header() {
 
       // set state
       const status = AuthUtils.setProfileInStorage(profileObject);
+      trackWalletConnect({
+        wallet_address:
+          publicKey?.toString() || data.account.publicKey.toString(),
+      });
 
       if (!status) {
         throw new Error("Something went wrong!");

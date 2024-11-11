@@ -7,16 +7,19 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import React, { useEffect, useState } from "react";
 
 import ChatModelComponent from "@/components/ChatModel";
 import ChatRowComponent from "@/components/ChatRow";
 
+import { trackComment, trackReply } from "./services/analytics";
 import type { ChatsResponse } from "./services/coinApiClient";
 import { coinApiClient } from "./services/coinApiClient";
 
 function ChatModule(props: { agentId: string }) {
   const toast = useToast();
+  const { publicKey } = useWallet();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [comment, setComment] = useState("");
   const [selectedMessageId, setSelectedMessageId] = useState<
@@ -48,6 +51,19 @@ function ChatModule(props: { agentId: string }) {
         agent_id: props.agentId,
         is_reply: !!selectedMessageId,
       });
+      if (selectedMessageId) {
+        trackReply({
+          agent_address: props.agentId,
+          wallet_address: publicKey?.toString() || "",
+          timestamp: Date.now(),
+        });
+      } else {
+        trackComment({
+          agent_address: props.agentId,
+          wallet_address: publicKey?.toString() || "",
+          timestamp: Date.now(),
+        });
+      }
       onClose();
       toast({
         title: "Success",
