@@ -5,8 +5,8 @@ import { userStore } from "@/stores/useUserStore";
 
 export const ENDPOINT =
   process.env.NODE_ENV === "development"
-    ? "https://aibj3eljy6.execute-api.us-east-1.amazonaws.com"
-    : "https://aibj3eljy6.execute-api.us-east-1.amazonaws.com";
+    ? "https://api.martian.fun"
+    : "https://api.martian.fun";
 
 interface BaseApiClientProps {
   baseURL?: string;
