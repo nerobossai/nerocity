@@ -3,7 +3,7 @@ import React from "react";
 
 import type { CardProps } from "@/components/Card";
 
-function AboutModule(props: CardProps) {
+function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
   return (
     <Stack fontSize="12px" spacing="1rem" marginTop="1rem">
       <HStack justifyContent="start" alignItems="start" spacing="1rem">
@@ -22,8 +22,8 @@ function AboutModule(props: CardProps) {
         When the market cap reaches $69k all the liquidity from the bonding
         curve will be deposited into Raydium and burned. <br /> <br /> There are{" "}
         {props.current_real_token_reserves || 0} tokens still available for sale
-        in the bonding curve, and there is {props.current_virtual_sol_reserves}{" "}
-        SOL in the bonding curve.
+        in the bonding curve, and there is {props.sol_reserve || 0} SOL in the
+        bonding curve.
       </Text>
     </Stack>
   );
