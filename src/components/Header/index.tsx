@@ -23,8 +23,8 @@ import { authApiClient } from "@/modules/Home/services/authApiClient";
 import useUserStore from "@/stores/useUserStore";
 import * as AuthUtils from "@/utils/AuthUtils";
 
-import ProfileModalComponent from "../ProfileModal";
 import HelpComponent from "../Help";
+import ProfileModalComponent from "../ProfileModal";
 import { Logo } from "../Svgs/Logo";
 
 const Container = styled.header`

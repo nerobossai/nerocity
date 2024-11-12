@@ -81,7 +81,9 @@ function Card(props: CardProps) {
             {props.name} ${props.ticker}
           </Text>
           {props.description && (
-            <Text maxWidth="20rem" fontSize={{ base: "10px", md: "14px" }}>{props.description || ""}</Text>
+            <Text maxWidth="20rem" fontSize={{ base: "10px", md: "14px" }}>
+              {props.description || ""}
+            </Text>
           )}
         </Stack>
       </HStack>
