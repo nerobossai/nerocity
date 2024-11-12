@@ -18,11 +18,13 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import { trackWalletConnect } from "@/modules/Home/services/analytics";
 import { authApiClient } from "@/modules/Home/services/authApiClient";
 import useUserStore from "@/stores/useUserStore";
 import * as AuthUtils from "@/utils/AuthUtils";
 
 import ProfileModalComponent from "../ProfileModal";
+import HelpComponent from "../Help";
 import { Logo } from "../Svgs/Logo";
 
 const Container = styled.header`
@@ -59,6 +61,7 @@ function Header() {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
+  const [openHelp, setOpenHelp] = useState(false);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
 
   const handleSignin = async () => {
@@ -86,6 +89,10 @@ function Header() {
 
       // set state
       const status = AuthUtils.setProfileInStorage(profileObject);
+      trackWalletConnect({
+        wallet_address:
+          publicKey?.toString() || data.account.publicKey.toString(),
+      });
 
       if (!status) {
         throw new Error("Something went wrong!");
@@ -136,16 +143,14 @@ function Header() {
           <Link href="/">
             <Logo />
           </Link>
-          <Link
-            href="/"
-            paddingLeft="2rem"
-            _hover={{
-              textDecoration: "none",
-              opacity: 0.6,
-            }}
+          <Text
+            className="sm:text-md pointer text-[12px]"
+            cursor="pointer"
+            onClick={() => setOpenHelp(true)}
           >
-            <Text className="sm:text-md text-[12px]">how does it work?</Text>
-          </Link>
+            how does it work?
+          </Text>
+          <HelpComponent isOpen={openHelp} onClose={() => setOpenHelp(false)} />
         </HStack>
         <HStack>
           {isAuthenticated ? (

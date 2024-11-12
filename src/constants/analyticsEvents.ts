@@ -1,6 +1,9 @@
 export const AnalyticsEvents = {
   visitors: "visitors",
-  login: "login",
-  otp_req: "otp_req",
-  app_connect_request: "app_connect_request",
+  wallet_connect: "Wallet connect",
+  agent_creation: "Agent creation",
+  buy: "Buy",
+  sell: "Sell",
+  reply: "Reply",
+  comment: "Comment",
 };

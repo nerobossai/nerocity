@@ -9,6 +9,7 @@ import {
 import React from "react";
 
 import type { CardProps } from "@/components/Card";
+import SubscriptText from "@/components/SubscriptText";
 import { getSolScanLink } from "@/utils";
 import { timeDifference } from "@/utils/timeDifference";
 import { truncateString } from "@/utils/truncateString";
@@ -48,7 +49,7 @@ function CoinHeaderModule(props: CardProps) {
             <Text fontWeight="bold" color="green.50">
               Market Cap
             </Text>
-            <Text>${props.market_cap}</Text>
+            <SubscriptText value={props.market_cap} />
           </VStack>
 
           <VStack
@@ -118,7 +119,7 @@ function CoinHeaderModule(props: CardProps) {
           fontSize="12px"
         >
           <Text>Market Cap</Text>
-          <Text>${props.market_cap}</Text>
+          <SubscriptText value={props.market_cap} />
         </VStack>
         <VStack textAlign="center" fontSize="12px">
           <Text>Coin Address</Text>

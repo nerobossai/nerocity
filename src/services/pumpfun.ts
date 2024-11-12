@@ -11,10 +11,16 @@ import type {
   Keypair,
   VersionedTransaction,
 } from "@solana/web3.js";
-import { Connection, PublicKey, Transaction } from "@solana/web3.js";
+import {
+  Connection,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  Transaction,
+} from "@solana/web3.js";
 import { BN } from "bn.js";
 
 import { RPC_NODE_URL } from "@/constants/platform";
+import { homeApiClient } from "@/modules/Home/services/homeApiClient";
 
 import { ENDPOINT } from "./baseApiClient";
 import { BondingCurveAccount } from "./bondingCurveAccount";
@@ -69,7 +75,10 @@ export class PumpFunSDK {
   async createAndBuy(
     creator: PublicKey,
     mint: Keypair,
-    createTokenMetadata: CreateTokenMetadata,
+    tokenMetadata: {
+      metadata: TokenMetadata;
+      metadataUri: string;
+    },
     buyAmountSol: number,
     slippageBasisPoints: number = 500,
     priorityFees?: PriorityFee,
@@ -78,12 +87,10 @@ export class PumpFunSDK {
     createResults: VersionedTransaction;
     tokenMetadata: TokenMetadata;
   }> {
-    const tokenMetadata = await this.createTokenMetadata(createTokenMetadata);
-
     const createTx = await this.getCreateInstructions(
       creator,
-      createTokenMetadata.name,
-      createTokenMetadata.symbol,
+      tokenMetadata.metadata.name,
+      tokenMetadata.metadata.symbol,
       tokenMetadata.metadataUri,
       mint,
     );
@@ -109,7 +116,14 @@ export class PumpFunSDK {
       newTx.add(buyTx);
     }
 
-    const platformFeesInSol = 0;
+    let platformFeesInSol;
+    try {
+      const solPrice = await homeApiClient.solPrice();
+      platformFeesInSol = 2 * parseFloat((1 / solPrice.solana.usd).toFixed(3));
+    } catch (err) {
+      console.log(err);
+      platformFeesInSol = 0.01;
+    }
 
     const createResults = await sendTx(
       this.connection,
@@ -139,7 +153,7 @@ export class PumpFunSDK {
       commitment,
     );
 
-    const platformFeesInSol = 0;
+    const platformFeesInSol = ((2 / 100) * buyAmountSol) / LAMPORTS_PER_SOL;
 
     const buyResults = await sendTx(
       this.connection,

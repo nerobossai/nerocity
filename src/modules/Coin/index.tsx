@@ -40,7 +40,7 @@ function CoinModule() {
   const [price, setPrice] = useState<string>();
   const [marketCap, setMarketCap] = useState<string>();
   const [realTokenReserve, setRealTokenReserve] = useState<number>();
-  const [realSolReserve, setRealSolReserve] = useState<number>();
+  const [realSolReserve, setRealSolReserve] = useState<string>();
   const [completionPercent, setCompletionPercent] = useState<number>(0);
   const [tokenHolders, setTokenHolders] = useState<string>("0");
   const [candlestickData, setCandlestickData] = useState<CandlestickResponse>();
@@ -113,7 +113,7 @@ function CoinModule() {
       parseInt(((tmp.realTokenReserves || 0) / 10 ** 6).toString(10), 10),
     );
     setRealSolReserve(
-      Math.floor((tmp.realSolReserves || 0) / LAMPORTS_PER_SOL),
+      ((tmp.realSolReserves || 0) / LAMPORTS_PER_SOL).toFixed(2),
     );
 
     const prices = await homeApiClient.candlestickData(ag.mint_public_key);
@@ -148,7 +148,13 @@ function CoinModule() {
   if (!isLargeScreen && agentDetails) {
     if (selectedTab === "Info") {
       return (
-        <Box width="100%" display="flex" height="80vh" flexDirection="column">
+        <Box
+          width="100%"
+          display="flex"
+          height="80vh"
+          flexDirection="column"
+          padding="1rem"
+        >
           <CoinHeaderModule
             {...agentDetails}
             market_cap={marketCap || "0"}
@@ -276,7 +282,7 @@ function CoinModule() {
               <AboutModule
                 {...agentDetails}
                 current_real_token_reserves={realTokenReserve}
-                current_virtual_sol_reserves={realSolReserve}
+                sol_reserve={realSolReserve}
               />
               <ProgressModule completionPercent={completionPercent} />
             </>

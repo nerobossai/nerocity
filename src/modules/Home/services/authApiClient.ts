@@ -12,6 +12,10 @@ export type ValidateTokenBody = {
   token: string;
 };
 
+export type ValidateReferralBody = {
+  code: string;
+};
+
 export type AuthSuccessResponse = {
   status: string;
   token: string;
@@ -54,7 +58,22 @@ class ApiClient extends BaseApiClient {
           token: body.token,
         },
       });
-      return resp.data.is_valid;
+      return resp.data.valid;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async validateReferral(body: ValidateReferralBody) {
+    try {
+      const resp = await this.apiCall({
+        type: "POST",
+        url: ApiEndpoints.auth.validateReferral,
+        body: {
+          code: body.code,
+        },
+      });
+      return resp.data.valid;
     } catch (err: any) {
       return Promise.reject(getErrorMessageFromAxios(err));
     }

@@ -14,13 +14,16 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import React, { useEffect, useState } from "react";
 
+import SubscriptText from "@/components/SubscriptText";
 import { pumpFunSdk } from "@/services/pumpfun";
+import { logger } from "@/utils/Logger";
 
 import type {
   AgentResponse,
   SolanaPriceResponse,
 } from "../Home/services/homeApiClient";
 import { homeApiClient } from "../Home/services/homeApiClient";
+import { trackBuy, trackSell } from "./services/analytics";
 
 export type TradeModuleProps = {
   currentPrice: string;
@@ -110,7 +113,42 @@ function TradeModule(props: TradeModuleProps) {
       }
 
       const txnResp = await sendTransaction(txn, connection);
-      connection.confirmTransaction(txnResp, "confirmed");
+      await connection.confirmTransaction(txnResp, "confirmed");
+
+      // for analytics
+      switch (active) {
+        case "buy": {
+          const platformFeesInSol = (2 / 100) * parseFloat(input);
+          trackBuy({
+            agent_address: props.tokenDetails.mint_public_key,
+            timestamp: Date.now(),
+            wallet_address: publicKey.toString(),
+            amount_of_coins_bought_dollar:
+              parseFloat(input) * (solPrice?.solana.usd || 169.551),
+            revenue_in_dollar:
+              platformFeesInSol * (solPrice?.solana.usd || 169.551),
+            amount_of_coins_bought_sol: parseFloat(input),
+            revenue_in_sol: platformFeesInSol,
+          });
+          break;
+        }
+        case "sell": {
+          trackSell({
+            agent_address: props.tokenDetails.mint_public_key,
+            timestamp: Date.now(),
+            wallet_address: publicKey.toString(),
+            amount_of_coins_sold_dollar: parseFloat(
+              dollarInput?.toString() || "0",
+            ),
+            amount_of_coins_sold_token: parseFloat(input),
+          });
+          break;
+        }
+        default: {
+          logger.log("default case");
+        }
+      }
+
       toast({
         title: "Success",
         description: "Txn submitted successfully",
@@ -156,7 +194,7 @@ function TradeModule(props: TradeModuleProps) {
           fontSize="12px"
         >
           <Text>Price</Text>
-          <Text>${props.currentPrice}</Text>
+          <SubscriptText value={props.currentPrice} />
         </VStack>
         <VStack textAlign="center" fontWeight="bold" fontSize="12px">
           <Text>Holders</Text>

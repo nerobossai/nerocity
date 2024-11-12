@@ -248,7 +248,9 @@ function HomeModule() {
               marginLeft={{ base: "0", md: "20px" }}
             >
               {feed.map((data: any) => {
-                return <Card {...data} key={data.id} />;
+                return parseFloat(data.market_cap) > 0 ? (
+                  <Card {...data} key={data.id} />
+                ) : null;
               })}
             </SimpleGrid>
           </Stack>

@@ -6,12 +6,12 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import { UnsafeBurnerWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useMemo, useState } from "react";
 
+import ReferralModule from "@/modules/Referral";
 import useUserStore from "@/stores/useUserStore";
 import { tailwindConfig } from "@/styles/global";
 import { tabsTheme } from "@/styles/tabsTheme";
@@ -55,7 +55,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   }, []);
 
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-  const network = WalletAdapterNetwork.Devnet;
+  const network = WalletAdapterNetwork.Mainnet;
 
   // You can also provide a custom RPC endpoint.
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
@@ -74,7 +74,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
        * instantiate its legacy wallet adapter here. Common legacy adapters can be found
        * in the npm package `@solana/wallet-adapter-wallets`.
        */
-      new UnsafeBurnerWalletAdapter(),
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [network],
@@ -94,6 +93,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
               rel="stylesheet"
             />
           </Head>
+          <ReferralModule />
           <Component {...pageProps} />
         </ChakraProvider>
       </WalletProvider>
