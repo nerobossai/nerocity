@@ -1,8 +1,10 @@
 import { Avatar, HStack, Text } from "@chakra-ui/react";
 import dateFormat from "dateformat";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 function ChatRowComponent(props: any) {
+  const router = useRouter();
   return (
     <HStack
       justifyContent="space-between"
@@ -11,7 +13,10 @@ function ChatRowComponent(props: any) {
       borderRadius="0.5rem"
       fontSize="12px"
     >
-      <HStack>
+      <HStack
+        onClick={() => router.push(`/profile/${props.user_details.username}`)}
+        cursor="pointer"
+      >
         <Avatar boxSize="30px" src={props.user_details.profile_pic} />
         <Text
           padding="0.3rem"
