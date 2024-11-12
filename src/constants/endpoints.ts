@@ -7,6 +7,7 @@ export const ApiEndpoints = Object.freeze({
   auth: {
     login: "/auth/login",
     validateToken: "/auth/validate-token",
+    validateReferral: "/auth/validate-referral",
   },
   agents: {
     launch: "/agents/launch",
