@@ -14,6 +14,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import React, { useEffect, useState } from "react";
 
+import SubscriptText from "@/components/SubscriptText";
 import { pumpFunSdk } from "@/services/pumpfun";
 import { logger } from "@/utils/Logger";
 
@@ -193,7 +194,7 @@ function TradeModule(props: TradeModuleProps) {
           fontSize="12px"
         >
           <Text>Price</Text>
-          <Text>${props.currentPrice}</Text>
+          <SubscriptText value={props.currentPrice} />
         </VStack>
         <VStack textAlign="center" fontWeight="bold" fontSize="12px">
           <Text>Holders</Text>
