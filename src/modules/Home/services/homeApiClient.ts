@@ -21,6 +21,7 @@ export type AgentResponse = {
   current_virtual_sol_reserves: number;
   current_virtual_token_reserves: number;
   current_token_total_supply: number;
+  complete?: boolean;
   token_metadata: {
     name: string;
     symbol: string;
@@ -37,6 +38,7 @@ export type FeedSuccessResponse = {
   last_index: string;
   agents: [
     {
+      complete?: boolean | undefined;
       created_by: string;
       id: string;
       name: string;

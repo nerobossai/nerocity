@@ -13,6 +13,7 @@ export type CardProps = {
   description?: string;
   market_cap: string;
   created_at: number;
+  complete?: boolean;
   replies: string;
   image: string;
   fee_basis_points?: number;
@@ -73,7 +74,9 @@ function Card(props: CardProps) {
             </Text>
           </HStack>
           <Text fontSize="12px" fontWeight="bold" color="green.50">
-            Market Cap ${props.market_cap}
+            {props.complete === true
+              ? "Raydium Pool Seeded"
+              : `Market Cap ${props.market_cap}`}
           </Text>
           <Text fontSize="12px">Replies {props.replies}</Text>
           <Text fontWeight="bold" fontSize="20px">

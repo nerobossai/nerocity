@@ -20,141 +20,6 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const DummyData = [
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-  {
-    image: "https://bit.ly/dan-abramov",
-    coinAddress: "martian12345",
-    createdBy: "123456",
-    marketCap: "32k",
-    createdAt: 1730708878676,
-    replies: "10",
-    name: "Based frog",
-    ticker: "$TYBF",
-    description:
-      "Based AI named steve playing minecraft woith his friends, wearing a chigi champs, with l rosellini lips, looking to spit out l ron hubbard but missing the scientology as he foes about his everyday boring",
-  },
-];
-
 function HomeModule() {
   const navigator = useRouter();
   const [feedLoading, setFeedLoading] = useState(false);
@@ -178,6 +43,8 @@ function HomeModule() {
             )
               .toFixed(3)
               .toString();
+
+            resp.agents[idx].complete = tmp?.complete;
           }
         }),
       );
@@ -247,7 +114,7 @@ function HomeModule() {
               margin={{ base: "0px", md: "20px" }}
             >
               {feed.map((data: any) => {
-                return parseFloat(data.market_cap) > 0 ? (
+                return parseFloat(data.market_cap) >= 0 ? (
                   <Card {...data} key={data.id} />
                 ) : null;
               })}
