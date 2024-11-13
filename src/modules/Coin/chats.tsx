@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 
 import ChatModelComponent from "@/components/ChatModel";
 import ChatRowComponent from "@/components/ChatRow";
+import useUserStore from "@/stores/useUserStore";
 
 import { trackComment, trackReply } from "./services/analytics";
 import type { ChatsResponse } from "./services/coinApiClient";
@@ -28,6 +29,8 @@ function ChatModule(props: { agentId: string }) {
   const [posting, setPosting] = useState(false);
   const [chats, setChats] = useState<ChatsResponse>();
   const [loading, setLoading] = useState(false);
+
+  const { isAuthenticated } = useUserStore();
 
   const fetchChats = async () => {
     try {
@@ -137,6 +140,15 @@ function ChatModule(props: { agentId: string }) {
             opacity: 0.8,
           }}
           onClick={() => {
+            if (!isAuthenticated) {
+              toast({
+                title: "",
+                description: "Please connect wallet to message!",
+                status: "info",
+                position: "bottom-right",
+              });
+              return;
+            }
             setSelectedMessageId(undefined);
             onOpen();
           }}
