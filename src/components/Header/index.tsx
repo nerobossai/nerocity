@@ -138,21 +138,25 @@ function Header() {
           <HelpComponent isOpen={openHelp} onClose={() => setOpenHelp(false)} />
         </HStack>
         <HStack>
-          {isLargeScreen ? <WalletModalProvider>
-            <WalletMultiButton
-              style={{
-                backgroundColor: "#262A2E",
-                color: "white",
-                fontFamily: "Tsukimi Rounded",
-                fontSize,
-                justifyContent: "space-around",
-                whiteSpace: "nowrap",
-                textAlign: "center",
-                padding: "0.5rem 1rem",
-                maxWidth: "200px",
-              }}
-            />
-          </WalletModalProvider> :<> v2 <ConnectPhantomButton /></>}
+          {isLargeScreen ? (
+            <WalletModalProvider>
+              <WalletMultiButton
+                style={{
+                  backgroundColor: "#262A2E",
+                  color: "white",
+                  fontFamily: "Tsukimi Rounded",
+                  fontSize,
+                  justifyContent: "space-around",
+                  whiteSpace: "nowrap",
+                  textAlign: "center",
+                  padding: "0.5rem 1rem",
+                  maxWidth: "200px",
+                }}
+              />
+            </WalletModalProvider>
+          ) : (
+            <ConnectPhantomButton />
+          )}
         </HStack>
       </Stack>
     </Container>
