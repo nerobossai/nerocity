@@ -215,7 +215,10 @@ function TradeModule(props: TradeModuleProps) {
         backgroundColor="grey.50"
         borderRadius="0.5rem"
       >
-        <HStack justifyContent="center">
+        <HStack
+          justifyContent="center"
+          opacity={props.pumpfunData?.complete ? "0.6" : "1"}
+        >
           <Button
             backgroundColor={active === "buy" ? "green.100" : "black"}
             color={active === "buy" ? "white" : "grey"}
@@ -225,6 +228,7 @@ function TradeModule(props: TradeModuleProps) {
               opacity: 0.8,
             }}
             onClick={() => setActive("buy")}
+            isDisabled={!!props.pumpfunData?.complete}
           >
             Buy
           </Button>
@@ -237,11 +241,12 @@ function TradeModule(props: TradeModuleProps) {
             variant="ghosted"
             width="30vw"
             onClick={() => setActive("sell")}
+            isDisabled={!!props.pumpfunData?.complete}
           >
             Sell
           </Button>
         </HStack>
-        <InputGroup>
+        <InputGroup opacity={props.pumpfunData?.complete ? "0.6" : "1"}>
           <Input
             backgroundColor="grey.100"
             border={0}
@@ -258,7 +263,10 @@ function TradeModule(props: TradeModuleProps) {
             {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`}
           </InputRightAddon>
         </InputGroup>
-        <HStack justifyContent="space-between">
+        <HStack
+          justifyContent="space-between"
+          opacity={props.pumpfunData?.complete ? "0.6" : "1"}
+        >
           <Text fontSize="10px" fontWeight="bold">
             ${dollarInput}
           </Text>
@@ -273,7 +281,7 @@ function TradeModule(props: TradeModuleProps) {
             )}
           </Text>
         </HStack>
-        <InputGroup>
+        <InputGroup opacity={props.pumpfunData?.complete ? "0.6" : "1"}>
           <Input
             backgroundColor="grey.100"
             border={0}
@@ -288,7 +296,12 @@ function TradeModule(props: TradeModuleProps) {
             {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`}
           </InputRightAddon>
         </InputGroup>
-        <Text textAlign="end" fontSize="10px" fontWeight="bold">
+        <Text
+          textAlign="end"
+          fontSize="10px"
+          fontWeight="bold"
+          opacity={props.pumpfunData?.complete ? "0.6" : "1"}
+        >
           1 {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`} = $
           {active === "sell"
             ? `${solPrice?.solana.usd}` || "$164.84"
