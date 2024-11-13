@@ -14,6 +14,7 @@ import TabBar from "@/components/TabBar";
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 import { getTokenHolders } from "@/utils/getTokenHolders";
+import { logger } from "@/utils/Logger";
 
 import type {
   AgentResponse,
@@ -25,6 +26,7 @@ import ChatModule from "./chats";
 import CoinHeaderModule from "./coinheader";
 import CandlestickChart from "./graph";
 import ProgressModule from "./progress";
+import type { PumpfunCoinResponse } from "./services/coinApiClient";
 import { coinApiClient } from "./services/coinApiClient";
 import TradeModule from "./trade";
 
@@ -32,6 +34,8 @@ const Container = styled.div`
   padding: 2rem;
   padding-top: 0rem;
 `;
+
+const RAYDIUM_MIGRATION_COMPLETED = "raydium_migration_completed";
 
 function CoinModule() {
   const router = useRouter();
@@ -45,8 +49,30 @@ function CoinModule() {
   const [tokenHolders, setTokenHolders] = useState<string>("0");
   const [candlestickData, setCandlestickData] = useState<CandlestickResponse>();
   const [selectedTab, setSelectedTab] = useState("Info");
+  const [pumpfunData, setPumpfunData] = useState<PumpfunCoinResponse>();
 
   const isLargeScreen = useBreakpointValue({ base: false, md: true });
+
+  const fetchPumpfunData = async () => {
+    try {
+      const resp = await coinApiClient.fetchPumpfunData(
+        router.query.coin as string,
+      );
+      setMarketCap(resp.usd_market_cap.toFixed(3));
+
+      const raydiumData = await coinApiClient.fetchPoolPrice(resp.raydium_pool);
+      const price = parseFloat(
+        raydiumData?.attributes?.base_token_price_usd || "0",
+      ).toExponential();
+      setPrice(price);
+      setCompletionPercent(100);
+      setPumpfunData(resp);
+    } catch (err) {
+      logger.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const startPolling = (
     timeout: number,
@@ -57,6 +83,11 @@ function CoinModule() {
     return setTimeout(async () => {
       try {
         const ag = await executePollingLogic(agent);
+        if (!ag) return;
+        if (ag === RAYDIUM_MIGRATION_COMPLETED) {
+          fetchPumpfunData();
+          return;
+        }
         startPolling(timeout, ag); // Continue polling with updated agent if necessary
       } catch (err) {
         console.error(err);
@@ -66,7 +97,9 @@ function CoinModule() {
 
   const executePollingLogic = async (
     agent?: AgentResponse,
-  ): Promise<AgentResponse | undefined> => {
+  ): Promise<
+    AgentResponse | typeof RAYDIUM_MIGRATION_COMPLETED | undefined
+  > => {
     let ag: AgentResponse;
 
     if (!agent) {
@@ -89,7 +122,13 @@ function CoinModule() {
       new PublicKey(ag.mint_public_key),
     );
 
-    if (!tmp) return;
+    if (!tmp) {
+      await router.replace(Paths.home);
+      return;
+    }
+    if (tmp.complete) {
+      return RAYDIUM_MIGRATION_COMPLETED;
+    }
 
     const solPrice = await homeApiClient.solPrice();
     const price =
@@ -173,18 +212,32 @@ function CoinModule() {
           flexDirection="column"
           padding="1rem"
         >
-          <CandlestickChart
-            marginTop="0.5rem"
-            fontSize="12px"
-            data={candlestickData || []}
-            symbol={agentDetails.ticker}
-            priceData={{
-              open: null,
-              low: null,
-              high: null,
-              close: null,
-            }}
-          />
+          {pumpfunData ? (
+            <iframe
+              height="400px"
+              width="100%"
+              id="geckoterminal-embed"
+              title="GeckoTerminal Embed"
+              src={`https://www.geckoterminal.com/solana/pools/${pumpfunData.raydium_pool}?embed=1&info=0&swaps=0`}
+              frameBorder="0"
+              allow="clipboard-write"
+              allowFullScreen
+            />
+          ) : (
+            <CandlestickChart
+              marginTop="0.5rem"
+              fontSize="12px"
+              data={candlestickData || []}
+              symbol={agentDetails.ticker}
+              priceData={{
+                open: null,
+                low: null,
+                high: null,
+                close: null,
+              }}
+            />
+          )}
+
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </Box>
       );
@@ -204,6 +257,7 @@ function CoinModule() {
               currentPrice={price || "0"}
               tokenDetails={agentDetails}
               holders={tokenHolders}
+              pumpfunData={pumpfunData}
             />
           </Box>
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
@@ -244,18 +298,32 @@ function CoinModule() {
                 market_cap={marketCap || "0"}
                 completionPercent={completionPercent}
               />
-              <CandlestickChart
-                marginTop="0.5rem"
-                fontSize="12px"
-                data={candlestickData || []}
-                symbol={agentDetails.ticker}
-                priceData={{
-                  open: null,
-                  low: null,
-                  high: null,
-                  close: null,
-                }}
-              />
+
+              {pumpfunData ? (
+                <iframe
+                  height="400px"
+                  width="100%"
+                  id="geckoterminal-embed"
+                  title="GeckoTerminal Embed"
+                  src={`https://www.geckoterminal.com/solana/pools/${pumpfunData.raydium_pool}?embed=1&info=0&swaps=0`}
+                  frameBorder="0"
+                  allow="clipboard-write"
+                  allowFullScreen
+                />
+              ) : (
+                <CandlestickChart
+                  marginTop="0.5rem"
+                  fontSize="12px"
+                  data={candlestickData || []}
+                  symbol={agentDetails.ticker}
+                  priceData={{
+                    open: null,
+                    low: null,
+                    high: null,
+                    close: null,
+                  }}
+                />
+              )}
             </>
           ) : null}
           {loading ? (
@@ -272,6 +340,7 @@ function CoinModule() {
               currentPrice={price || "0"}
               tokenDetails={agentDetails}
               holders={tokenHolders}
+              pumpfunData={pumpfunData}
             />
           ) : null}
 

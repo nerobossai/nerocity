@@ -16,6 +16,7 @@ import React, { useEffect, useState } from "react";
 
 import SubscriptText from "@/components/SubscriptText";
 import { pumpFunSdk } from "@/services/pumpfun";
+import { getGeckoterminalLink } from "@/utils";
 import { logger } from "@/utils/Logger";
 
 import type {
@@ -24,11 +25,13 @@ import type {
 } from "../Home/services/homeApiClient";
 import { homeApiClient } from "../Home/services/homeApiClient";
 import { trackBuy, trackSell } from "./services/analytics";
+import type { PumpfunCoinResponse } from "./services/coinApiClient";
 
 export type TradeModuleProps = {
   currentPrice: string;
   holders: number | string;
   tokenDetails: AgentResponse;
+  pumpfunData: PumpfunCoinResponse | undefined;
 };
 
 function TradeModule(props: TradeModuleProps) {
@@ -88,6 +91,11 @@ function TradeModule(props: TradeModuleProps) {
 
   const placeTrade = async () => {
     try {
+      if (props.pumpfunData?.complete) {
+        window.open(getGeckoterminalLink(props.pumpfunData?.raydium_pool));
+        return;
+      }
+
       if (!publicKey) {
         throw new Error("connect your wallet");
       }
@@ -242,6 +250,7 @@ function TradeModule(props: TradeModuleProps) {
               setInput(e.target.value);
               setToken(e.target.value);
             }}
+            disabled={!!props.pumpfunData?.complete}
             value={input}
             type="number"
           />
@@ -286,7 +295,7 @@ function TradeModule(props: TradeModuleProps) {
             : props.currentPrice}
         </Text>
         <Button onClick={placeTrade} isLoading={submitting}>
-          Place Trade
+          {props.pumpfunData?.complete ? "Trade on Raydium" : "Place Trade"}
         </Button>
       </Stack>
     </Stack>
