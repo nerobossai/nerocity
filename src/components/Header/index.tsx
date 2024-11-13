@@ -23,6 +23,7 @@ import * as AuthUtils from "@/utils/AuthUtils";
 
 import HelpComponent from "../Help";
 import { Logo } from "../Svgs/Logo";
+import ConnectPhantomButton from "./connectPhantomButton";
 
 const Container = styled.header`
   /* max-width: 490px; */
@@ -59,6 +60,7 @@ function Header() {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [openHelp, setOpenHelp] = useState(false);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
+  const isLargeScreen = useBreakpointValue({ base: false, md: true });
 
   const handleSignin = async () => {
     try {
@@ -136,7 +138,7 @@ function Header() {
           <HelpComponent isOpen={openHelp} onClose={() => setOpenHelp(false)} />
         </HStack>
         <HStack>
-          <WalletModalProvider>
+          {isLargeScreen ? <WalletModalProvider>
             <WalletMultiButton
               style={{
                 backgroundColor: "#262A2E",
@@ -150,7 +152,7 @@ function Header() {
                 maxWidth: "200px",
               }}
             />
-          </WalletModalProvider>
+          </WalletModalProvider> :<> v2 <ConnectPhantomButton /></>}
         </HStack>
       </Stack>
     </Container>
