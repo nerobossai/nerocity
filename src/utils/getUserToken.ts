@@ -9,11 +9,22 @@ interface TokenAccount {
 
 const PROGRAM_ID = "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P";
 
+function isHexString(str: string): boolean {
+  return /^[0-9a-fA-F]+$/.test(str);
+}
+
 export async function getUserTokens(
   walletAddress: string,
 ): Promise<TokenAccount[]> {
+  let publicKey: PublicKey;
+  if (isHexString(walletAddress)) {
+    const buffer = Buffer.from(walletAddress, "hex");
+    publicKey = new PublicKey(buffer);
+  } else {
+    publicKey = new PublicKey(walletAddress);
+  }
+
   const connection = new Connection(RPC_NODE_URL);
-  const publicKey = new PublicKey(walletAddress);
 
   try {
     const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
