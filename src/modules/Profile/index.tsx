@@ -18,6 +18,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { pumpFunSdk } from "@/services/pumpfun";
+import { getUserTokens } from "@/utils/getUserToken";
 
 import { homeApiClient } from "../Home/services/homeApiClient";
 import { profileApiClient } from "./services/profileApiClient";
@@ -74,6 +75,7 @@ function ProfileModule() {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [tokenData, setTokenData] = useState([]);
 
   useEffect(() => {
     if (!username) {
@@ -121,6 +123,9 @@ function ProfileModule() {
           }),
         );
 
+        const tokensData = await getUserTokens(
+          profileData.user.public_key as string,
+        );
         setCoinsData(updatedCoinData);
         setLoading(false);
       } catch (err) {
