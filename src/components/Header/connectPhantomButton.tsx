@@ -1,5 +1,3 @@
-// components/ConnectWallet.js
-
 import { useBreakpointValue } from "@chakra-ui/react";
 import {
   ConnectionProvider,
@@ -14,7 +12,7 @@ import { clusterApiUrl } from "@solana/web3.js";
 import React, { useMemo } from "react";
 
 export const ConnectWallet = () => {
-  const network = clusterApiUrl("devnet"); // Change to 'mainnet-beta' or 'testnet' as needed
+  const network = clusterApiUrl("devnet");
 
   const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
