@@ -105,9 +105,14 @@ function ChatModule(props: { agentId: string }) {
           <Stack key={data.message_id}>
             <ChatRowComponent {...data} />
             <Stack marginLeft="3rem">
-              {data.replies.map((rData) => {
-                return <ChatRowComponent {...rData} key={rData.message_id} />;
-              })}
+              {data.replies
+                .sort(
+                  (a, b) =>
+                    parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10),
+                )
+                .map((rData) => {
+                  return <ChatRowComponent {...rData} key={rData.message_id} />;
+                })}
               <Button
                 fontSize="12px"
                 color="white"
