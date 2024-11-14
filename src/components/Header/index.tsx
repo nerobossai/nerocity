@@ -60,6 +60,8 @@ function Header() {
     publicKey?.toString(),
   );
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [openHelp, setOpenHelp] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
