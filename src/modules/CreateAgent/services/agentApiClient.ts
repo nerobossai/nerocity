@@ -12,6 +12,7 @@ export type LaunchAgentBody = {
   tokenMetadata: TokenMetadata;
   telegram?: string;
   twtToken?: string;
+  txnHash: string;
 };
 
 export type LaunchSuccessResponse = {

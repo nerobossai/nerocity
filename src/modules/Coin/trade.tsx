@@ -121,7 +121,7 @@ function TradeModule(props: TradeModuleProps) {
       }
 
       const txnResp = await sendTransaction(txn, connection);
-      await connection.confirmTransaction(txnResp, "confirmed");
+      // await connection.confirmTransaction(txnResp, "confirmed");
 
       // for analytics
       switch (active) {
