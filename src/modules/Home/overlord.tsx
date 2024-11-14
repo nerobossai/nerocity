@@ -26,7 +26,7 @@ function OverlordModule(props: { overlord: AgentResponse }) {
   // }, []);
 
   return (
-    <Stack justifyContent="center" alignItems="center">
+    <Stack justifyContent="center" alignItems="center" marginBottom="20px">
       <Text
         color="red.600"
         fontWeight="bold"

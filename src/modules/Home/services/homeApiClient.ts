@@ -30,6 +30,10 @@ export type AgentResponse = {
     showName: true;
     createdOn: string;
   };
+  social?: {
+    twitter: string;
+    telegram: string;
+  };
   mint_public_key: string;
 };
 

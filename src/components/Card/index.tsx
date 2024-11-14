@@ -27,6 +27,10 @@ export type CardProps = {
   current_token_total_supply?: number;
   onClick?: any;
   completionPercent?: number;
+  social?: {
+    twitter: string;
+    telegram: string;
+  };
 };
 
 const Container = styled.div`
@@ -64,7 +68,7 @@ function Card(props: CardProps) {
           alt="ai agent image"
         />
         <Stack>
-          <HStack justifyContent="space-between" minWidth="17rem">
+          <HStack justifyContent="space-between">
             <Text fontSize="12px">Created by @{props.created_by}</Text>
             <Text fontWeight="bold" color="blue.100" fontSize="12px">
               {timeDifference(
@@ -83,7 +87,12 @@ function Card(props: CardProps) {
             {props.name} ${props.ticker}
           </Text>
           {props.description && (
-            <Text maxWidth="20rem">{props.description || ""}</Text>
+            <Text
+              maxWidth="20rem"
+              fontSize={{ base: "12px", sm: "14px", md: "16px" }}
+            >
+              {props.description || ""}
+            </Text>
           )}
         </Stack>
       </HStack>
