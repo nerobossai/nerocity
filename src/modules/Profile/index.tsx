@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import SubscriptText from "@/components/SubscriptText";
 import { pumpFunSdk } from "@/services/pumpfun";
 import { getUserTokens } from "@/utils/getUserToken";
 
@@ -211,7 +212,9 @@ function ProfileModule() {
                   : coinsData.map((coin) => (
                       <Tr key={coin.id}>
                         <Td>{coin.name}</Td>
-                        <Td>{coin.price}</Td>
+                        <Td>
+                          <SubscriptText value={coin.price} />
+                        </Td>
                         <Td>{coin.market_cap}</Td>
                       </Tr>
                     ))}

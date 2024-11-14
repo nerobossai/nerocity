@@ -182,9 +182,7 @@ function Header() {
                 isDisconnecting={isDisconnecting}
               />{" "}
             </>
-          ) : 
-            isLargeScreen ? (
-
+          ) : isLargeScreen ? (
             <WalletModalProvider>
               <WalletMultiButton
                 style={{

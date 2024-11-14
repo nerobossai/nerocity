@@ -1,5 +1,5 @@
 const SubscriptText = ({ value }: { value: string }) => {
-  const isExponential = value.toLowerCase().includes("e");
+  const isExponential = value?.toLowerCase().includes("e");
 
   let formattedValue = value;
   let beforeSubscript = "";
@@ -12,6 +12,9 @@ const SubscriptText = ({ value }: { value: string }) => {
       .replace(/\.?0+$/, "");
   }
 
+  if (!value) {
+    return null;
+  }
   const valueNum = parseFloat(formattedValue);
   if (valueNum < 0.1 && valueNum !== 0) {
     const [whole, decimal] = formattedValue.split(".");
