@@ -49,7 +49,9 @@ function CoinHeaderModule(props: CardProps) {
             <Text fontWeight="bold" color="green.50">
               Market Cap
             </Text>
-            <SubscriptText value={props.market_cap} />
+            <Text>
+              <SubscriptText value={props.market_cap} />
+            </Text>
           </VStack>
 
           <VStack
@@ -119,7 +121,9 @@ function CoinHeaderModule(props: CardProps) {
           fontSize="12px"
         >
           <Text>Market Cap</Text>
-          <SubscriptText value={props.market_cap} />
+          <Text>
+            <SubscriptText value={props.market_cap} />
+          </Text>
         </VStack>
         <VStack textAlign="center" fontSize="12px">
           <Text>Coin Address</Text>

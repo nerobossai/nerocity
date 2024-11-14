@@ -202,7 +202,9 @@ function TradeModule(props: TradeModuleProps) {
           fontSize="12px"
         >
           <Text>Price</Text>
-          <SubscriptText value={props.currentPrice} />
+          <Text>
+            <SubscriptText value={props.currentPrice} />
+          </Text>
         </VStack>
         <VStack textAlign="center" fontWeight="bold" fontSize="12px">
           <Text>Holders</Text>
@@ -277,7 +279,7 @@ function TradeModule(props: TradeModuleProps) {
             ) : active === "buy" ? (
               `$${solPrice?.solana.usd}` || "$164.84"
             ) : (
-              `$${props.currentPrice}`
+              <SubscriptText value={props.currentPrice} />
             )}
           </Text>
         </HStack>
@@ -303,9 +305,11 @@ function TradeModule(props: TradeModuleProps) {
           opacity={props.pumpfunData?.complete ? "0.6" : "1"}
         >
           1 {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`} = $
-          {active === "sell"
-            ? `${solPrice?.solana.usd}` || "$164.84"
-            : props.currentPrice}
+          {active === "sell" ? (
+            `${solPrice?.solana.usd}` || "$164.84"
+          ) : (
+            <SubscriptText value={props.currentPrice} />
+          )}
         </Text>
         <Button onClick={placeTrade} isLoading={submitting}>
           {props.pumpfunData?.complete ? "Trade on Raydium" : "Place Trade"}

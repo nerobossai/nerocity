@@ -1,12 +1,4 @@
-import { Text } from "@chakra-ui/react";
-
-const SubscriptText = ({
-  value,
-  label = "",
-}: {
-  value: string;
-  label?: String;
-}) => {
+const SubscriptText = ({ value }: { value: string }) => {
   const isExponential = value.toLowerCase().includes("e");
 
   let formattedValue = value;
@@ -30,21 +22,17 @@ const SubscriptText = ({
     afterSubscript = decimal?.slice((firstNonZeroIndex ?? 0) + 1) ?? "";
 
     return (
-      <Text fontSize="12px" fontWeight="bold" color="green.50">
-        {label} ${whole}.{beforeSubscript}
+      <span>
+        ${whole}.{beforeSubscript}
         <span style={{ verticalAlign: "sub", fontSize: "0.8em" }}>
           {subscriptDigit}
         </span>
         {afterSubscript}
-      </Text>
+      </span>
     );
   }
 
-  return (
-    <Text fontSize="12px" fontWeight="bold" color="green.50">
-      {label} ${value}
-    </Text>
-  );
+  return <span>${value}</span>;
 };
 
 export default SubscriptText;
