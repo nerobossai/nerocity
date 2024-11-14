@@ -63,8 +63,6 @@ function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [openHelp, setOpenHelp] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isDisconnecting, setIsDisconnecting] = useState(false);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
   const isLargeScreen = useBreakpointValue({ base: false, md: true });
 
