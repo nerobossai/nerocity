@@ -15,6 +15,7 @@ export const ApiEndpoints = Object.freeze({
     pumpfun: "/agents/pumpfun/:agent_id",
     twitteroauth1: "/agents/twitter-oauth1",
     validateoauth1: "/agents/twitter/validate-oauth1",
+    fetchCoinsHeldByAgentId: "/agents/:agent_id",
   },
   coins: {
     transactions: "/coins/transactions",

@@ -31,40 +31,12 @@ const Container = styled.div`
   padding: 1rem;
 `;
 
-const samepleData = [
-  {
-    user_details: {
-      new_user: true,
-    },
-    id: "5JijRF9hXonAgG3XSctHgM5Ar44fStZuPT9D7XEoJGBY",
-    name: "marvin",
-    market_cap: "6510.000",
-    created_at: "1731330879893",
-    replies: "4",
-    ticker: "MARVIN",
-    description:
-      "marvin is the first martian in the form of pepe, he is a slick trader liquidiating all idiots who try to short squeeze him. he has a vicious tongue and doesn't stop himself from criticizing people who he talks to and shows them down.",
-    image:
-      "https://ipfs.io/ipfs/QmcHSnavawPKpNoQsaEGkSu5Zm2bSP5zTneDTUsJPQjd1w",
-    token_metadata: {
-      name: "marvin",
-      symbol: "MARVIN",
-      description:
-        "marvin is the first martian in the form of pepe, he is a slick trader liquidiating all idiots who try to short squeeze him. he has a vicious tongue and doesn't stop himself from criticizing people who he talks to and shows them down.",
-      image:
-        "https://ipfs.io/ipfs/QmcHSnavawPKpNoQsaEGkSu5Zm2bSP5zTneDTUsJPQjd1w",
-      show_name: true,
-      created_on: "https://pump.fun",
-    },
-    mint_public_key: "5JijRF9hXonAgG3XSctHgM5Ar44fStZuPT9D7XEoJGBY",
-    fee_basis_points: 100,
-    initial_virtual_sol_reserves: 30000000000,
-    initial_virtual_token_reserves: 793100000000000,
-    current_virtual_sol_reserves: 30000000000,
-    target_pool_balance: 150000000000,
-    current_virtual_token_reserves: 793100000000000,
-  },
-];
+interface CoinsHeldData {
+  mint: string;
+  balance: number;
+  name: string;
+  ticker: string;
+}
 
 function ProfileModule() {
   const router = useRouter();
@@ -75,7 +47,7 @@ function ProfileModule() {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [tokenData, setTokenData] = useState([]);
+  const [coinsHeldData, setCoinsHeldData] = useState<CoinsHeldData[]>([]);
 
   useEffect(() => {
     if (!username) {
@@ -88,6 +60,31 @@ function ProfileModule() {
         );
         const fetchedProfile = profileData.user;
         setProfile(fetchedProfile);
+
+        const tokensData: any[] = await getUserTokens(
+          profileData.user.public_key as string,
+        );
+
+        const dataWithNameTicker = [];
+        for (let i = 0; i < tokensData.length; i++) {
+          const data = tokensData[i];
+          try {
+            const coinsHeldResponse =
+              await profileApiClient.fetchCoinsCreatedByAgent(data.mint);
+            if (coinsHeldResponse) {
+              dataWithNameTicker.push({
+                ...data,
+                name: coinsHeldResponse.name,
+                ticker: coinsHeldResponse.ticker,
+              });
+            }
+          } catch {
+            continue;
+          }
+        }
+
+        setCoinsHeldData(dataWithNameTicker);
+
         const coinDataResponse = await profileApiClient.fetchCoinsByPublicKey(
           fetchedProfile.public_key as string,
         );
@@ -121,10 +118,6 @@ function ProfileModule() {
               marketcap,
             };
           }),
-        );
-
-        const tokensData = await getUserTokens(
-          profileData.user.public_key as string,
         );
         setCoinsData(updatedCoinData);
         setLoading(false);
@@ -197,22 +190,23 @@ function ProfileModule() {
               </Tr>
             </Thead>
             <Tbody>
-              {coinsData.map((coin) => (
-                <Tr key={coin.id}>
-                  <Td>{coin.name}</Td>
-                  {selectedTab === 0 ? (
-                    <>
-                      <Td>{coin.coinsHeld}</Td>
-                      <Td>{coin.value}</Td>
-                    </>
-                  ) : (
-                    <>
+              {selectedTab === 0
+                ? coinsHeldData.map((coin, index) => (
+                    <Tr key={index}>
+                      <>
+                        <Td>{coin.name}</Td>
+                        <Td>{coin.ticker}</Td>
+                        <Td>{coin.balance}</Td>
+                      </>
+                    </Tr>
+                  ))
+                : coinsData.map((coin) => (
+                    <Tr key={coin.id}>
+                      <Td>{coin.name}</Td>
                       <Td>{coin.price}</Td>
                       <Td>{coin.market_cap}</Td>
-                    </>
-                  )}
-                </Tr>
-              ))}
+                    </Tr>
+                  ))}
             </Tbody>
           </Table>
         </VStack>

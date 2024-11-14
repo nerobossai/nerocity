@@ -62,6 +62,40 @@ interface CoinResponse {
   }[];
 }
 
+interface AgentCoinResponseData {
+  status: string;
+  created_by: string;
+  user_details: {
+    new_user: boolean;
+    public_key: string;
+    username: string;
+    profile_pic: string;
+  };
+  id: string;
+  name: string;
+  market_cap: string;
+  created_at: string;
+  replies: string;
+  ticker: string;
+  description: string;
+  token_metadata: {
+    name: string;
+    symbol: string;
+    description: string;
+    image: string;
+    show_name: boolean;
+    created_on: string;
+  };
+  mint_public_key: string;
+  image: string;
+  fee_basis_points: number;
+  initial_virtual_sol_reserves: number;
+  initial_virtual_token_reserves: number;
+  current_virtual_sol_reserves: number;
+  target_pool_balance: number;
+  current_virtual_token_reserves: number;
+}
+
 class ApiClient extends BaseApiClient {
   constructor() {
     super({});
@@ -104,6 +138,23 @@ class ApiClient extends BaseApiClient {
         url: ApiEndpoints.profile.fetchCoinsByPublicKey.replace(
           ":public_key",
           publicKey,
+        ),
+      });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async fetchCoinsCreatedByAgent(
+    agentId: string,
+  ): Promise<AgentCoinResponseData> {
+    try {
+      const resp = await this.secureApiCall({
+        type: "GET",
+        url: ApiEndpoints.agents.fetchCoinsHeldByAgentId.replace(
+          ":agent_id",
+          agentId,
         ),
       });
       return resp.data;

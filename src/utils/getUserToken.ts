@@ -7,7 +7,7 @@ interface TokenAccount {
   balance: number;
 }
 
-const PROGRAM_ID = "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P";
+const PROGRAM_ID = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 
 function isHexString(str: string): boolean {
   return /^[0-9a-fA-F]+$/.test(str);
