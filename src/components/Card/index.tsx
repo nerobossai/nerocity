@@ -69,7 +69,7 @@ function Card(props: CardProps) {
           alt="ai agent image"
         />
         <Stack width="100%">
-          <HStack justifyContent="space-between" minWidth="17rem">
+          <HStack justifyContent="space-between">
             <Text fontSize="12px">Created by @{props.created_by}</Text>
             <Text fontWeight="bold" color="blue.100" fontSize="12px">
               {timeDifference(
