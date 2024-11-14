@@ -167,7 +167,7 @@ function CreateAgentModule() {
         0,
       );
       const txnResp = await sendTransaction(createResults, connection);
-      await connection.confirmTransaction(txnResp, "confirmed");
+      // await connection.confirmTransaction(txnResp, "confirmed");
       // send txn to wallet for signing
       await agentApiClient.launch({
         name,
@@ -177,6 +177,7 @@ function CreateAgentModule() {
         mintPublicKey: tokenMint.publicKey.toString(),
         tokenMetadata,
         twtToken,
+        txnHash: txnResp,
       });
       trackAgentCreation({
         agent_address: tokenMint.publicKey.toString(),
