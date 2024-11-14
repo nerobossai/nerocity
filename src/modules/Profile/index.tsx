@@ -31,6 +31,7 @@ const Container = styled.div`
   padding: 1rem;
 `;
 
+const RAYDIUM_MIGRATION_COMPLETED = "raydium_migration_completed";
 interface CoinsHeldData {
   mint: string;
   balance: number;
@@ -55,6 +56,7 @@ function ProfileModule() {
     }
     const fetchData = async () => {
       try {
+        setLoading(true);
         const profileData = await profileApiClient.fetchProfileByUserName(
           username as string,
         );
@@ -99,6 +101,9 @@ function ProfileModule() {
             );
 
             if (!tmp) return coin;
+            if (tmp.complete) {
+              return RAYDIUM_MIGRATION_COMPLETED;
+            }
 
             const price =
               (((await tmp.getSellPrice(1, 0)) || 0) / 100) *
@@ -172,43 +177,47 @@ function ProfileModule() {
               Coins created
             </Box>
           </HStack>
-          <Table variant="unstyled">
-            <Thead>
-              <Tr>
-                <Th>Name</Th>
-                {selectedTab === 0 ? (
-                  <>
-                    <Th>Coins</Th>
-                    <Th>Value</Th>
-                  </>
-                ) : (
-                  <>
-                    <Th>Price</Th>
-                    <Th>Market Cap</Th>
-                  </>
-                )}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {selectedTab === 0
-                ? coinsHeldData.map((coin, index) => (
-                    <Tr key={index}>
-                      <>
+          {loading ? (
+            <Spinner marginTop={20} />
+          ) : (
+            <Table variant="unstyled">
+              <Thead>
+                <Tr>
+                  <Th>Name</Th>
+                  {selectedTab === 0 ? (
+                    <>
+                      <Th>Coins</Th>
+                      <Th>Value</Th>
+                    </>
+                  ) : (
+                    <>
+                      <Th>Price</Th>
+                      <Th>Market Cap</Th>
+                    </>
+                  )}
+                </Tr>
+              </Thead>
+              <Tbody>
+                {selectedTab === 0
+                  ? coinsHeldData.map((coin, index) => (
+                      <Tr key={index}>
+                        <>
+                          <Td>{coin.name}</Td>
+                          <Td>{coin.ticker}</Td>
+                          <Td>{coin.balance}</Td>
+                        </>
+                      </Tr>
+                    ))
+                  : coinsData.map((coin) => (
+                      <Tr key={coin.id}>
                         <Td>{coin.name}</Td>
-                        <Td>{coin.ticker}</Td>
-                        <Td>{coin.balance}</Td>
-                      </>
-                    </Tr>
-                  ))
-                : coinsData.map((coin) => (
-                    <Tr key={coin.id}>
-                      <Td>{coin.name}</Td>
-                      <Td>{coin.price}</Td>
-                      <Td>{coin.market_cap}</Td>
-                    </Tr>
-                  ))}
-            </Tbody>
-          </Table>
+                        <Td>{coin.price}</Td>
+                        <Td>{coin.market_cap}</Td>
+                      </Tr>
+                    ))}
+              </Tbody>
+            </Table>
+          )}
         </VStack>
       </Stack>
     </Container>
