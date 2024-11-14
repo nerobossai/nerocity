@@ -7,7 +7,6 @@ const SubscriptText = ({
   value: string;
   label?: String;
 }) => {
-  console.log("vv", value);
   const isExponential = value.toLowerCase().includes("e");
 
   let formattedValue = value;
@@ -16,14 +15,12 @@ const SubscriptText = ({
   let afterSubscript = "";
 
   if (isExponential) {
-    // Convert exponential value to a decimal string with enough precision
     formattedValue = Number(value)
       .toFixed(20)
-      .replace(/\.?0+$/, ""); // Remove trailing zeros
+      .replace(/\.?0+$/, "");
   }
 
   const valueNum = parseFloat(formattedValue);
-  console.log("vvvvvv", valueNum);
   if (valueNum < 0.1 && valueNum !== 0) {
     const [whole, decimal] = formattedValue.split(".");
     const firstNonZeroIndex = decimal?.search(/[1-9]/);
