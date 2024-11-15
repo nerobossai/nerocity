@@ -133,7 +133,17 @@ function ChatModule(props: { agentId: string }) {
           </Stack>
         );
       })}
-      {loading && <Spinner />}
+      {loading && (
+        <Box
+          width="100%"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100px"
+        >
+          <Spinner />
+        </Box>
+      )}
       <Box display="flex" alignItems="flex-start">
         <Button
           fontSize={{ base: "8px", sm: "12px" }}

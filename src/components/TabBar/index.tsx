@@ -18,7 +18,7 @@ function TabBar({
   ];
 
   return (
-    <Box className="absolute bottom-0 h-[50px] w-full bg-[#0b0d0e] md:hidden">
+    <Box className="fixed bottom-0 h-[50px] w-full bg-[#0b0d0e] md:hidden">
       <Grid templateColumns="repeat(4, 1fr)" gap={2} height="100%">
         {tabs.map((tab) => (
           <Flex
