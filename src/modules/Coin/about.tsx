@@ -1,4 +1,12 @@
-import { HStack, Image, Link, Stack, Text, VStack } from "@chakra-ui/react";
+import {
+  HStack,
+  Image,
+  Link,
+  Stack,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import React from "react";
 import { LiaTelegram } from "react-icons/lia";
 import { RiTwitterXFill } from "react-icons/ri";
@@ -6,6 +14,18 @@ import { RiTwitterXFill } from "react-icons/ri";
 import type { CardProps } from "@/components/Card";
 
 function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
+  const toast = useToast();
+
+  const handleMissingLink = (platform: string) => {
+    toast({
+      title: `No ${platform} linked by creator.`,
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+      position: "bottom-right"
+    });
+  };
+
   return (
     <Stack fontSize="12px" spacing="1rem" marginTop="1rem">
       <HStack justifyContent="start" alignItems="start" spacing="1rem">
@@ -23,11 +43,23 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
               <Link href={"https://x.com/" + props.social.twitter} isExternal>
                 <RiTwitterXFill size="1.2rem" />
               </Link>
+            ) : (
+              <RiTwitterXFill
+                size="1.2rem"
+                onClick={() => handleMissingLink("Twitter")}
+                cursor="pointer"
+              />
             )}
-            {props.social && props.social.telegram && (
+            {props.social && props.social.telegram ? (
               <Link href={props.social?.telegram} isExternal>
                 <LiaTelegram size="1.5rem" />
               </Link>
+            ) : (
+              <LiaTelegram
+                size="1.5rem"
+                onClick={() => handleMissingLink("Telegram")}
+                cursor="pointer"
+              />
             )}
           </HStack>
         </VStack>
