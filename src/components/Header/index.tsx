@@ -88,6 +88,7 @@ function Header() {
       setUserProfile(profileObject.profile);
       setToken(profileObject.token);
       setAuthenticated(true);
+      setIsOpen(false);
 
       // set state
       const status = AuthUtils.setProfileInStorage(profileObject);
@@ -108,8 +109,7 @@ function Header() {
     if (
       connected &&
       !isAuthenticated &&
-      !isSigningIn &&
-      previousKey !== publicKey?.toString()
+      !isSigningIn
     ) {
       setIsSigningIn(true);
       handleSignin()
@@ -126,6 +126,7 @@ function Header() {
       reset();
       await disconnect();
       AuthUtils.signOut();
+      setIsSigningIn(false);
       setIsDisconnecting(false);
     } catch (err) {
       console.error("Error disconnecting wallet", err);
@@ -155,7 +156,7 @@ function Header() {
           <HelpComponent isOpen={openHelp} onClose={() => setOpenHelp(false)} />
         </HStack>
         <HStack>
-          {connected ? (
+          {isAuthenticated ? (
             <>
               <Button
                 onClick={() => setIsOpen(true)}
@@ -176,7 +177,7 @@ function Header() {
               </Button>
               <ProfileModalComponent
                 userDetails={profile.profile ?? profile}
-                isOpen={isOpen}
+                isOpen={isOpen && isAuthenticated}
                 onClose={() => setIsOpen(false)}
                 disconnect={handleDisconnect}
                 isDisconnecting={isDisconnecting}
