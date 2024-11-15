@@ -39,8 +39,8 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
         <VStack>
           <Text>{props.description || ""}</Text>
           <HStack justifyContent="start" width="100%">
-            {props.social && props.social.twitter ? (
-              <Link href={`https://x.com/${props.social.twitter}`} isExternal>
+            {props.social && props.social.twitter && (
+              <Link href={"https://x.com/" + props.social.twitter} isExternal>
                 <RiTwitterXFill size="1.2rem" />
               </Link>
             ) : (

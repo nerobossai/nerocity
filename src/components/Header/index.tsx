@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  Avatar,
+  Button,
   HStack,
   Link,
   Stack,
@@ -22,6 +24,7 @@ import useUserStore from "@/stores/useUserStore";
 import * as AuthUtils from "@/utils/AuthUtils";
 
 import HelpComponent from "../Help";
+import ProfileModalComponent from "../ProfileModal";
 import { Logo } from "../Svgs/Logo";
 import ConnectPhantomButton from "./connectPhantomButton";
 
@@ -53,11 +56,12 @@ function Header() {
     disconnect,
     signIn,
   } = useWallet();
-
   const [previousKey, setPreviousKey] = useState<string | undefined>(
     publicKey?.toString(),
   );
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [openHelp, setOpenHelp] = useState(false);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
   const isLargeScreen = useBreakpointValue({ base: false, md: true });
@@ -116,6 +120,19 @@ function Header() {
     }
   }, [connected, publicKey]);
 
+  const handleDisconnect = async () => {
+    try {
+      setIsDisconnecting(true);
+      reset();
+      await disconnect();
+      AuthUtils.signOut();
+      setIsDisconnecting(false);
+    } catch (err) {
+      console.error("Error disconnecting wallet", err);
+      setIsDisconnecting(false);
+    }
+  };
+
   return (
     <Container className="dual-header">
       <Stack
@@ -138,7 +155,34 @@ function Header() {
           <HelpComponent isOpen={openHelp} onClose={() => setOpenHelp(false)} />
         </HStack>
         <HStack>
-          {isLargeScreen ? (
+          {isAuthenticated ? (
+            <>
+              <Button
+                onClick={() => setIsOpen(true)}
+                backgroundColor="grey.100"
+                color="primary"
+                display="flex"
+                gap="10px"
+                alignItems="center"
+                _hover={{ opacity: 0.8 }}
+                fontSize="14px"
+                fontWeight={300}
+              >
+                <Avatar
+                  boxSize="20px"
+                  src={profile?.profile_pic ?? profile?.profile?.profile_pic}
+                />
+                <Text>{profile?.username ?? profile?.profile?.username}</Text>
+              </Button>
+              <ProfileModalComponent
+                userDetails={profile.profile ?? profile}
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                disconnect={handleDisconnect}
+                isDisconnecting={isDisconnecting}
+              />{" "}
+            </>
+          ) : isLargeScreen ? (
             <WalletModalProvider>
               <WalletMultiButton
                 style={{
