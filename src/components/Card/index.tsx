@@ -38,6 +38,7 @@ const Container = styled.div`
     transition: background-color 50ms;
     padding: 1rem;
     cursor: pointer;
+    height: 100%;
   }
   .card-main:hover {
     background-color: #211e1e;
@@ -67,7 +68,7 @@ function Card(props: CardProps) {
           src={props.image}
           alt="ai agent image"
         />
-        <Stack>
+        <Stack width="100%">
           <HStack justifyContent="space-between">
             <Text fontSize="12px">Created by @{props.created_by}</Text>
             <Text fontWeight="bold" color="blue.100" fontSize="12px">

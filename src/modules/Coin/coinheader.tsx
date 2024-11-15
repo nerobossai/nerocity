@@ -6,6 +6,7 @@ import {
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 import type { CardProps } from "@/components/Card";
@@ -18,6 +19,7 @@ import ProgressModule from "./progress";
 
 function CoinHeaderModule(props: CardProps) {
   const isLargeScreen = useBreakpointValue({ base: false, md: true });
+  const router = useRouter();
 
   if (!isLargeScreen) {
     return (
@@ -35,7 +37,7 @@ function CoinHeaderModule(props: CardProps) {
             {props.name}
           </Text>
           <Text fontSize="24px" fontWeight="bold">
-            {props.ticker}
+            {`$${props.ticker}`}
           </Text>
         </HStack>
 
@@ -75,7 +77,12 @@ function CoinHeaderModule(props: CardProps) {
             flex="1"
           >
             <Text>Created By</Text>
-            <Text>@{props.created_by}</Text>
+            <Text
+              onClick={() => router.push(`/profile/${props.created_by}`)}
+              cursor="pointer"
+            >
+              @{props.created_by}
+            </Text>
           </VStack>
 
           <VStack
@@ -106,7 +113,7 @@ function CoinHeaderModule(props: CardProps) {
   return (
     <HStack marginTop="1rem" justifyContent="space-between">
       <Text fontSize="24px" fontWeight="bold">
-        {props.name} {props.ticker}
+        {props.name} {`$${props.ticker}`}
       </Text>
       <HStack
         spacing="5rem"
@@ -133,7 +140,12 @@ function CoinHeaderModule(props: CardProps) {
         </VStack>
         <VStack textAlign="center" fontSize="12px">
           <Text>Created By</Text>
-          <Text>@{props.created_by}</Text>
+          <Text
+            onClick={() => router.push(`/profile/${props.created_by}`)}
+            cursor="pointer"
+          >
+            @{props.created_by}
+          </Text>
         </VStack>
         <VStack
           textAlign="center"

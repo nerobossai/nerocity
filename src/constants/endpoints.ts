@@ -15,6 +15,7 @@ export const ApiEndpoints = Object.freeze({
     pumpfun: "/agents/pumpfun/:agent_id",
     twitteroauth1: "/agents/twitter-oauth1",
     validateoauth1: "/agents/twitter/validate-oauth1",
+    fetchCoinsHeldByAgentId: "/agents/:agent_id",
   },
   coins: {
     transactions: "/coins/transactions",
@@ -22,5 +23,10 @@ export const ApiEndpoints = Object.freeze({
   chat: {
     send: "/chat/send",
     fetch: "/chat/fetch/:agent_id",
+  },
+  profile: {
+    fetchByPublicKey: "/profile/get/:public_key",
+    fetchByUserName: "/profile/get/username/:username",
+    fetchCoinsByPublicKey: "/profile/coins/createdby/:public_key",
   },
 });
