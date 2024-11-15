@@ -6,6 +6,7 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -62,6 +63,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   const wallets = useMemo(
     () => [
+      new PhantomWalletAdapter(),
       /**
        * Wallets that implement either of these standards will be available automatically.
        *

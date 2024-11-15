@@ -26,7 +26,6 @@ import * as AuthUtils from "@/utils/AuthUtils";
 import HelpComponent from "../Help";
 import ProfileModalComponent from "../ProfileModal";
 import { Logo } from "../Svgs/Logo";
-import ConnectPhantomButton from "./connectPhantomButton";
 
 const Container = styled.header`
   /* max-width: 490px; */
@@ -56,6 +55,7 @@ function Header() {
     disconnect,
     signIn,
   } = useWallet();
+
   const [previousKey, setPreviousKey] = useState<string | undefined>(
     publicKey?.toString(),
   );
@@ -155,7 +155,7 @@ function Header() {
           <HelpComponent isOpen={openHelp} onClose={() => setOpenHelp(false)} />
         </HStack>
         <HStack>
-          {isAuthenticated ? (
+          {connected ? (
             <>
               <Button
                 onClick={() => setIsOpen(true)}
@@ -182,7 +182,7 @@ function Header() {
                 isDisconnecting={isDisconnecting}
               />{" "}
             </>
-          ) : isLargeScreen ? (
+          ) : (
             <WalletModalProvider>
               <WalletMultiButton
                 style={{
@@ -198,8 +198,6 @@ function Header() {
                 }}
               />
             </WalletModalProvider>
-          ) : (
-            <ConnectPhantomButton />
           )}
         </HStack>
       </Stack>

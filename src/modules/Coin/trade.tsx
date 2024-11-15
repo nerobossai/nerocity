@@ -304,7 +304,7 @@ function TradeModule(props: TradeModuleProps) {
           fontWeight="bold"
           opacity={props.pumpfunData?.complete ? "0.6" : "1"}
         >
-          1 {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`} = 
+          1 {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`} =
           {active === "sell" ? (
             `$${solPrice?.solana.usd}` || "$164.84"
           ) : (
