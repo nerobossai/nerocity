@@ -4,6 +4,7 @@ import {
   Spinner,
   Stack,
   useBreakpointValue,
+  VStack,
 } from "@chakra-ui/react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
@@ -194,11 +195,25 @@ function CoinModule() {
           flexDirection="column"
           padding="1rem"
         >
-          <CoinHeaderModule
-            {...agentDetails}
-            market_cap={marketCap || "0"}
-            completionPercent={completionPercent}
-          />
+          <Box
+            display="flex"
+            flexDirection="column"
+            w="full"
+            mr="auto"
+            flexGrow={1}
+            px={8}
+            gap={8}
+          >
+            <CoinHeaderModule {...agentDetails} market_cap={marketCap || "0"} />
+            <VStack width="100%" alignItems="flex-start" flexGrow={1}>
+              <AboutModule
+                {...agentDetails}
+                current_real_token_reserves={realTokenReserve}
+                sol_reserve={realSolReserve}
+              />
+              <ProgressModule completionPercent={completionPercent ?? 0} />
+            </VStack>
+          </Box>
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </Box>
       );
@@ -296,7 +311,6 @@ function CoinModule() {
               <CoinHeaderModule
                 {...agentDetails}
                 market_cap={marketCap || "0"}
-                completionPercent={completionPercent}
               />
 
               {pumpfunData ? (

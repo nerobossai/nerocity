@@ -1,5 +1,4 @@
 import {
-  Box,
   HStack,
   Link,
   Text,
@@ -14,22 +13,12 @@ import { getSolScanLink } from "@/utils";
 import { timeDifference } from "@/utils/timeDifference";
 import { truncateString } from "@/utils/truncateString";
 
-import ProgressModule from "./progress";
-
 function CoinHeaderModule(props: CardProps) {
   const isLargeScreen = useBreakpointValue({ base: false, md: true });
 
   if (!isLargeScreen) {
     return (
-      <Box
-        display="flex"
-        flexDirection="column"
-        w="full"
-        mr="auto"
-        flexGrow={1}
-        px={8}
-        gap={8}
-      >
+      <>
         <HStack spacing="0.5rem" alignItems="flex-start">
           <Text fontSize="24px" fontWeight="bold">
             {props.name}
@@ -95,11 +84,7 @@ function CoinHeaderModule(props: CardProps) {
             </Text>
           </VStack>
         </HStack>
-
-        <VStack width="100%" alignItems="flex-start" flexGrow={1}>
-          <ProgressModule completionPercent={props.completionPercent ?? 0} />
-        </VStack>
-      </Box>
+      </>
     );
   }
 

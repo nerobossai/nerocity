@@ -22,7 +22,7 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
       status: "error",
       duration: 3000,
       isClosable: true,
-      position: "bottom-right"
+      position: "bottom-right",
     });
   };
 
