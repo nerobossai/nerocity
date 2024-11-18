@@ -38,6 +38,8 @@ const Container = styled.div`
 
 const RAYDIUM_MIGRATION_COMPLETED = "raydium_migration_completed";
 
+import MemoizedChart from "@/components/TVChartContainer";
+
 function CoinModule() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -239,18 +241,7 @@ function CoinModule() {
               allowFullScreen
             />
           ) : (
-            <CandlestickChart
-              marginTop="0.5rem"
-              fontSize="12px"
-              data={candlestickData || []}
-              symbol={agentDetails.ticker}
-              priceData={{
-                open: null,
-                low: null,
-                high: null,
-                close: null,
-              }}
-            />
+            <MemoizedChart mintKey={agentDetails.mint_public_key} symbol={agentDetails.ticker} />
           )}
 
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
@@ -325,18 +316,7 @@ function CoinModule() {
                   allowFullScreen
                 />
               ) : (
-                <CandlestickChart
-                  marginTop="0.5rem"
-                  fontSize="12px"
-                  data={candlestickData || []}
-                  symbol={agentDetails.ticker}
-                  priceData={{
-                    open: null,
-                    low: null,
-                    high: null,
-                    close: null,
-                  }}
-                />
+                <MemoizedChart mintKey={agentDetails.mint_public_key} symbol={agentDetails.ticker} />
               )}
             </>
           ) : null}
