@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import TabBar from "@/components/TabBar";
+import MemoizedChart from "@/components/TVChartContainer";
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 import { getTokenHolders } from "@/utils/getTokenHolders";
@@ -25,7 +26,6 @@ import { homeApiClient } from "../Home/services/homeApiClient";
 import AboutModule from "./about";
 import ChatModule from "./chats";
 import CoinHeaderModule from "./coinheader";
-import CandlestickChart from "./graph";
 import ProgressModule from "./progress";
 import type { PumpfunCoinResponse } from "./services/coinApiClient";
 import { coinApiClient } from "./services/coinApiClient";
@@ -37,8 +37,6 @@ const Container = styled.div`
 `;
 
 const RAYDIUM_MIGRATION_COMPLETED = "raydium_migration_completed";
-
-import MemoizedChart from "@/components/TVChartContainer";
 
 function CoinModule() {
   const router = useRouter();
@@ -241,7 +239,10 @@ function CoinModule() {
               allowFullScreen
             />
           ) : (
-            <MemoizedChart mintKey={agentDetails.mint_public_key} symbol={agentDetails.ticker} />
+            <MemoizedChart
+              mintKey={agentDetails.mint_public_key}
+              symbol={agentDetails.ticker}
+            />
           )}
 
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
@@ -316,7 +317,10 @@ function CoinModule() {
                   allowFullScreen
                 />
               ) : (
-                <MemoizedChart mintKey={agentDetails.mint_public_key} symbol={agentDetails.ticker} />
+                <MemoizedChart
+                  mintKey={agentDetails.mint_public_key}
+                  symbol={agentDetails.ticker}
+                />
               )}
             </>
           ) : null}

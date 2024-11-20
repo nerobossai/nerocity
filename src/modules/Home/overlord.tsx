@@ -1,10 +1,10 @@
-import { Stack, Text } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 import React from "react";
 
 import Card from "@/components/Card";
+import MainCard from "@/components/Card/MainCard";
 
 import type { AgentResponse } from "./services/homeApiClient";
-import MainCard from "@/components/Card/MainCard";
 
 function OverlordModule(props: { overlord: AgentResponse }) {
   // const [loading, setLoading] = useState(false);
@@ -27,7 +27,12 @@ function OverlordModule(props: { overlord: AgentResponse }) {
   // }, []);
 
   return (
-    <Stack justifyContent="center" alignItems="center" marginBottom="20px" maxWidth={{base:"auto", lg: "80%"}}>
+    <Stack
+      justifyContent="center"
+      alignItems="center"
+      marginBottom="20px"
+      maxWidth={{ base: "auto", lg: "80%" }}
+    >
       <MainCard {...props.overlord} />
       <Card {...props.overlord} />
     </Stack>

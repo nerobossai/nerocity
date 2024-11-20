@@ -7,7 +7,6 @@ import {
   HStack,
   Input,
   Link,
-  Stack,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
@@ -18,6 +17,8 @@ import {
 } from "@solana/wallet-adapter-react-ui";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { BiSearch } from "react-icons/bi";
+import { FaWallet } from "react-icons/fa";
 import styled from "styled-components";
 
 import { trackWalletConnect } from "@/modules/Home/services/analytics";
@@ -25,11 +26,8 @@ import { authApiClient } from "@/modules/Home/services/authApiClient";
 import useUserStore from "@/stores/useUserStore";
 import * as AuthUtils from "@/utils/AuthUtils";
 
-import HelpComponent from "../Help";
 import ProfileModalComponent from "../ProfileModal";
 import { Logo } from "../Svgs/Logo";
-import { FaWallet } from "react-icons/fa";
-import { BiSearch } from "react-icons/bi";
 
 const Container = styled.header`
   /* max-width: 490px; */
@@ -110,11 +108,7 @@ function Header() {
   };
 
   useEffect(() => {
-    if (
-      connected &&
-      !isAuthenticated &&
-      !isSigningIn
-    ) {
+    if (connected && !isAuthenticated && !isSigningIn) {
       setIsSigningIn(true);
       handleSignin()
         .then(() => {
@@ -139,11 +133,19 @@ function Header() {
   };
 
   return (
-    <HStack bg="indigo.100" height="70px" pl="40px" py="1rem" align="center" gap="40px" justifyContent={{base:"space-between", md:"block"}}>
+    <HStack
+      bg="indigo.100"
+      height="70px"
+      pl="40px"
+      py="1rem"
+      align="center"
+      gap="40px"
+      justifyContent={{ base: "space-between", md: "block" }}
+    >
       <Link href="/">
         <Logo />
       </Link>
-      <Box flexGrow="1" padding="20px" display={{base:"none", md:"block"}}>
+      <Box flexGrow="1" padding="20px" display={{ base: "none", md: "block" }}>
         <Box
           px="2rem"
           display="flex"
@@ -166,7 +168,6 @@ function Header() {
             }}
           />
         </Box>
-
       </Box>
       <HStack>
         {isAuthenticated ? (
@@ -198,22 +199,29 @@ function Header() {
           </>
         ) : (
           <WalletModalProvider>
-            <WalletMultiButton style={{backgroundColor:"transparent"}}>
-              <Button bg="#1FEF34" width="140px" borderRadius="0"  color="white" padding="15px" display="flex" justifyContent="space-between"
+            <WalletMultiButton style={{ backgroundColor: "transparent" }}>
+              <Button
+                bg="#1FEF34"
+                width="140px"
+                borderRadius="0"
+                color="white"
+                padding="15px"
+                display="flex"
+                justifyContent="space-between"
                 _hover={{
-                  boxShadow: "0px 2px 3px 0px #21972D1A"
+                  boxShadow: "0px 2px 3px 0px #21972D1A",
                 }}
                 _focus={{
-                  boxShadow: "0px 6px 6px 0px #21972D17"
+                  boxShadow: "0px 6px 6px 0px #21972D17",
                 }}
                 _active={{
-                  boxShadow: "0px 14px 9px 0px #21972D0D"
+                  boxShadow: "0px 14px 9px 0px #21972D0D",
                 }}
                 _disabled={{
-                  boxShadow: "0px 25px 10px 0px #21972D03"
+                  boxShadow: "0px 25px 10px 0px #21972D03",
                 }}
-              
-              gap="10px">
+                gap="10px"
+              >
                 <FaWallet />
                 <span>Connect</span>
               </Button>

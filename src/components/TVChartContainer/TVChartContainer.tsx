@@ -1,12 +1,14 @@
-import styles from "./index.module.css";
 import { useEffect, useRef } from "react";
-import {
+
+import type {
   ChartingLibraryWidgetOptions,
   LanguageCode,
   ResolutionString,
-  widget,
 } from "@/public/static/charting_library";
+import { widget } from "@/public/static/charting_library";
+
 import CustomDataFeed from "./CustomDataFeed";
+import styles from "./index.module.css";
 
 export interface TVChartContainerProps {
   symbol: string;
@@ -29,12 +31,15 @@ export const TVChartContainer = (props: TVChartContainerProps) => {
   useEffect(() => {
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: props.symbol || "BTCUSD",
-      datafeed: (new CustomDataFeed(props.mintKey, props.symbol)) as any,
+      datafeed: new CustomDataFeed(props.mintKey, props.symbol) as any,
       container: chartContainerRef.current,
-      interval: '1h' as ResolutionString,
+      interval: "1h" as ResolutionString,
       library_path: props.library_path,
-      locale: props.locale as LanguageCode || "en",
-      disabled_features: ["use_localstorage_for_settings", "header_resolutions"],
+      locale: (props.locale as LanguageCode) || "en",
+      disabled_features: [
+        "use_localstorage_for_settings",
+        "header_resolutions",
+      ],
       enabled_features: [],
       fullscreen: props.fullscreen || false,
       autosize: props.autosize || true,

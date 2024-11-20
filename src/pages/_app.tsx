@@ -91,7 +91,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <ChakraProvider theme={theme}>
           <Head>
             <link
-              href="https://fonts.googleapis.com/css2?family=Tsukimi+Rounded:wght@300;400;500;600;700&display=swap"
+              href="'https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap'"
               rel="stylesheet"
             />
           </Head>
