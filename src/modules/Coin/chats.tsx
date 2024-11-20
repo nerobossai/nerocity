@@ -100,9 +100,9 @@ function ChatModule(props: { agentId: string }) {
       marginBottom="4rem"
     >
       <Text>Chat with agent and users</Text>
-      {(chats?.chats || []).map((data) => {
+      {(chats?.chats || []).map((data, r) => {
         return (
-          <Stack key={data.message_id}>
+          <Stack key={r}>
             <ChatRowComponent {...data} />
             <Stack marginLeft="3rem">
               {data.replies
@@ -110,8 +110,8 @@ function ChatModule(props: { agentId: string }) {
                   (a, b) =>
                     parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10),
                 )
-                .map((rData) => {
-                  return <ChatRowComponent {...rData} key={rData.message_id} />;
+                .map((rData, v: number) => {
+                  return <ChatRowComponent {...rData} key={v} />;
                 })}
               <Button
                 fontSize="12px"
