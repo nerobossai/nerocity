@@ -7,6 +7,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 
 import { timeDifference } from "@/utils/timeDifference";
@@ -14,6 +15,14 @@ import { timeDifference } from "@/utils/timeDifference";
 import type { CardProps } from "./index";
 
 function RowCard(props: CardProps) {
+  const navigator = useRouter();
+  const handleClick = () => {
+    if (props.onClick) {
+      props.onClick();
+    } else {
+      navigator.push(props.id);
+    }
+  };
   return (
     <Stack
       padding="20px"
@@ -24,6 +33,9 @@ function RowCard(props: CardProps) {
       display="flex"
       flexDirection={{ base: "column", md: "row" }}
       justifyContent="center"
+      cursor="pointer"
+      _hover={{ opacity: 0.8 }}
+      onClick={handleClick}
     >
       <HStack
         className="card-main"

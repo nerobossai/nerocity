@@ -8,7 +8,7 @@ function ChatRowComponent(props: any) {
   return (
     <HStack
       justifyContent="space-between"
-      backgroundColor={props.is_agent ? "green.100" : "transparent"}
+      backgroundColor={props.is_agent ? "#1F2E22" : "transparent"}
       padding="0.5rem"
       borderRadius="0.5rem"
       fontSize="12px"
@@ -21,7 +21,7 @@ function ChatRowComponent(props: any) {
         <Text
           padding="0.3rem"
           borderRadius="0.5rem"
-          backgroundColor={props.isAgent ? "green.50" : "blue.50"}
+          backgroundColor={props.isAgent ? "#1F2E22" : "blue.50"}
           color={props.isAgent ? "black" : "white"}
           fontWeight="bold"
         >

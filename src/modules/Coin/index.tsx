@@ -3,12 +3,14 @@ import {
   HStack,
   Spinner,
   Stack,
+  Text,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { IoArrowBackSharp } from "react-icons/io5";
 import styled from "styled-components";
 
 import TabBar from "@/components/TabBar";
@@ -26,7 +28,6 @@ import { homeApiClient } from "../Home/services/homeApiClient";
 import AboutModule from "./about";
 import ChatModule from "./chats";
 import CoinHeaderModule from "./coinheader";
-import ProgressModule from "./progress";
 import type { PumpfunCoinResponse } from "./services/coinApiClient";
 import { coinApiClient } from "./services/coinApiClient";
 import TradeModule from "./trade";
@@ -34,6 +35,12 @@ import TradeModule from "./trade";
 const Container = styled.div`
   padding: 2rem;
   padding-top: 0rem;
+  max-width: 1300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: auto;
 `;
 
 const RAYDIUM_MIGRATION_COMPLETED = "raydium_migration_completed";
@@ -211,7 +218,7 @@ function CoinModule() {
                 current_real_token_reserves={realTokenReserve}
                 sol_reserve={realSolReserve}
               />
-              <ProgressModule completionPercent={completionPercent ?? 0} />
+              {/* <ProgressModule completionPercent={completionPercent ?? 0} /> */}
             </VStack>
           </Box>
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
@@ -290,12 +297,24 @@ function CoinModule() {
 
   return (
     <Container>
+      <HStack width="100%" alignItems="center" py="1rem">
+        <Box
+          display="flex"
+          alignItems="center"
+          gap="20px"
+          cursor="pointer"
+          onClick={() => router.push("/")}
+        >
+          <IoArrowBackSharp />
+          <Text>BACK</Text>
+        </Box>
+      </HStack>
       <HStack
         justifyContent="space-evenly"
         alignItems="start"
         flexDirection={["column-reverse", "row"]}
       >
-        <Stack>
+        <Stack padding="0 1rem" bg="#1B1B1E">
           {loading ? (
             <Spinner />
           ) : agentDetails ? (
@@ -330,7 +349,7 @@ function CoinModule() {
             <ChatModule agentId={agentDetails.id} />
           ) : null}
         </Stack>
-        <Stack maxWidth={["90vw", "33vw"]}>
+        <Box padding="0" alignItems="flex-start">
           {loading ? (
             <Spinner />
           ) : agentDetails ? (
@@ -351,10 +370,10 @@ function CoinModule() {
                 current_real_token_reserves={realTokenReserve}
                 sol_reserve={realSolReserve}
               />
-              <ProgressModule completionPercent={completionPercent} />
+              {/* <ProgressModule completionPercent={completionPercent} /> */}
             </>
           ) : null}
-        </Stack>
+        </Box>
       </HStack>
     </Container>
   );

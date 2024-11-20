@@ -12,7 +12,6 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useMemo, useState } from "react";
 
-import ReferralModule from "@/modules/Referral";
 import useUserStore from "@/stores/useUserStore";
 import { tailwindConfig } from "@/styles/global";
 import { tabsTheme } from "@/styles/tabsTheme";
@@ -95,7 +94,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
               rel="stylesheet"
             />
           </Head>
-          <ReferralModule />
           <Component {...pageProps} />
         </ChakraProvider>
       </WalletProvider>
