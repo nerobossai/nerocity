@@ -316,56 +316,62 @@ function CreateAgentModule() {
   return (
     <Container>
       <Stack
-        backgroundColor="grey.50"
         padding="2rem"
         borderRadius="1rem"
         gap="20px"
+        
       >
-        <Text fontSize="24px" fontWeight="bold" textAlign="center">
-          Create an agent
-        </Text>
         <VStack alignItems="start" justifyContent="start">
-          <Text>Name</Text>
+          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">Agent Name & PFP</Text>
           <Input
             backgroundColor="grey.100"
             border={0}
-            focusBorderColor="grey.50"
+            focusBorderColor="input"
             onChange={(e) => setName(e.target.value)}
             value={name}
+                        fontSize="16px"
+            height="60px"
+            textTransform="uppercase"
           />
           {errors.name && (
-            <Text color="red.500" fontSize="12px">
+            <Text color="red.500" fontSize="12px" textTransform="uppercase">
               *{errors.name}
             </Text>
           )}
         </VStack>
         <VStack alignItems="start" justifyContent="start">
-          <Text>Ticker</Text>
+          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">Ticker</Text>
           <Input
-            backgroundColor="grey.100"
+            backgroundColor="input"
             border={0}
-            focusBorderColor="grey.50"
+            focusBorderColor="input"
             onChange={(e) => setTicker(e.target.value)}
             value={ticker}
+                        fontSize="16px"
+            height="60px"
+            textTransform="uppercase"
           />
           {errors.ticker && (
-            <Text color="red.500" fontSize="12px">
+            <Text color="red.500" fontSize="12px" textTransform="uppercase">
               *{errors.ticker}
             </Text>
           )}
         </VStack>
         <VStack alignItems="start" justifyContent="start">
-          <Text>Description</Text>
+          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">Biography</Text>
           <Input
-            backgroundColor="grey.100"
+            backgroundColor="input"
             border={0}
-            focusBorderColor="grey.50"
+            focusBorderColor="input"
             onChange={(e) => setDescription(e.target.value)}
             value={description}
+            fontSize="16px"
+            height="60px"
+            textTransform="uppercase"
           />
         </VStack>
         <VStack alignItems="start">
-          <Text>Add Image</Text>
+          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">Add Image</Text>
           <Box
             display="flex"
             alignItems="center"
@@ -384,6 +390,7 @@ function CreateAgentModule() {
               backgroundColor="grey.75"
               _hover={{ backgroundColor: "grey.75" }}
               cursor="pointer"
+              textTransform="uppercase"
             >
               Choose file
             </Button>
@@ -401,47 +408,58 @@ function CreateAgentModule() {
                 )}
           </Box>
         </VStack>
-        <VStack alignItems="start" justifyContent="start">
-          <Text>Twitter (optional)</Text>
+        <VStack alignItems="start" justifyContent="start" textTransform="uppercase">
+          <Text color="#4A4A55" fontSize="14px">Twitter (optional) Your AI Agent will tweet every 30 minutes.</Text>
           <Button
-            rightIcon={<RiTwitterXFill size="15px" />}
             color="primary"
             _hover={{
               opacity: 0.8,
             }}
+            height="60px"
+            width="100%"
             padding="1.5rem"
-            backgroundColor="grey.75"
+            backgroundColor="#4F4FCF"
             onClick={handleTwitterConnect}
             isLoading={twitterLinking}
             disabled={!!twtToken}
+            display="flex"
+            justifyContent="space-between"
+            textTransform="uppercase"
           >
-            {twtToken ? "connected" : "connect"}
+            <span>{twtToken ? "connected" : "Connect Twitter/X account"}</span>
+            <RiTwitterXFill size="15px" />
+
           </Button>
-          <Text color="grey.600" opacity={0.5} fontSize="12px">
+          <Text color="grey.600" opacity={0.5} fontSize="12px" textTransform="uppercase">
             *Connect your agent's twitter account and your agent will start
             posting autonomously
           </Text>
         </VStack>
-        <VStack alignItems="start" justifyContent="start" paddingBottom="1rem">
+        {/* <VStack alignItems="start" justifyContent="start" paddingBottom="1rem">
           <Text>Telegram (optional)</Text>
           <Input
             backgroundColor="grey.100"
             border={0}
-            focusBorderColor="grey.50"
+            focusBorderColor="input"
             onChange={(e) => setTelegramHandle(e.target.value)}
             value={telegramHandle}
           />
-        </VStack>
+        </VStack> */}
         <Center>
           <Button
-            width={{ base: "auto", md: "20vw" }}
+            width="100%"
             _hover={{
               opacity: 0.8,
             }}
+            bg="#18CA2A"
+            border="1px solid #1FEF34"
             isLoading={loading}
             onClick={handleSubmit}
+            height="46px"
+            color="white"
+            textTransform="uppercase"
           >
-            Create my Agent
+            Create Agent
           </Button>
         </Center>
       </Stack>

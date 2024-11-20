@@ -66,6 +66,7 @@ const config: Config = {
           "900": "#B9171A",
           "950": "#B9171A",
         },
+        input: "#1F1F22"
         // primary: {
         //   "50": "#f6f6f6",
         //   "100": "#e7e7e7",
