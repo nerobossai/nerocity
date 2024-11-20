@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Banner from "@/components/Banner";
 
 const Container = styled.div<{ $noHeaderOnMobile?: boolean }>`
   width: 100%;
@@ -31,6 +32,7 @@ const Main = (props: IPropType) => {
     <Container $noHeaderOnMobile={noHeaderOnMobile}>
       <GoogleAnalytics gaId="G-7KQEXTEH06" />
       <Header />
+      <Banner />
       {children}
       {nofooter ? null : <Footer />}
     </Container>

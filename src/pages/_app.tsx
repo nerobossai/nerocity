@@ -27,9 +27,9 @@ const theme = extendTheme({
     Tabs: tabsTheme,
   },
   fonts: {
-    body: "Tsukimi Rounded",
-    heading: "Tsukimi Rounded",
-    text: "Tsukimi Rounded",
+    body: "JetBrains Mono",
+    heading: "JetBrains Mono",
+    text: "JetBrains Mono",
   },
 });
 

@@ -1,10 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import 'fonts/fonts.scss';
-@import 'modules/breakpoints.scss';
-@import 'modules/swiper.scss';
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
 :root {
   --swiper-pagination-bullet-inactive-color: #e3e3e3;
@@ -13,6 +10,24 @@
 
 *::-webkit-scrollbar {
   display: none;
+}
+
+@font-face {
+  font-family: 'CustomFont';
+  src: url('/KNF.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  color: var(--foreground);
+  font-family: 'JetBrains Mono', monospace;
+  background-color: black;
+}
+
+.knf {
+  font-family: 'CustomFont', sans-serif;
+  font-weight: 400;
 }
 
 * {

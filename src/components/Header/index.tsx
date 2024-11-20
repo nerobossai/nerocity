@@ -2,8 +2,10 @@
 
 import {
   Avatar,
+  Box,
   Button,
   HStack,
+  Input,
   Link,
   Stack,
   Text,
@@ -26,6 +28,8 @@ import * as AuthUtils from "@/utils/AuthUtils";
 import HelpComponent from "../Help";
 import ProfileModalComponent from "../ProfileModal";
 import { Logo } from "../Svgs/Logo";
+import { FaWallet } from "react-icons/fa";
+import { BiSearch } from "react-icons/bi";
 
 const Container = styled.header`
   /* max-width: 490px; */
@@ -135,74 +139,89 @@ function Header() {
   };
 
   return (
-    <Container className="dual-header">
-      <Stack
-        direction={["row"]}
-        justifyContent={["space-between"]}
-        padding="1rem"
-        // paddingBottom={"1rem"}
-      >
-        <HStack>
-          <Link href="/">
-            <Logo />
-          </Link>
-          <Text
-            className="sm:text-md pointer text-[12px]"
-            cursor="pointer"
-            onClick={() => setOpenHelp(true)}
-          >
-            how does it work?
-          </Text>
-          <HelpComponent isOpen={openHelp} onClose={() => setOpenHelp(false)} />
-        </HStack>
-        <HStack>
-          {isAuthenticated ? (
-            <>
-              <Button
-                onClick={() => setIsOpen(true)}
-                backgroundColor="grey.100"
-                color="primary"
-                display="flex"
-                gap="10px"
-                alignItems="center"
-                _hover={{ opacity: 0.8 }}
-                fontSize="14px"
-                fontWeight={300}
-              >
-                <Avatar
-                  boxSize="20px"
-                  src={profile?.profile_pic ?? profile?.profile?.profile_pic}
-                />
-                <Text>{profile?.username ?? profile?.profile?.username}</Text>
-              </Button>
-              <ProfileModalComponent
-                userDetails={profile.profile ?? profile}
-                isOpen={isOpen && isAuthenticated}
-                onClose={() => setIsOpen(false)}
-                disconnect={handleDisconnect}
-                isDisconnecting={isDisconnecting}
-              />{" "}
-            </>
-          ) : (
-            <WalletModalProvider>
-              <WalletMultiButton
-                style={{
-                  backgroundColor: "#262A2E",
-                  color: "white",
-                  fontFamily: "Tsukimi Rounded",
-                  fontSize,
-                  justifyContent: "space-around",
-                  whiteSpace: "nowrap",
-                  textAlign: "center",
-                  padding: "0.5rem 1rem",
-                  maxWidth: "200px",
-                }}
+    <HStack bg="indigo.100" height="70px" pl="40px" py="1rem" align="center" gap="40px" justifyContent={{base:"space-between", md:"block"}}>
+      <Link href="/">
+        <Logo />
+      </Link>
+      <Box flexGrow="1" padding="20px" display={{base:"none", md:"block"}}>
+        <Box
+          px="2rem"
+          display="flex"
+          bg="indigo.200"
+          width="60%"
+          alignItems="center"
+          gap="20px"
+        >
+          <BiSearch size={20} />
+          <Input
+            outline="none"
+            border="0"
+            flexGrow="1"
+            padding="0"
+            placeholder="Search for agent / coin"
+            _focus={{
+              outline: "none",
+              border: "none",
+              boxShadow: "none",
+            }}
+          />
+        </Box>
+
+      </Box>
+      <HStack>
+        {isAuthenticated ? (
+          <>
+            <Button
+              onClick={() => setIsOpen(true)}
+              backgroundColor="grey.100"
+              color="primary"
+              display="flex"
+              gap="10px"
+              alignItems="center"
+              _hover={{ opacity: 0.8 }}
+              fontSize="14px"
+              fontWeight={300}
+            >
+              <Avatar
+                boxSize="20px"
+                src={profile?.profile_pic ?? profile?.profile?.profile_pic}
               />
-            </WalletModalProvider>
-          )}
-        </HStack>
-      </Stack>
-    </Container>
+              <Text>{profile?.username ?? profile?.profile?.username}</Text>
+            </Button>
+            <ProfileModalComponent
+              userDetails={profile.profile ?? profile}
+              isOpen={isOpen && isAuthenticated}
+              onClose={() => setIsOpen(false)}
+              disconnect={handleDisconnect}
+              isDisconnecting={isDisconnecting}
+            />{" "}
+          </>
+        ) : (
+          <WalletModalProvider>
+            <WalletMultiButton style={{backgroundColor:"transparent"}}>
+              <Button bg="#1FEF34" width="140px" borderRadius="0"  color="white" padding="15px" display="flex" justifyContent="space-between"
+                _hover={{
+                  boxShadow: "0px 2px 3px 0px #21972D1A"
+                }}
+                _focus={{
+                  boxShadow: "0px 6px 6px 0px #21972D17"
+                }}
+                _active={{
+                  boxShadow: "0px 14px 9px 0px #21972D0D"
+                }}
+                _disabled={{
+                  boxShadow: "0px 25px 10px 0px #21972D03"
+                }}
+              
+              gap="10px">
+                <FaWallet />
+                <span>Connect</span>
+              </Button>
+            </WalletMultiButton>
+          </WalletModalProvider>
+        )}
+      </HStack>
+    </HStack>
   );
 }
 
