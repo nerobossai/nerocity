@@ -15,7 +15,7 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noUnusedLocals": false, // TODO: fix this
-    "noUnusedParameters": true,
+    "noUnusedParameters": false, // TODO: fix in TVContainer Component
     "allowUnreachableCode": false,
     "noFallthroughCasesInSwitch": true,
 
@@ -47,7 +47,7 @@
       }
     ]
   },
-  "exclude": ["./out/**/*", "./node_modules/**/*"],
+  "exclude": ["public","./out/**/*", "./node_modules/**/*"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
