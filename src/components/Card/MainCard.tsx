@@ -39,6 +39,7 @@ function MainCard(props: CardProps) {
       onClick={handleClick}
       position="relative"
       overflow="hidden"
+      cursor="pointer"
     >
       <HStack
         className="card-main"

@@ -47,7 +47,7 @@ const RAYDIUM_MIGRATION_COMPLETED = "raydium_migration_completed";
 
 function CoinModule() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [agentDetails, setAgentDetails] = useState<AgentResponse>();
   const [price, setPrice] = useState<string>();
   const [marketCap, setMarketCap] = useState<string>();
@@ -298,7 +298,7 @@ function CoinModule() {
   return (
     <Container>
       <HStack width="100%" alignItems="center" p="20px" mt="12px">
-        <Box
+        {!loading && <Box
           display="flex"
           alignItems="center"
           gap="20px"
@@ -307,7 +307,7 @@ function CoinModule() {
         >
           <IoArrowBackSharp />
           <Text>BACK</Text>
-        </Box>
+        </Box>}
       </HStack>
       <HStack
         justifyContent="space-evenly"
