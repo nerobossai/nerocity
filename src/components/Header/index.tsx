@@ -1,13 +1,11 @@
 "use client";
 
 import {
-  Avatar,
   Box,
   Button,
   HStack,
   Input,
   Link,
-  Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -174,7 +172,7 @@ function Header() {
           <>
             <Button
               onClick={() => setIsOpen(true)}
-              backgroundColor="grey.100"
+              bg="#1FEF34"
               color="primary"
               display="flex"
               gap="10px"
@@ -182,12 +180,14 @@ function Header() {
               _hover={{ opacity: 0.8 }}
               fontSize="14px"
               fontWeight={300}
+              borderRadius="0"
+              marginRight="15px"
             >
-              <Avatar
-                boxSize="20px"
-                src={profile?.profile_pic ?? profile?.profile?.profile_pic}
-              />
-              <Text>{profile?.username ?? profile?.profile?.username}</Text>
+              <FaWallet />
+              <span>
+                {profile.profile.public_key.slice(0, 3)}...
+                {profile.profile.public_key.slice(-3)}
+              </span>
             </Button>
             <ProfileModalComponent
               userDetails={profile.profile ?? profile}

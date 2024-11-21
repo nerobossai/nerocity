@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Input,
   Spinner,
   Stack,
   Text,
@@ -9,6 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import React, { useEffect, useState } from "react";
+import { FaRegHeart } from "react-icons/fa";
+import { FaRegComment } from "react-icons/fa6";
 
 import ChatModelComponent from "@/components/ChatModel";
 import ChatRowComponent from "@/components/ChatRow";
@@ -18,6 +21,34 @@ import { trackComment, trackReply } from "./services/analytics";
 import type { ChatsResponse } from "./services/coinApiClient";
 import { coinApiClient } from "./services/coinApiClient";
 
+const AddComment = ({ comment, setComment, isAuthenticated }: any) => {
+  return (
+    <Box width="100%" bg="#454545" display="flex" padding="0.5rem" my="10px">
+      <Input
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        flexGrow="1"
+        placeholder="Add a comment"
+        outline="none"
+        border="none"
+        disabled={!isAuthenticated}
+        _focus={{
+          border: "none",
+          boxShadow: "none",
+        }}
+      />
+      <Button
+        padding="10px 20px"
+        bg="white"
+        fontSize="12px"
+        color="black"
+        disabled={!isAuthenticated}
+      >
+        POST
+      </Button>
+    </Box>
+  );
+};
 function ChatModule(props: { agentId: string }) {
   const toast = useToast();
   const { publicKey } = useWallet();
@@ -93,43 +124,84 @@ function ChatModule(props: { agentId: string }) {
   }, []);
 
   return (
-    <Stack
-      backgroundColor="grey.50"
-      padding="1rem"
-      flexGrow="1"
-      marginBottom="4rem"
-    >
+    <Stack padding="1rem" flexGrow="1" marginBottom="4rem">
       <Text>Chat with agent and users</Text>
+      <AddComment
+        comment={comment}
+        setComment={setComment}
+        isAuthenticated={isAuthenticated}
+      />
       {(chats?.chats || []).map((data, r) => {
         return (
           <Stack key={r}>
             <ChatRowComponent {...data} />
-            <Stack marginLeft="3rem">
-              {data.replies
-                .sort(
-                  (a, b) =>
-                    parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10),
-                )
-                .map((rData, v: number) => {
-                  return <ChatRowComponent {...rData} key={v} />;
-                })}
-              <Button
+            Display this Stack only if reply button is clicked
+            {selectedMessageId === data.message_id && (
+              <Stack marginLeft="3rem">
+                {data.replies
+                  .sort(
+                    (a, b) =>
+                      parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10),
+                  )
+                  .map((rData, v: number) => {
+                    return <ChatRowComponent {...rData} key={v} />;
+                  })}{" "}
+                <AddComment
+                  comment={comment}
+                  setComment={setComment}
+                  isAuthenticated={isAuthenticated}
+                />
+              </Stack>
+            )}
+            <Box
+              display="flex"
+              paddingRight="20px"
+              gap="20px"
+              marginLeft="0.5rem"
+            >
+              <Box
                 fontSize="12px"
-                color="white"
-                width="20%"
-                variant="ghosted"
-                backgroundColor="grey.100"
+                color="#8C8C8C"
+                backgroundColor="transparent"
                 _hover={{
                   opacity: 0.8,
                 }}
                 onClick={() => {
-                  setSelectedMessageId(data.message_id);
-                  onOpen();
+                  setSelectedMessageId(
+                    data.message_id === selectedMessageId
+                      ? undefined
+                      : data.message_id,
+                  );
                 }}
+                display="flex"
+                gap="5px"
+                alignItems="center"
+                cursor="pointer"
               >
-                Reply
-              </Button>
-            </Stack>
+                <FaRegHeart /> Like
+              </Box>
+              <Box
+                fontSize="12px"
+                color="#8C8C8C"
+                backgroundColor="transparent"
+                _hover={{
+                  opacity: 0.8,
+                }}
+                onClick={() => {
+                  setSelectedMessageId(
+                    data.message_id === selectedMessageId
+                      ? undefined
+                      : data.message_id,
+                  );
+                }}
+                display="flex"
+                gap="5px"
+                alignItems="center"
+                cursor="pointer"
+              >
+                <FaRegComment /> Reply
+              </Box>
+            </Box>
           </Stack>
         );
       })}
@@ -144,33 +216,6 @@ function ChatModule(props: { agentId: string }) {
           <Spinner />
         </Box>
       )}
-      <Box display="flex" alignItems="flex-start">
-        <Button
-          fontSize={{ base: "8px", sm: "12px" }}
-          color="white"
-          variant="ghosted"
-          marginTop="0.5rem"
-          backgroundColor="grey.100"
-          _hover={{
-            opacity: 0.8,
-          }}
-          onClick={() => {
-            if (!isAuthenticated) {
-              toast({
-                title: "",
-                description: "Please connect wallet to message!",
-                status: "info",
-                position: "bottom-right",
-              });
-              return;
-            }
-            setSelectedMessageId(undefined);
-            onOpen();
-          }}
-        >
-          Post Message
-        </Button>
-      </Box>
       <ChatModelComponent
         isOpen={isOpen}
         onClose={() => {
