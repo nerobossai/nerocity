@@ -1,4 +1,4 @@
-import { Box, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react";
+import { Box, Table, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react";
 import React from "react";
 
 interface ActivityProps {
@@ -13,7 +13,7 @@ interface ActivityProps {
 function ActivityTable({ activities }: { activities: ActivityProps[] }) {
   return (
     <VStack bg="#1B1B1E" width="100%" px="2rem">
-      <Box as="table" width="100%">
+      <Table as="table" width="100%">
         <Thead fontSize="12px" color="#9B9B9B" textTransform="uppercase">
           <Tr>
             <Th color="text.100" textAlign="left">
@@ -67,7 +67,7 @@ function ActivityTable({ activities }: { activities: ActivityProps[] }) {
             </Box>
           ))}
         </Tbody>
-      </Box>
+      </Table>
     </VStack>
   );
 }
