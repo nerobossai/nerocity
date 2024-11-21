@@ -21,7 +21,7 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
     <Stack
       fontSize="12px"
       spacing="1rem"
-      marginTop="1rem"
+      marginTop="42px"
       border="1px solid #5B2AA9"
       padding="1rem"
     >
@@ -48,7 +48,7 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
         </VStack>
         <VStack gap="5px" alignItems="flex-start">
           <Text color="text.100">CREATOR</Text>
-          <Text fontSize="12px">{props.replies}</Text>
+          <Text fontSize="12px">{props.created_by}</Text>
         </VStack>
 
         <VStack gap="5px" alignItems="flex-start">
@@ -61,13 +61,13 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
           <Text fontSize="12px">+120%</Text>
         </VStack>
       </Grid>
-      <Text>
-        When the market cap reaches $69k all the liquidity from the bonding
-        curve will be deposited into Raydium and burned. <br /> <br /> There are{" "}
-        {props.current_real_token_reserves || 0} tokens still available for sale
-        in the bonding curve, and there is {props.sol_reserve || 0} SOL in the
-        bonding curve.
-      </Text>
+
+      <VStack alignItems="flex-start" gap="4px">
+        <Text color="text.100">ABOUT</Text>
+        <Text>
+              {props.description}
+        </Text>
+      </VStack>
       {/* <HStack justifyContent="start" alignItems="start" spacing="1rem">
         <Image
           boxSize="5rem"

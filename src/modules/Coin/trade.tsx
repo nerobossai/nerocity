@@ -9,6 +9,7 @@ import {
   Stack,
   Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
@@ -45,6 +46,9 @@ function TradeModule(props: TradeModuleProps) {
   const [dollarInput, setDollarInput] = useState<string | number>();
   const [output, setOutput] = useState<string>();
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [selectedSol, setSelectedSol] = useState(0.1);
+
+  const buttons = [0.1, 0.5, 1, 5];
 
   const fetchPrice = async () => {
     try {
@@ -71,7 +75,7 @@ function TradeModule(props: TradeModuleProps) {
         setOutput((buy / 10 ** 6).toFixed(8));
         setDollarInput(
           parseFloat(amount) *
-            parseFloat(solPrice?.solana.usd.toString() || "1"),
+          parseFloat(solPrice?.solana.usd.toString() || "1"),
         );
       } else {
         const sell = tmp!.getSellPrice(parseInt(amount, 10), 100) / 100;
@@ -193,6 +197,7 @@ function TradeModule(props: TradeModuleProps) {
         padding="1rem"
         backgroundColor="grey.50"
         borderRadius="0.5rem"
+        gap="1rem"
       >
         <HStack
           justifyContent="flex-start"
@@ -226,7 +231,30 @@ function TradeModule(props: TradeModuleProps) {
             Sell
           </Button>
         </HStack>
-        <InputGroup opacity={props.pumpfunData?.complete ? "0.6" : "1"}>
+
+        <VStack alignItems="flex-start" gap="4px">
+          <Text color="text.100" fontSize="10px">YOU PAY</Text>
+          <HStack width="100%" gap="5px">
+            {buttons.map((button, index) => (
+              <Button
+                key={index}
+                borderRadius="0"
+                onClick={() => {setInput(button as any); setToken(button as any); setSelectedSol(button)}}
+                bg={selectedSol === button ? "white" : "#222227"}
+                color={selectedSol === button ? "black" : "#818181"}
+                _hover={{
+                  bg: selectedSol === button ? "white" : "#333",
+                }}
+                padding="10px 20px"
+                fontSize="12px"
+              >
+                {button} SOL
+              </Button>
+            ))}
+          </HStack>
+        </VStack>
+
+        <InputGroup opacity={props.pumpfunData?.complete ? "0.6" : "1"} borderRadius="0">
           <Input
             backgroundColor="grey.100"
             border={0}
@@ -238,30 +266,16 @@ function TradeModule(props: TradeModuleProps) {
             disabled={!!props.pumpfunData?.complete}
             value={input}
             type="number"
+            borderRadius="0"
           />
-          <InputRightAddon backgroundColor="grey.100" border={0}>
+          <InputRightAddon backgroundColor="grey.100" border={0} borderRadius="0">
             {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`}
           </InputRightAddon>
         </InputGroup>
-        <HStack
-          justifyContent="space-between"
-          opacity={props.pumpfunData?.complete ? "0.6" : "1"}
-        >
-          <Text fontSize="10px" fontWeight="bold">
-            ${dollarInput}
-          </Text>
-          <Text fontSize="10px" fontWeight="bold">
-            1 {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`} ={" "}
-            {loading ? (
-              <Spinner />
-            ) : active === "buy" ? (
-              `$${solPrice?.solana.usd}` || "$164.84"
-            ) : (
-              <SubscriptText value={props.currentPrice} />
-            )}
-          </Text>
-        </HStack>
-        <InputGroup opacity={props.pumpfunData?.complete ? "0.6" : "1"}>
+        
+        <VStack alignItems="flex-start" gap="4px">
+          <Text color="text.100" fontSize="10px">YOU GET</Text>
+          <InputGroup opacity={props.pumpfunData?.complete ? "0.6" : "1"}>
           <Input
             backgroundColor="grey.100"
             border={0}
@@ -271,13 +285,17 @@ function TradeModule(props: TradeModuleProps) {
               backgroundColor: "grey.100",
             }}
             value={output}
+            borderRadius="0"
           />
-          <InputRightAddon backgroundColor="grey.100" border={0}>
+          <InputRightAddon backgroundColor="grey.100" border={0} borderRadius="0">
             {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`}
           </InputRightAddon>
         </InputGroup>
+        </VStack>
+
 
         <Button
+          mt="4px"
           onClick={placeTrade}
           isLoading={submitting}
           style={{
@@ -287,7 +305,7 @@ function TradeModule(props: TradeModuleProps) {
               ? "white"
               : active === "buy"
                 ? "#18CA2A"
-                : "red.50",
+                : "#570A18",
             color: props.pumpfunData?.complete ? "black" : "white",
           }}
         >
@@ -301,10 +319,10 @@ function TradeModule(props: TradeModuleProps) {
         <Box
           borderTop="1px solid #29292E"
           paddingTop="10px"
-          marginTop="20px"
+          margin="0 5px"
           display="flex"
           flexDirection="column"
-          gap="10px"
+          gap="5px"
           transform="uppercase"
         >
           <Text

@@ -42,6 +42,7 @@ const AddComment = ({ comment, setComment, isAuthenticated }: any) => {
         bg="white"
         fontSize="12px"
         color="black"
+        borderRadius="0"
         disabled={!isAuthenticated}
       >
         POST

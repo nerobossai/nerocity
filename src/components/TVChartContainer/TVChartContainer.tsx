@@ -61,5 +61,5 @@ export const TVChartContainer = (props: TVChartContainerProps) => {
     };
   }, [props]);
 
-  return <div ref={chartContainerRef} className={styles.TVChartContainer} />;
+  return <div ref={chartContainerRef} className={styles.TVChartContainer} style={{height:"400px"}} />;
 };

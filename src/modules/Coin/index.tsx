@@ -297,7 +297,7 @@ function CoinModule() {
 
   return (
     <Container>
-      <HStack width="100%" alignItems="center" py="1rem">
+      <HStack width="100%" alignItems="center" p="20px" mt="12px">
         <Box
           display="flex"
           alignItems="center"
@@ -313,8 +313,9 @@ function CoinModule() {
         justifyContent="space-evenly"
         alignItems="start"
         flexDirection={["column-reverse", "row"]}
-        gap="20px"
+        gap="2rem"
         width="100%"
+        p="20px"
       >
         <Stack padding="0 1rem" bg="#1B1B1E" flexGrow="1">
           {loading ? (
