@@ -26,7 +26,7 @@ import type {
 } from "../Home/services/homeApiClient";
 import { homeApiClient } from "../Home/services/homeApiClient";
 import AboutModule from "./about";
-import ChatModule from "./chats";
+import ActivityBar from "./activityBar";
 import CoinHeaderModule from "./coinheader";
 import type { PumpfunCoinResponse } from "./services/coinApiClient";
 import { coinApiClient } from "./services/coinApiClient";
@@ -288,7 +288,7 @@ function CoinModule() {
           padding="1rem"
           gap="20px"
         >
-          <ChatModule agentId={agentDetails.id} />
+          <ActivityBar agentId={agentDetails.id} />
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </Box>
       );
@@ -313,8 +313,10 @@ function CoinModule() {
         justifyContent="space-evenly"
         alignItems="start"
         flexDirection={["column-reverse", "row"]}
+        gap="20px"
+        width="100%"
       >
-        <Stack padding="0 1rem" bg="#1B1B1E">
+        <Stack padding="0 1rem" bg="#1B1B1E" flexGrow="1">
           {loading ? (
             <Spinner />
           ) : agentDetails ? (
@@ -346,10 +348,10 @@ function CoinModule() {
           {loading ? (
             <Spinner />
           ) : agentDetails ? (
-            <ChatModule agentId={agentDetails.id} />
+            <ActivityBar agentId={agentDetails.id} />
           ) : null}
         </Stack>
-        <Box padding="0" alignItems="flex-start">
+        <Box padding="0" alignItems="flex-start" maxWidth="320px">
           {loading ? (
             <Spinner />
           ) : agentDetails ? (

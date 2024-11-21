@@ -1,124 +1,182 @@
-import {
-  Grid,
-  Heading,
-  HStack,
-  Image,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Heading, HStack, Image, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 
 import { timeDifference } from "@/utils/timeDifference";
 
-import type { CardProps } from "./index";
+interface CardProps {
+  id: string;
+  image: string;
+  ticker: string;
+  name: string;
+  description: string;
+  created_at: string | number;
+  created_by: string;
+  market_cap: string;
+  fee_basis_points: string;
+  replies: string;
+}
 
-function RowCard(props: CardProps) {
-  const navigator = useRouter();
-  const handleClick = () => {
-    if (props.onClick) {
-      props.onClick();
-    } else {
-      navigator.push(props.id);
-    }
-  };
+function DataTable({ feed }: { feed: CardProps[] }) {
+  const router = useRouter();
   return (
-    <Stack
-      padding="20px"
-      width="100%"
-      marginTop="20px"
-      border="1px solid #343434"
-      bg="#1B1B1E"
-      display="flex"
-      flexDirection={{ base: "column", md: "row" }}
-      justifyContent="center"
-      cursor="pointer"
-      _hover={{ opacity: 0.8 }}
-      onClick={handleClick}
-    >
-      <HStack
-        className="card-main"
-        justifyContent="start"
-        alignItems="start"
-        spacing="1rem"
-        gap="1rem"
-      >
-        <Image
-          boxSize="6rem"
-          objectFit="cover"
-          src={props.image}
-          alt="ai agent image"
-        />
-        <VStack textAlign="left" alignItems="start">
-          <Heading as="h4" size="md" fontSize="16px">
-            {props.ticker}
-          </Heading>
-          <Heading as="h5" size="sm" textAlign="left">
-            {props.name}
-          </Heading>
-          <Text fontSize="12px" fontWeight="bold" color="text.100">
-            {props.description}
-          </Text>
-        </VStack>
-      </HStack>
-      <Grid
-        templateColumns={{
-          base: "repeat(2, 1fr)", // 2 columns for small screens
-          md: "repeat(3, 1fr)", // 3 columns for medium screens
-          lg: "repeat(6, 1fr)", // 6 columns for large screens
+    <VStack bg="#1B1B1E" width="100%" px="2rem">
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "separate",
+          borderSpacing: "0 20px", // Space between rows
         }}
-        textTransform="uppercase"
-        gap="2rem"
       >
-        <VStack alignItems="flex-end">
-          <Text fontSize="12px" color="text.100">
-            CREATED
-          </Text>
-          <Text fontSize="14px">
-            {timeDifference(
-              Date.now(),
-              parseInt(props.created_at.toString(), 10),
-            )}
-          </Text>
-        </VStack>
-        <VStack alignItems="flex-end">
-          <Text fontSize="12px" color="text.100">
-            CREATOR
-          </Text>
-          <Text fontSize="14px" color="#00C2FF">
-            {props.created_by}
-          </Text>
-        </VStack>
-        <VStack alignItems="flex-end">
-          <Text fontSize="12px" color="text.100">
-            MCAP
-          </Text>
-          <Text fontSize="14px">{props.market_cap}</Text>
-        </VStack>
-        <VStack alignItems="flex-end">
-          <Text fontSize="12px" color="text.100">
-            HOLDERS
-          </Text>
-          <Text fontSize="14px">{props.fee_basis_points}</Text>
-        </VStack>
-        <VStack alignItems="flex-end">
-          <Text fontSize="12px" color="text.100">
-            COMMENTS
-          </Text>
-          <Text fontSize="14px">{props.replies}</Text>
-        </VStack>
-        <VStack alignItems="flex-end">
-          <Text fontSize="12px" color="text.100">
-            24H
-          </Text>
-          <Text fontSize="14px" color="green.100">
-            120%
-          </Text>
-        </VStack>
-      </Grid>
-    </Stack>
+        <thead>
+          <tr>
+            <th
+              style={{ color: "#656565", textAlign: "left", padding: "1rem" }}
+            >
+              Ticker
+            </th>
+            <th
+              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
+            >
+              Created
+            </th>
+            <th
+              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
+            >
+              Creator
+            </th>
+            <th
+              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
+            >
+              MCAP
+            </th>
+            <th
+              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
+            >
+              Holders
+            </th>
+            <th
+              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
+            >
+              Comments
+            </th>
+            <th
+              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
+            >
+              24H
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {feed.map((data: CardProps) =>
+            parseFloat(data.market_cap) >= 0 ? (
+              <tr
+                key={data.id}
+                style={{ backgroundColor: "transparent", cursor: "pointer" }}
+                onClick={() => router.push(`/${data.id}`)}
+              >
+                {/* Ticker Column */}
+                <td
+                  style={{
+                    height: "120px",
+                    padding: "1rem",
+                    borderRight: "0px",
+                    border: "1px solid 1px solid #343434 0 1px solid #343434",
+                  }}
+                >
+                  <HStack spacing="1rem">
+                    <Image
+                      boxSize="4rem"
+                      objectFit="cover"
+                      src={data.image}
+                      alt="Ticker Image"
+                    />
+                    <VStack alignItems="flex-start" spacing="0">
+                      <Heading as="h4" size="sm" fontSize="16px" color="white">
+                        {data.ticker}
+                      </Heading>
+                      <Text fontSize="12px">{data.name}</Text>
+                      <Text
+                        fontSize="12px"
+                        color="gray.500"
+                        maxWidth="200px"
+                        overflow="hidden"
+                      >
+                        {data.description.slice(0, 20)}...
+                      </Text>
+                    </VStack>
+                  </HStack>
+                </td>
+                {/* Remaining Columns */}
+                <td
+                  style={{
+                    textAlign: "right",
+                    color: "white",
+                    padding: "1rem",
+                    border: "1px solid #343434 0",
+                  }}
+                >
+                  {timeDifference(
+                    Date.now(),
+                    parseInt(data.created_at.toString(), 10),
+                  )}
+                </td>
+                <td
+                  style={{
+                    textAlign: "right",
+                    color: "#00C2FF",
+                    padding: "1rem",
+                    border: "1px solid #343434 0",
+                  }}
+                >
+                  {data.created_by}
+                </td>
+                <td
+                  style={{
+                    textAlign: "right",
+                    color: "white",
+                    padding: "1rem",
+                    border: "1px solid #343434 0",
+                  }}
+                >
+                  {data.market_cap}
+                </td>
+                <td
+                  style={{
+                    textAlign: "right",
+                    color: "white",
+                    padding: "1rem",
+                    border: "1px solid #343434 0",
+                  }}
+                >
+                  {data.fee_basis_points}
+                </td>
+                <td
+                  style={{
+                    textAlign: "right",
+                    color: "white",
+                    padding: "1rem",
+                    border: "0px solid #343434 0",
+                  }}
+                >
+                  {data.replies}
+                </td>
+                <td
+                  style={{
+                    textAlign: "right",
+                    padding: "1rem",
+                    color: "#00FF29",
+                  }}
+                >
+                  +{data.replies}%
+                </td>
+              </tr>
+            ) : null,
+          )}
+        </tbody>
+      </table>
+    </VStack>
   );
 }
 
-export default RowCard;
+export default DataTable;

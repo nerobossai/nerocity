@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Center,
+  HStack,
   Input,
   Stack,
   Text,
@@ -13,6 +14,7 @@ import { Keypair } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { IoArrowBackSharp } from "react-icons/io5";
 import { RiTwitterXFill } from "react-icons/ri";
 import styled from "styled-components";
 import z from "zod";
@@ -29,7 +31,7 @@ import { trackAgentCreation } from "./services/analytics";
 const Container = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   padding: 1rem;
 `;
@@ -86,6 +88,7 @@ function CreateAgentModule() {
     metadataUri: string;
   }>();
   const [twtToken, setTwtToken] = useState<string>();
+  const router = useRouter();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -315,21 +318,37 @@ function CreateAgentModule() {
 
   return (
     <Container>
+      <HStack width="100%" alignItems="center" py="1rem">
+        <Box
+          display="flex"
+          alignItems="center"
+          gap="20px"
+          cursor="pointer"
+          marginLeft="40px"
+          onClick={() => router.push("/")}
+        >
+          <IoArrowBackSharp />
+          <Text>BACK</Text>
+        </Box>
+      </HStack>
       <Stack
         padding="2rem"
         borderRadius="1rem"
         gap="20px"
-        
+        maxWidth="1200px"
+        margin="auto"
       >
         <VStack alignItems="start" justifyContent="start">
-          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">Agent Name & PFP</Text>
+          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
+            Agent Name & PFP
+          </Text>
           <Input
             backgroundColor="grey.100"
             border={0}
             focusBorderColor="input"
             onChange={(e) => setName(e.target.value)}
             value={name}
-                        fontSize="16px"
+            fontSize="16px"
             height="60px"
             textTransform="uppercase"
           />
@@ -340,14 +359,16 @@ function CreateAgentModule() {
           )}
         </VStack>
         <VStack alignItems="start" justifyContent="start">
-          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">Ticker</Text>
+          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
+            Ticker
+          </Text>
           <Input
             backgroundColor="input"
             border={0}
             focusBorderColor="input"
             onChange={(e) => setTicker(e.target.value)}
             value={ticker}
-                        fontSize="16px"
+            fontSize="16px"
             height="60px"
             textTransform="uppercase"
           />
@@ -358,7 +379,9 @@ function CreateAgentModule() {
           )}
         </VStack>
         <VStack alignItems="start" justifyContent="start">
-          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">Biography</Text>
+          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
+            Biography
+          </Text>
           <Input
             backgroundColor="input"
             border={0}
@@ -371,7 +394,9 @@ function CreateAgentModule() {
           />
         </VStack>
         <VStack alignItems="start">
-          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">Add Image</Text>
+          <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
+            Add Image
+          </Text>
           <Box
             display="flex"
             alignItems="center"
@@ -408,8 +433,14 @@ function CreateAgentModule() {
                 )}
           </Box>
         </VStack>
-        <VStack alignItems="start" justifyContent="start" textTransform="uppercase">
-          <Text color="#4A4A55" fontSize="14px">Twitter (optional) Your AI Agent will tweet every 30 minutes.</Text>
+        <VStack
+          alignItems="start"
+          justifyContent="start"
+          textTransform="uppercase"
+        >
+          <Text color="#4A4A55" fontSize="14px">
+            Twitter (optional) Your AI Agent will tweet every 30 minutes.
+          </Text>
           <Button
             color="primary"
             _hover={{
@@ -428,9 +459,13 @@ function CreateAgentModule() {
           >
             <span>{twtToken ? "connected" : "Connect Twitter/X account"}</span>
             <RiTwitterXFill size="15px" />
-
           </Button>
-          <Text color="grey.600" opacity={0.5} fontSize="12px" textTransform="uppercase">
+          <Text
+            color="grey.600"
+            opacity={0.5}
+            fontSize="12px"
+            textTransform="uppercase"
+          >
             *Connect your agent's twitter account and your agent will start
             posting autonomously
           </Text>

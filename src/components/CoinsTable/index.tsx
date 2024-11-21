@@ -1,7 +1,7 @@
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 
-import RowCard from "../Card/RowCard";
+import DataTable from "../Card/RowCard";
 
 function CoinsTable({ feed }: any) {
   return (
@@ -26,13 +26,14 @@ function CoinsTable({ feed }: any) {
         </HStack>
       </HStack>
 
-      <VStack bg="#1B1B1E" padding="2rem">
+      {/* <VStack bg="#1B1B1E" padding="2rem">
         {feed.map((data: any) => {
           return parseFloat(data.market_cap) >= 0 ? (
             <RowCard {...data} key={data.id} />
           ) : null;
         })}
-      </VStack>
+      </VStack> */}
+      <DataTable feed={feed} />
     </VStack>
   );
 }
