@@ -1,4 +1,5 @@
 import {
+  Box,
   Grid,
   Heading,
   HStack,
@@ -13,6 +14,7 @@ import React from "react";
 import { timeDifference } from "@/utils/timeDifference";
 
 import type { CardProps } from "./index";
+import { StarSticker } from "../Svgs/Star";
 
 function MainCard(props: CardProps) {
   const navigator = useRouter();
@@ -35,6 +37,8 @@ function MainCard(props: CardProps) {
       justifyContent="center"
       _hover={{ opacity: 0.8 }}
       onClick={handleClick}
+      position="relative"
+      overflow="hidden"
     >
       <HStack
         className="card-main"
@@ -113,6 +117,9 @@ function MainCard(props: CardProps) {
           </Text>
           <Text fontSize="14px">120%</Text>
         </VStack>
+        <Box position="absolute" bottom="0" right="0">
+      <StarSticker />
+      </Box>
       </Grid>
     </Stack>
   );

@@ -80,8 +80,9 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                   style={{
                     height: "120px",
                     padding: "1rem",
-                    borderRight: "0px",
-                    border: "1px solid 1px solid #343434 0 1px solid #343434",
+                    borderLeft: "1px solid #343434",
+                    borderTop: "1px solid #343434",
+                    borderBottom: "1px solid #343434",
                   }}
                 >
                   <HStack spacing="1rem">
@@ -113,7 +114,8 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     textAlign: "right",
                     color: "white",
                     padding: "1rem",
-                    border: "1px solid #343434 0",
+                    borderTop: "1px solid #343434",
+                    borderBottom: "1px solid #343434",
                   }}
                 >
                   {timeDifference(
@@ -126,7 +128,8 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     textAlign: "right",
                     color: "#00C2FF",
                     padding: "1rem",
-                    border: "1px solid #343434 0",
+                    borderTop: "1px solid #343434",
+                    borderBottom: "1px solid #343434",
                   }}
                 >
                   {data.created_by}
@@ -136,7 +139,8 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     textAlign: "right",
                     color: "white",
                     padding: "1rem",
-                    border: "1px solid #343434 0",
+                    borderTop: "1px solid #343434",
+                    borderBottom: "1px solid #343434",
                   }}
                 >
                   {data.market_cap}
@@ -146,7 +150,8 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     textAlign: "right",
                     color: "white",
                     padding: "1rem",
-                    border: "1px solid #343434 0",
+                    borderTop: "1px solid #343434",
+                    borderBottom: "1px solid #343434",
                   }}
                 >
                   {data.fee_basis_points}
@@ -156,7 +161,8 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     textAlign: "right",
                     color: "white",
                     padding: "1rem",
-                    border: "0px solid #343434 0",
+                    borderTop: "1px solid #343434",
+                    borderBottom: "1px solid #343434",
                   }}
                 >
                   {data.replies}
@@ -166,6 +172,9 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     textAlign: "right",
                     padding: "1rem",
                     color: "#00FF29",
+                    borderTop: "1px solid #343434",
+                    borderBottom: "1px solid #343434",
+                    borderRight: "1px solid #343434",
                   }}
                 >
                   +{data.replies}%

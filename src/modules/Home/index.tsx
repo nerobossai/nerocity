@@ -6,11 +6,12 @@ import styled from "styled-components";
 
 import MainCard from "@/components/Card/MainCard";
 import CoinsTable from "@/components/CoinsTable";
-import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
+import { HomeSticker } from "@/components/Svgs/homeSticker";
+import { Paths } from "@/constants/paths";
 
 const Container = styled.div`
   width: 100%;
@@ -79,19 +80,22 @@ function HomeModule() {
             width="100%"
             alignItems="center"
             bg="linear-gradient(100.39deg, #290D57 -0.99%, #653CA8 112.46%)"
-            padding="20px"
             display="flex"
             justifyContent="space-between"
           >
-            <Text fontSize="24px" className="knf">
+            <Text fontSize="24px" className="knf" textTransform="uppercase" margin="20px">
               Your agent can make it rain.
             </Text>
+            <Box flexGrow="1" display={{base:"none", lg: "block"}}>
+              <HomeSticker />
+            </Box>
             <Button
               _hover={{
                 opacity: 0.8,
               }}
-              border="0"
+              borderRadius="0"
               onClick={() => navigator.push(Paths.createAgent)}
+              margin="20px"
             >
               CREATE AGENT
             </Button>
@@ -109,37 +113,6 @@ function HomeModule() {
             </Box>
           ) : (
             <CoinsTable feed={feed} />
-            // <Stack
-            //   marginTop="2rem"
-            //   fontSize={{ base: "16px", sm: "12px" }}
-            //   alignItems="flex-start"
-            //   padding="1rem"
-            // >
-            //   <Button
-            //     fontSize={{ base: "sm", md: "md", lg: "lg" }}
-            //     colorScheme="blue"
-            //     _hover={{
-            //       opacity: 0.8,
-            //     }}
-            //     maxW={{ md: "200px", lg: "250px" }}
-            //     margin={{ base: "0px", md: "20px" }}
-            //   >
-            //     sort: created at
-            //   </Button>
-            //   <SimpleGrid
-            //     columns={{ base: 1, md: 1, lg: 3 }}
-            //     spacing={10}
-            //     padding={0}
-            //     marginBottom={{ base: "40px", md: "40px" }}
-            //     marginLeft={{ base: "0", md: "20px" }}
-            //   >
-            //     {feed.map((data: any) => {
-            //       return parseFloat(data.market_cap) >= 0 ? (
-            //         <Card {...data} key={data.id} />
-            //       ) : null;
-            //     })}
-            //   </SimpleGrid>
-            // </Stack>
           )}
         </Stack>
       </Stack>
