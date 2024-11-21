@@ -96,7 +96,7 @@ function CreateAgentModule() {
   }>();
   const [twtToken, setTwtToken] = useState<string>();
   const [traits, setTraits] = useState([]);
-  const [screen, setScreen] = useState(3);
+  const [screen, setScreen] = useState(1);
   const router = useRouter();
 
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
