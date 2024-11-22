@@ -13,8 +13,8 @@ import React from "react";
 
 import { timeDifference } from "@/utils/timeDifference";
 
-import type { CardProps } from "./index";
 import { StarSticker } from "../Svgs/Star";
+import type { CardProps } from "./index";
 
 function MainCard(props: CardProps) {
   const navigator = useRouter();
@@ -119,8 +119,8 @@ function MainCard(props: CardProps) {
           <Text fontSize="14px">120%</Text>
         </VStack>
         <Box position="absolute" bottom="0" right="0">
-      <StarSticker />
-      </Box>
+          <StarSticker />
+        </Box>
       </Grid>
     </Stack>
   );

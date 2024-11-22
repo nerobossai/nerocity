@@ -14,7 +14,7 @@ import {
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { FaWallet } from "react-icons/fa";
 import styled from "styled-components";
@@ -66,6 +66,17 @@ function Header() {
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
   const isLargeScreen = useBreakpointValue({ base: false, md: true });
 
+  const walletAddress = useMemo(() => {
+    if (profile && profile.profile && profile.profile.public_key) {
+      return `${profile.profile.public_key.slice(
+        0,
+        3,
+      )}...${profile.profile.public_key.slice(-3)}`;
+    }
+
+    return "tst...val";
+  }, [profile]);
+
   const handleSignin = async () => {
     try {
       if (!signIn) return;
@@ -84,8 +95,7 @@ function Header() {
         isAuthenticated: true,
         token: resp.token,
       };
-
-      setUserProfile(profileObject.profile);
+      setUserProfile(profileObject);
       setToken(profileObject.token);
       setAuthenticated(true);
       setIsOpen(false);
@@ -184,10 +194,7 @@ function Header() {
               marginRight="15px"
             >
               <FaWallet />
-              <span>
-                {profile.profile.public_key.slice(0, 3)}...
-                {profile.profile.public_key.slice(-3)}
-              </span>
+              <span>{walletAddress}</span>
             </Button>
             <ProfileModalComponent
               userDetails={profile.profile ?? profile}

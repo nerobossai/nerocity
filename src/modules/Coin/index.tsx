@@ -298,16 +298,18 @@ function CoinModule() {
   return (
     <Container>
       <HStack width="100%" alignItems="center" p="20px" mt="12px">
-        {!loading && <Box
-          display="flex"
-          alignItems="center"
-          gap="20px"
-          cursor="pointer"
-          onClick={() => router.push("/")}
-        >
-          <IoArrowBackSharp />
-          <Text>BACK</Text>
-        </Box>}
+        {!loading && (
+          <Box
+            display="flex"
+            alignItems="center"
+            gap="20px"
+            cursor="pointer"
+            onClick={() => router.push("/")}
+          >
+            <IoArrowBackSharp />
+            <Text>BACK</Text>
+          </Box>
+        )}
       </HStack>
       <HStack
         justifyContent="space-evenly"

@@ -2,8 +2,8 @@ import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 
 import DataTable from "../Card/RowCard";
-import { GainerIcon } from "../Svgs/GainerIcon";
 import { AllCoins } from "../Svgs/AllCoins";
+import { GainerIcon } from "../Svgs/GainerIcon";
 import { LoserIcon } from "../Svgs/LoserIcon";
 import { MigrationIcon } from "../Svgs/MigrationIcon";
 

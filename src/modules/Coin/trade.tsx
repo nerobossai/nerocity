@@ -5,7 +5,6 @@ import {
   Input,
   InputGroup,
   InputRightAddon,
-  Spinner,
   Stack,
   Text,
   useToast,
@@ -27,6 +26,8 @@ import type {
 import { homeApiClient } from "../Home/services/homeApiClient";
 import { trackBuy, trackSell } from "./services/analytics";
 import type { PumpfunCoinResponse } from "./services/coinApiClient";
+import TradeFailure from "./tradeFailure";
+import TradeSuccess from "./tradeSuccess";
 
 export type TradeModuleProps = {
   currentPrice: string;
@@ -47,6 +48,7 @@ function TradeModule(props: TradeModuleProps) {
   const [output, setOutput] = useState<string>();
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [selectedSol, setSelectedSol] = useState(0.1);
+  const [screenNumber, setScreenNumber] = useState(0); // 0 for initial screen, 1 for success screen and 2 for failure screen
 
   const buttons = [0.1, 0.5, 1, 5];
 
@@ -75,7 +77,7 @@ function TradeModule(props: TradeModuleProps) {
         setOutput((buy / 10 ** 6).toFixed(8));
         setDollarInput(
           parseFloat(amount) *
-          parseFloat(solPrice?.solana.usd.toString() || "1"),
+            parseFloat(solPrice?.solana.usd.toString() || "1"),
         );
       } else {
         const sell = tmp!.getSellPrice(parseInt(amount, 10), 100) / 100;
@@ -192,182 +194,206 @@ function TradeModule(props: TradeModuleProps) {
 
   return (
     <Stack flexGrow="1" bg="#1B1B1E">
-      <Stack
-        spacing="0.5rem"
-        padding="1rem"
-        backgroundColor="grey.50"
-        borderRadius="0.5rem"
-        gap="1rem"
-      >
-        <HStack
-          justifyContent="flex-start"
-          opacity={props.pumpfunData?.complete ? "0.6" : "1"}
-          width="30vw"
+      {screenNumber === 0 ? (
+        <Stack
+          spacing="0.5rem"
+          padding="1rem"
+          backgroundColor="grey.50"
+          borderRadius="0.5rem"
+          gap="1rem"
         >
-          <Button
-            backgroundColor={active === "buy" ? "green.200" : "transparent"}
-            color={active === "buy" ? "white" : "grey"}
-            borderRadius="0"
-            variant="ghosted"
-            _hover={{
-              opacity: 0.8,
-            }}
-            onClick={() => setActive("buy")}
-            isDisabled={!!props.pumpfunData?.complete}
-          >
-            Buy
-          </Button>
-          <Button
-            backgroundColor={active === "sell" ? "red.50" : "transparent"}
-            borderRadius="0"
-            color={active === "sell" ? "white" : "grey"}
-            _hover={{
-              opacity: 0.8,
-            }}
-            variant="ghosted"
-            onClick={() => setActive("sell")}
-            isDisabled={!!props.pumpfunData?.complete}
-          >
-            Sell
-          </Button>
-        </HStack>
-
-        <VStack alignItems="flex-start" gap="4px">
-          <Text color="text.100" fontSize="10px">YOU PAY</Text>
-          <HStack width="100%" gap="5px">
-            {buttons.map((button, index) => (
-              <Button
-                key={index}
-                borderRadius="0"
-                onClick={() => {setInput(button as any); setToken(button as any); setSelectedSol(button)}}
-                bg={selectedSol === button ? "white" : "#222227"}
-                color={selectedSol === button ? "black" : "#818181"}
-                _hover={{
-                  bg: selectedSol === button ? "white" : "#333",
-                }}
-                padding="10px 20px"
-                fontSize="12px"
-              >
-                {button} SOL
-              </Button>
-            ))}
-          </HStack>
-        </VStack>
-
-        <InputGroup opacity={props.pumpfunData?.complete ? "0.6" : "1"} borderRadius="0">
-          <Input
-            backgroundColor="grey.100"
-            border={0}
-            focusBorderColor="grey.50"
-            onChange={(e) => {
-              setInput(e.target.value);
-              setToken(e.target.value);
-            }}
-            disabled={!!props.pumpfunData?.complete}
-            value={input}
-            type="number"
-            borderRadius="0"
-          />
-          <InputRightAddon backgroundColor="grey.100" border={0} borderRadius="0">
-            {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`}
-          </InputRightAddon>
-        </InputGroup>
-        
-        <VStack alignItems="flex-start" gap="4px">
-          <Text color="text.100" fontSize="10px">YOU GET</Text>
-          <InputGroup opacity={props.pumpfunData?.complete ? "0.6" : "1"}>
-          <Input
-            backgroundColor="grey.100"
-            border={0}
-            focusBorderColor="grey.50"
-            disabled
-            _disabled={{
-              backgroundColor: "grey.100",
-            }}
-            value={output}
-            borderRadius="0"
-          />
-          <InputRightAddon backgroundColor="grey.100" border={0} borderRadius="0">
-            {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`}
-          </InputRightAddon>
-        </InputGroup>
-        </VStack>
-
-
-        <Button
-          mt="4px"
-          onClick={placeTrade}
-          isLoading={submitting}
-          style={{
-            borderRadius: "0",
-            fontSize: "16px",
-            backgroundColor: props.pumpfunData?.complete
-              ? "white"
-              : active === "buy"
-                ? "#18CA2A"
-                : "#570A18",
-            color: props.pumpfunData?.complete ? "black" : "white",
-          }}
-        >
-          {props.pumpfunData?.complete
-            ? "Trade on Raydium"
-            : active === "buy"
-              ? "Buy"
-              : "Sell"}
-        </Button>
-
-        <Box
-          borderTop="1px solid #29292E"
-          paddingTop="10px"
-          margin="0 5px"
-          display="flex"
-          flexDirection="column"
-          gap="5px"
-          transform="uppercase"
-        >
-          <Text
-            textAlign="left"
-            fontSize="12px"
-            fontWeight="bold"
+          <HStack
+            justifyContent="flex-start"
             opacity={props.pumpfunData?.complete ? "0.6" : "1"}
+            width="30vw"
           >
-            1 {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`} =
-            &nbsp;
-            {active === "sell" ? (
-              `$${solPrice?.solana.usd}` || "$164.84"
-            ) : (
-              <SubscriptText value={props.currentPrice} />
-            )}
-          </Text>
-          <HStack
-            width="100%"
-            justifyContent="space-between"
-            color="text.100"
-            fontSize="10px"
-          >
-            <Text textAlign="left">SLIPAGE</Text>
-            <Text textAlign="right">1%</Text>
+            <Button
+              backgroundColor={active === "buy" ? "green.200" : "transparent"}
+              color={active === "buy" ? "white" : "grey"}
+              borderRadius="0"
+              variant="ghosted"
+              _hover={{
+                opacity: 0.8,
+              }}
+              onClick={() => setActive("buy")}
+              isDisabled={!!props.pumpfunData?.complete}
+            >
+              Buy
+            </Button>
+            <Button
+              backgroundColor={active === "sell" ? "red.50" : "transparent"}
+              borderRadius="0"
+              color={active === "sell" ? "white" : "grey"}
+              _hover={{
+                opacity: 0.8,
+              }}
+              variant="ghosted"
+              onClick={() => setActive("sell")}
+              isDisabled={!!props.pumpfunData?.complete}
+            >
+              Sell
+            </Button>
           </HStack>
-          <HStack
-            width="100%"
-            justifyContent="space-between"
-            color="text.100"
-            fontSize="10px"
+
+          <VStack alignItems="flex-start" gap="4px">
+            <Text color="text.100" fontSize="10px">
+              YOU PAY
+            </Text>
+            <HStack width="100%" gap="5px">
+              {buttons.map((button, index) => (
+                <Button
+                  key={index}
+                  borderRadius="0"
+                  onClick={() => {
+                    setInput(button as any);
+                    setToken(button as any);
+                    setSelectedSol(button);
+                  }}
+                  bg={selectedSol === button ? "white" : "#222227"}
+                  color={selectedSol === button ? "black" : "#818181"}
+                  _hover={{
+                    bg: selectedSol === button ? "white" : "#333",
+                  }}
+                  padding="10px 20px"
+                  fontSize="12px"
+                >
+                  {button} SOL
+                </Button>
+              ))}
+            </HStack>
+          </VStack>
+
+          <InputGroup
+            opacity={props.pumpfunData?.complete ? "0.6" : "1"}
+            borderRadius="0"
           >
-            <Text textAlign="left">Price Impact</Text>
-            <Text textAlign="right">12%</Text>
-          </HStack>
-          <HStack
-            width="100%"
-            justifyContent="space-between"
-            color="text.100"
-            fontSize="10px"
+            <Input
+              backgroundColor="grey.100"
+              border={0}
+              focusBorderColor="grey.50"
+              onChange={(e) => {
+                setInput(e.target.value);
+                setToken(e.target.value);
+              }}
+              disabled={!!props.pumpfunData?.complete}
+              value={input}
+              type="number"
+              borderRadius="0"
+            />
+            <InputRightAddon
+              backgroundColor="grey.100"
+              border={0}
+              borderRadius="0"
+            >
+              {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`}
+            </InputRightAddon>
+          </InputGroup>
+
+          <VStack alignItems="flex-start" gap="4px">
+            <Text color="text.100" fontSize="10px">
+              YOU GET
+            </Text>
+            <InputGroup opacity={props.pumpfunData?.complete ? "0.6" : "1"}>
+              <Input
+                backgroundColor="grey.100"
+                border={0}
+                focusBorderColor="grey.50"
+                disabled
+                _disabled={{
+                  backgroundColor: "grey.100",
+                }}
+                value={output}
+                borderRadius="0"
+              />
+              <InputRightAddon
+                backgroundColor="grey.100"
+                border={0}
+                borderRadius="0"
+              >
+                {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`}
+              </InputRightAddon>
+            </InputGroup>
+          </VStack>
+
+          <Button
+            mt="4px"
+            onClick={placeTrade}
+            isLoading={submitting}
+            style={{
+              borderRadius: "0",
+              fontSize: "16px",
+              backgroundColor: props.pumpfunData?.complete
+                ? "white"
+                : active === "buy"
+                  ? "#18CA2A"
+                  : "#c25959",
+              color: props.pumpfunData?.complete ? "black" : "white",
+            }}
           >
-            <Text textAlign="left">Minimum</Text>
-            <Text textAlign="right">TICKER</Text>
-          </HStack>
-        </Box>
-      </Stack>
+            {props.pumpfunData?.complete
+              ? "Trade on Raydium"
+              : active === "buy"
+                ? "Buy"
+                : "Sell"}
+          </Button>
+
+          <Box
+            borderTop="1px solid #29292E"
+            paddingTop="10px"
+            margin="0 5px"
+            display="flex"
+            flexDirection="column"
+            gap="5px"
+            transform="uppercase"
+          >
+            <Text
+              textAlign="left"
+              fontSize="12px"
+              fontWeight="bold"
+              opacity={props.pumpfunData?.complete ? "0.6" : "1"}
+            >
+              1 {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`} =
+              &nbsp;
+              {active === "sell" ? (
+                `$${solPrice?.solana.usd}` || "$164.84"
+              ) : (
+                <SubscriptText value={props.currentPrice} />
+              )}
+            </Text>
+            <HStack
+              width="100%"
+              justifyContent="space-between"
+              color="text.100"
+              fontSize="10px"
+            >
+              <Text textAlign="left">SLIPAGE</Text>
+              <Text textAlign="right">1%</Text>
+            </HStack>
+            <HStack
+              width="100%"
+              justifyContent="space-between"
+              color="text.100"
+              fontSize="10px"
+            >
+              <Text textAlign="left">Price Impact</Text>
+              <Text textAlign="right">12%</Text>
+            </HStack>
+            <HStack
+              width="100%"
+              justifyContent="space-between"
+              color="text.100"
+              fontSize="10px"
+            >
+              <Text textAlign="left">Minimum</Text>
+              <Text textAlign="right">TICKER</Text>
+            </HStack>
+          </Box>
+        </Stack>
+      ) : screenNumber === 1 ? (
+        <TradeSuccess tokenDetails={props.tokenDetails} />
+      ) : (
+        <TradeFailure setScreenNumber={setScreenNumber} />
+      )}
     </Stack>
   );
 }

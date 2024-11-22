@@ -1,6 +1,6 @@
 import { Heading, HStack, Image, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 
 import { timeDifference } from "@/utils/timeDifference";
 
@@ -19,6 +19,7 @@ interface CardProps {
 
 function DataTable({ feed }: { feed: CardProps[] }) {
   const router = useRouter();
+  const [isHovered, setIsHovered] = useState("");
   return (
     <VStack bg="#1B1B1E" width="100%" px="2rem">
       <table
@@ -72,8 +73,15 @@ function DataTable({ feed }: { feed: CardProps[] }) {
             parseFloat(data.market_cap) >= 0 ? (
               <tr
                 key={data.id}
-                style={{ backgroundColor: "transparent", cursor: "pointer" }}
+                // @ts-ignore
+                style={{
+                  backgroundColor:
+                    isHovered === data.id ? "#2D2D2D" : "transparent",
+                  cursor: "pointer",
+                }}
                 onClick={() => router.push(`/${data.id}`)}
+                onMouseEnter={() => setIsHovered(data.id)}
+                onMouseLeave={() => setIsHovered("")}
               >
                 {/* Ticker Column */}
                 <td

@@ -6,12 +6,12 @@ import styled from "styled-components";
 
 import MainCard from "@/components/Card/MainCard";
 import CoinsTable from "@/components/CoinsTable";
+import { HomeSticker } from "@/components/Svgs/homeSticker";
+import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
-import { HomeSticker } from "@/components/Svgs/homeSticker";
-import { Paths } from "@/constants/paths";
 
 const Container = styled.div`
   width: 100%;
@@ -83,10 +83,15 @@ function HomeModule() {
             display="flex"
             justifyContent="space-between"
           >
-            <Text fontSize="24px" className="knf" textTransform="uppercase" margin="20px">
+            <Text
+              fontSize="24px"
+              className="knf"
+              textTransform="uppercase"
+              margin="20px"
+            >
               Your agent can make it rain.
             </Text>
-            <Box flexGrow="1" display={{base:"none", lg: "block"}}>
+            <Box flexGrow="1" display={{ base: "none", lg: "block" }}>
               <HomeSticker />
             </Box>
             <Button

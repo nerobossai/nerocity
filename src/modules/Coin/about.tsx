@@ -64,9 +64,7 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
 
       <VStack alignItems="flex-start" gap="4px">
         <Text color="text.100">ABOUT</Text>
-        <Text>
-              {props.description}
-        </Text>
+        <Text>{props.description}</Text>
       </VStack>
       {/* <HStack justifyContent="start" alignItems="start" spacing="1rem">
         <Image
