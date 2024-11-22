@@ -207,13 +207,15 @@ function Header() {
         ) : (
           <WalletModalProvider>
             <WalletMultiButton style={{ backgroundColor: "transparent" }}>
-              <Button
+              <Box
                 bg="#1FEF34"
-                width="140px"
+                width="120px"
                 borderRadius="0"
+                height="40px"
                 color="white"
                 padding="15px"
                 display="flex"
+                alignItems="center"
                 justifyContent="space-between"
                 _hover={{
                   boxShadow: "0px 2px 3px 0px #21972D1A",
@@ -231,7 +233,7 @@ function Header() {
               >
                 <FaWallet />
                 <span>Connect</span>
-              </Button>
+              </Box>
             </WalletMultiButton>
           </WalletModalProvider>
         )}
