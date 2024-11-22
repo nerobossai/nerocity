@@ -4,33 +4,33 @@ import React, { useEffect, useState } from "react";
 function Banner() {
   const [messages, setMessages] = useState<any[]>([]);
 
-  useEffect(() => {
-    // const ws = new WebSocket("wss://echo-websocket.hoppscotch.io");
-    const ws = new WebSocket("ws://3.108.223.130/ws");
+  // useEffect(() => {
+  //   // const ws = new WebSocket("wss://echo-websocket.hoppscotch.io");
+  //   const ws = new WebSocket("ws://3.108.223.130/ws");
 
-    ws.onopen = () => console.log("Connected to WebSocket server");
-    ws.onclose = (event) => console.log("WebSocket closed:", event);
-    ws.onerror = (error) => console.error("WebSocket error:", error);
-    ws.onmessage = (event) => console.log("Message received:", event.data);
+  //   ws.onopen = () => console.log("Connected to WebSocket server");
+  //   ws.onclose = (event) => console.log("WebSocket closed:", event);
+  //   ws.onerror = (error) => console.error("WebSocket error:", error);
+  //   ws.onmessage = (event) => console.log("Message received:", event.data);
 
-    // ws.onmessage = (event) => {
-    //   try {
-    //     const data = JSON.parse(event.data);
-    //     console.log("dddd", data);
-    //     // setMessages((prev) => [data, ...prev].slice(0, 4)); // Keep the latest 4 messages
-    //   } catch (err) {
-    //     console.error("Error parsing WebSocket message:", err);
-    //   }
-    // };
+  //   // ws.onmessage = (event) => {
+  //   //   try {
+  //   //     const data = JSON.parse(event.data);
+  //   //     console.log("dddd", data);
+  //   //     // setMessages((prev) => [data, ...prev].slice(0, 4)); // Keep the latest 4 messages
+  //   //   } catch (err) {
+  //   //     console.error("Error parsing WebSocket message:", err);
+  //   //   }
+  //   // };
 
-    // ws.onerror = (error) => {
-    //   console.error("WebSocket error:", error);
-    // };
+  //   // ws.onerror = (error) => {
+  //   //   console.error("WebSocket error:", error);
+  //   // };
 
-    return () => {
-      ws.close();
-    };
-  }, []);
+  //   return () => {
+  //     ws.close();
+  //   };
+  // }, []);
 
   return (
     <HStack
