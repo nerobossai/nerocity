@@ -3,6 +3,7 @@ import React from "react";
 
 import type { CardProps } from "@/components/Card";
 import { timeDifference } from "@/utils/timeDifference";
+import CreatedAtComponent from "@/components/Created";
 
 function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
   const toast = useToast();
@@ -27,15 +28,8 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
     >
       <Text my="10px">DETAILS</Text>
       <Grid templateColumns="repeat(2, 1fr)" gap={4} width="100%">
-        <VStack gap="5px" alignItems="flex-start">
-          <Text color="text.100">CREATED</Text>
-          <Text fontSize="12px">
-            {timeDifference(
-              Date.now(),
-              parseInt(props.created_at.toString(), 10),
-            )}
-          </Text>
-        </VStack>
+
+        <CreatedAtComponent timeStamp={parseInt(props.created_at.toString(), 10)} fontSize="12px" alignItems="flex-start"/>
         <VStack gap="5px" alignItems="flex-start">
           <Text color="text.100">CREATOR</Text>
           <Text fontSize="12px" color="#00C2FF">

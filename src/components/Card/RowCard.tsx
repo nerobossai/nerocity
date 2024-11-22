@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import { timeDifference } from "@/utils/timeDifference";
+import CreatedAtComponent from "../Created";
 
 interface CardProps {
   id: string;
@@ -126,10 +127,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     borderBottom: "1px solid #343434",
                   }}
                 >
-                  {timeDifference(
-                    Date.now(),
-                    parseInt(data.created_at.toString(), 10),
-                  )}
+                  <CreatedAtComponent timeStamp={parseInt(data.created_at.toString())} noHeader />
                 </td>
                 <td
                   style={{

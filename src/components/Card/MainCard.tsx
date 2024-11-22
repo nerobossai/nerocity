@@ -15,6 +15,7 @@ import { timeDifference } from "@/utils/timeDifference";
 
 import { StarSticker } from "../Svgs/Star";
 import type { CardProps } from "./index";
+import CreatedAtComponent from "../Created";
 
 function MainCard(props: CardProps) {
   const navigator = useRouter();
@@ -75,17 +76,7 @@ function MainCard(props: CardProps) {
         textTransform="uppercase"
         gap="2rem"
       >
-        <VStack alignItems="flex-end">
-          <Text fontSize="12px" color="text.100">
-            CREATED
-          </Text>
-          <Text fontSize="14px">
-            {timeDifference(
-              Date.now(),
-              parseInt(props.created_at.toString(), 10),
-            )}
-          </Text>
-        </VStack>
+        <CreatedAtComponent timeStamp={parseInt(props.created_at.toString())}/>
         <VStack alignItems="flex-end">
           <Text fontSize="12px" color="text.100">
             CREATOR
