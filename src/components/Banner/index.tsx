@@ -6,7 +6,7 @@ function Banner() {
 
   useEffect(() => {
     // const ws = new WebSocket("wss://echo-websocket.hoppscotch.io");
-    const ws = new WebSocket("ws://3.108.223.130/ws");
+    const ws = new WebSocket("wss://wss.neroboss.ai");
 
     ws.onopen = () => console.log("Connected to WebSocket server");
     ws.onclose = (event) => console.log("WebSocket closed:", event);
