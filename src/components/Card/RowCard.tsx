@@ -37,7 +37,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
           width: "100%",
           borderCollapse: "separate",
           borderSpacing: "0 20px",
-          padding: "0 20px", // Space between rows
+          padding: "0 20px",
         }}
       >
         <thead>
