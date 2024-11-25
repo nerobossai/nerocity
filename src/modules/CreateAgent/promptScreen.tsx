@@ -13,17 +13,15 @@ function PromptScreen({ handleGenerateAgent, loading }: IPromptScreen) {
     <Stack
       borderRadius="1rem"
       gap="20px"
-      width="80vw"
-      margin="auto"
+      width="100%"
       alignItems="center"
       justifyContent="center"
-      px={{ lg: "20%", md: "10%", base: "5%" }}
     >
       <VStack
         alignItems="start"
         justifyContent="start"
         margin="auto"
-        width="100%"
+        width={{base:"100%", md:"500px"}}
       >
         <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
           Description for your ideal agent
@@ -35,6 +33,7 @@ function PromptScreen({ handleGenerateAgent, loading }: IPromptScreen) {
           onChange={(e) => setDescription(e.target.value)}
           fontSize="16px"
           value={description}
+          width="100%"
           height="500px"
           textTransform="uppercase"
           resize="none"

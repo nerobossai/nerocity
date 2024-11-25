@@ -28,6 +28,8 @@ function DataTable({ feed }: { feed: CardProps[] }) {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState("");
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
+  const isSmallScreen = useBreakpointValue({ base: true, md: false });
+
   return (
     <VStack bg="#1B1B1E" width="100%" overflowX="auto">
       <table
@@ -126,19 +128,19 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     borderBottom: "1px solid #343434",
                   }}
                 >
-                  <HStack spacing="1rem">
+                  <HStack spacing="1rem" width="100%" alignItems={isSmallScreen ? "flex-start" :"center"}>
                     <Image
-                      boxSize="4rem"
+                      boxSize={!isSmallScreen ? "4rem" : "2rem"}
                       objectFit="cover"
                       src={data.image}
                       alt="Ticker Image"
                     />
-                    <VStack alignItems="flex-start" spacing="0">
+                    <VStack alignItems="flex-start" spacing="0" >
                       <Heading as="h4" size="sm" fontSize="16px" color="white">
                         {data.ticker}
                       </Heading>
-                      <Text fontSize="12px">{data.name}</Text>
-                      <Text
+                      <Text fontSize="12px" wordBreak="break-all">{data.name}</Text>
+                      {!isSmallScreen && <Text
                         fontSize="12px"
                         color="gray.500"
                         maxWidth="200px"
@@ -146,7 +148,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                         wordBreak="break-all"
                       >
                         {data.description.slice(0, 20)}...
-                      </Text>
+                      </Text>}
                     </VStack>
                   </HStack>
                 </td>
@@ -187,6 +189,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     padding: "1rem",
                     borderTop: "1px solid #343434",
                     borderBottom: "1px solid #343434",
+                    fontSize: isLargeScreen ? "16px" : "12px"
                   }}
                 >
                   {data.market_cap}
