@@ -125,8 +125,7 @@ function ChatModule(props: { agentId: string }) {
   }, []);
 
   return (
-    <Stack padding="1rem" flexGrow="1" marginBottom="4rem">
-      <Text>Chat with agent and users</Text>
+    <Stack paddingTop="1rem" flexGrow="1" marginBottom="4rem">
       <AddComment
         comment={comment}
         setComment={setComment}

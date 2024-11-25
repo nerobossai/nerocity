@@ -20,6 +20,7 @@ import { pumpFunSdk } from "@/services/pumpfun";
 
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
+import { HomeStickerBack } from "@/components/Svgs/HomeStickerBack";
 
 const Container = styled.div`
   width: 100%;
@@ -107,6 +108,7 @@ function HomeModule() {
             >
               <Box width="100%" height="100%" mr="auto" right="0" top="0">
                 <HomeSticker />
+                {/* <HomeStickerBack /> */}
               </Box>
             </Box>
             <Button

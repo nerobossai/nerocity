@@ -226,6 +226,7 @@ function CoinModule() {
   if (!isLargeScreen && agentDetails) {
     if (selectedTab === 0) {
       return (
+        <>
         <Box
           width="100%"
           display="flex"
@@ -279,12 +280,14 @@ function CoinModule() {
               />
             </VStack>
           </Box>
-          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+          
         </Box>
+        <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        </>
       );
     }
     if (selectedTab === 1) {
-      return (
+      return (<>
         <Box
           width="100%"
           display="flex"
@@ -301,12 +304,13 @@ function CoinModule() {
               pumpfunData={pumpfunData}
             />
           </Box>
-          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-        </Box>
+        </Box>          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        </>
       );
     }
     if (selectedTab === 2) {
       return (
+        <>
         <Box
           width="100%"
           display="flex"
@@ -317,8 +321,8 @@ function CoinModule() {
         >
           <Breadcrumb loading={loading} />
           <ActivityBar agentId={agentDetails.id} />
-          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-        </Box>
+        </Box>          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} /></>
+
       );
     }
   }

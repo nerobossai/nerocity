@@ -143,6 +143,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                         color="gray.500"
                         maxWidth="200px"
                         overflow="hidden"
+                        wordBreak="break-all"
                       >
                         {data.description.slice(0, 20)}...
                       </Text>
