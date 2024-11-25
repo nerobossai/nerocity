@@ -208,7 +208,7 @@ function TradeModule(props: TradeModuleProps) {
             width="30vw"
           >
             <Button
-              backgroundColor={active === "buy" ? "green.200" : "transparent"}
+              backgroundColor={active === "buy" ? "#18CA2A" : "transparent"}
               color={active === "buy" ? "white" : "grey"}
               borderRadius="0"
               variant="ghosted"

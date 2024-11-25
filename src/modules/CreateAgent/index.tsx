@@ -17,7 +17,7 @@ import { Keypair } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { IoArrowBackSharp } from "react-icons/io5";
+import { LiaTelegram } from "react-icons/lia";
 import { RiTwitterXFill } from "react-icons/ri";
 import styled from "styled-components";
 import z from "zod";
@@ -32,7 +32,6 @@ import PromptScreen from "./promptScreen";
 import { agentApiClient } from "./services/agentApiClient";
 import { trackAgentCreation } from "./services/analytics";
 import SuccessScreen from "./successScreen";
-import { LiaTelegram } from "react-icons/lia";
 
 const Container = styled.div`
   width: 100%;
@@ -388,7 +387,12 @@ function CreateAgentModule() {
           justifyContent="space-between"
           className="knf"
         >
-          <Text fontSize="18px" cursor="pointer"><span style={{ color: "#959595" }} onClick={() => router.push("/")}>HOME / </span> CREATE AGENT</Text>
+          <Text fontSize="18px" cursor="pointer">
+            <span style={{ color: "#959595" }} onClick={() => router.push("/")}>
+              HOME /{" "}
+            </span>{" "}
+            CREATE AGENT
+          </Text>
         </Box>
       </HStack>
       {screen === 1 ? (
@@ -444,7 +448,6 @@ function CreateAgentModule() {
               value={name}
               fontSize="16px"
               height="60px"
-
             />
             {errors.name && (
               <Text color="red.500" fontSize="12px">
@@ -464,7 +467,6 @@ function CreateAgentModule() {
               value={ticker}
               fontSize="16px"
               height="60px"
-
             />
             {errors.ticker && (
               <Text color="red.500" fontSize="12px">
@@ -484,7 +486,6 @@ function CreateAgentModule() {
               value={description}
               fontSize="16px"
               height="60px"
-
             />
           </VStack>
           <VStack alignItems="start">
@@ -509,7 +510,6 @@ function CreateAgentModule() {
                 backgroundColor="grey.75"
                 _hover={{ backgroundColor: "grey.75" }}
                 cursor="pointer"
-
               >
                 Choose file
               </Button>
@@ -521,10 +521,10 @@ function CreateAgentModule() {
               {tokenM
                 ? tokenM.metadata.name
                 : file && (
-                  <Text ml={3} p={2} borderRadius="md" fontSize="sm">
-                    {file.name}
-                  </Text>
-                )}
+                    <Text ml={3} p={2} borderRadius="md" fontSize="sm">
+                      {file.name}
+                    </Text>
+                  )}
             </Box>
           </VStack>
           <VStack alignItems="start" justifyContent="start">
@@ -546,16 +546,9 @@ function CreateAgentModule() {
               ))}
             </HStack>
           </VStack>
-          <Grid
-            templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
-            gap={4}
-          >
+          <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
             <GridItem>
-              <VStack
-                alignItems="start"
-                justifyContent="start"
-
-              >
+              <VStack alignItems="start" justifyContent="start">
                 <Text color="#4A4A55" fontSize="14px">
                   Twitter/ X
                 </Text>
@@ -574,22 +567,15 @@ function CreateAgentModule() {
                   display="flex"
                   justifyContent="start"
                   gap="20px"
-
                 >
                   <RiTwitterXFill size="15px" />
 
-                  <span>
-                    {twtToken ? "connected" : "Connect Twitter/X"}
-                  </span>
+                  <span>{twtToken ? "connected" : "Connect Twitter/X"}</span>
                 </Button>
               </VStack>
             </GridItem>
             <GridItem>
-              <VStack
-                alignItems="start"
-                justifyContent="start"
-
-              >
+              <VStack alignItems="start" justifyContent="start">
                 <Text color="#4A4A55" fontSize="14px">
                   Telegram
                 </Text>
@@ -608,7 +594,6 @@ function CreateAgentModule() {
                   display="flex"
                   justifyContent="start"
                   gap="20px"
-
                 >
                   <LiaTelegram size="20px" />
 
@@ -633,7 +618,6 @@ function CreateAgentModule() {
               value={description}
               fontSize="16px"
               height="60px"
-
             />
           </VStack>
           <VStack alignItems="start" justifyContent="start">
@@ -648,7 +632,11 @@ function CreateAgentModule() {
                   fontSize="12px"
                   flexGrow="1"
                   flexWrap="wrap"
-                  border={coinPercentage === trait ? "0.5px solid white" : "0.5px solid #959595"}
+                  border={
+                    coinPercentage === trait
+                      ? "0.5px solid white"
+                      : "0.5px solid #959595"
+                  }
                   color={coinPercentage === trait ? "black" : "#959595"}
                   bg={coinPercentage === trait ? "white" : "#1B1B1D"}
                   onClick={() => setCoinPercentage(trait)}
@@ -658,7 +646,13 @@ function CreateAgentModule() {
               ))}
             </HStack>
             <Box position="relative" width="100%" mb="10px">
-              <Progress backgroundColor="#323232" color="white" height='36px' value={coinPercentage} width="100%" />
+              <Progress
+                backgroundColor="#323232"
+                color="white"
+                height="36px"
+                value={coinPercentage}
+                width="100%"
+              />
               <Text
                 position="absolute"
                 top="50%"
@@ -666,7 +660,8 @@ function CreateAgentModule() {
                 color="#959595"
                 transform="translate(-50%, -50%)"
                 fontWeight="bold"
-              >{coinPercentage}%
+              >
+                {coinPercentage}%
               </Text>
             </Box>
           </VStack>
@@ -683,7 +678,6 @@ function CreateAgentModule() {
               onClick={() => setScreen(3)}
               height="46px"
               color="white"
-
               marginBottom="20px"
             >
               Create Agent

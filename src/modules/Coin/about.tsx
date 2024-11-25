@@ -22,8 +22,9 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
       fontSize="12px"
       spacing="1rem"
       marginTop="42px"
-      border="1px solid #5B2AA9"
+      border="1px solid #959595"
       padding="1rem"
+      mb={{ base: "80px", lg: "0" }}
     >
       <Text my="10px">DETAILS</Text>
       <Grid templateColumns="repeat(2, 1fr)" gap={4} width="100%">

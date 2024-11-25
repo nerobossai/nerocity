@@ -26,6 +26,7 @@ import * as AuthUtils from "@/utils/AuthUtils";
 
 import ProfileModalComponent from "../ProfileModal";
 import { Logo } from "../Svgs/Logo";
+import { LogoSmall } from "../Svgs/LogoSmall";
 
 const Container = styled.header`
   /* max-width: 490px; */
@@ -64,7 +65,7 @@ function Header() {
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [openHelp, setOpenHelp] = useState(false);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
-  const isLargeScreen = useBreakpointValue({ base: false, md: true });
+  const isLargeScreen = useBreakpointValue({ base: false, sm: true });
 
   const walletAddress = useMemo(() => {
     if (profile && profile.profile && profile.profile.public_key) {
@@ -150,9 +151,7 @@ function Header() {
       gap="40px"
       justifyContent={{ base: "space-between", md: "block" }}
     >
-      <Link href="/">
-        <Logo />
-      </Link>
+      <Link href="/">{isLargeScreen ? <Logo /> : <LogoSmall />}</Link>
       <Box flexGrow="1" padding="20px" display={{ base: "none", md: "block" }}>
         <Box
           px="2rem"

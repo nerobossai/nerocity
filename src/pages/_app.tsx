@@ -51,8 +51,8 @@ const theme = extendTheme({
             borderRadius: "0",
           },
         },
-      }
-    }
+      },
+    },
   },
   fonts: {
     body: "JetBrains Mono",

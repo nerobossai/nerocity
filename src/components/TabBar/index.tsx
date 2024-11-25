@@ -1,39 +1,40 @@
-import { Box, Flex, Grid, Icon, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, Text } from "@chakra-ui/react";
 import React from "react";
-import { BiComment } from "react-icons/bi";
-import { FaChartLine, FaExchangeAlt, FaInfoCircle } from "react-icons/fa";
 
 function TabBar({
   selectedTab,
   setSelectedTab,
 }: {
-  selectedTab: string;
-  setSelectedTab: (v: string) => void;
+  selectedTab: number;
+  setSelectedTab: (v: number) => void;
 }) {
   const tabs = [
-    { name: "Info", icon: FaInfoCircle },
-    { name: "Charts", icon: FaChartLine },
-    { name: "Buy/Sell", icon: FaExchangeAlt },
-    { name: "Comments", icon: BiComment },
+    { name: "Info", tabValue: 0 },
+    { name: "Trade", tabValue: 1 },
+    { name: "Feed", tabValue: 2 },
   ];
 
   return (
-    <Box className="fixed bottom-0 h-[50px] w-full bg-[#0b0d0e] md:hidden">
-      <Grid templateColumns="repeat(4, 1fr)" gap={2} height="100%">
+    <Box className="fixed bottom-0 h-[50px] w-screen bg-background md:hidden">
+      <Grid templateColumns="repeat(3, 1fr)" gap={2} height="100%">
         {tabs.map((tab) => (
           <Flex
             key={tab.name}
             direction="column"
             align="center"
-            color="white"
+            color={selectedTab === tab.tabValue ? "primary" : "secondary"}
             cursor="pointer"
-            onClick={() => setSelectedTab(tab.name)}
-            borderBottom={selectedTab === tab.name ? "2px solid white" : "none"}
+            onClick={() => setSelectedTab(tab.tabValue)}
+            bg={selectedTab === tab.tabValue ? "brown.100" : "inherit"}
             pb={2}
-            justify="center" // Vertically center the items
+            justify="center"
           >
-            <Icon as={tab.icon} boxSize={4} />
-            <Text fontSize="8px" mt={1} color="primary">
+            <Text
+              fontWeight="500"
+              mt={1}
+              color="primary"
+              textTransform="uppercase"
+            >
               {tab.name}
             </Text>
           </Flex>

@@ -16,7 +16,7 @@ const config: Config = {
         },
         background: "#141415",
         primary:"#ffffff",
-        secondary:"#9B9B9B",
+        secondary:"#959595",
         text: {
           primary:"#ffffff",
           "100": "#737373",

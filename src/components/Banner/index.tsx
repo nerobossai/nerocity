@@ -37,10 +37,11 @@ function Banner() {
   }
   return (
     <HStack
-      height="40px"
+      minHeight="40px"
       justifyContent="center"
-      fontSize="12px"
+      fontSize={{ base: "10px", sm: "12px" }}
       py="10px"
+      px="2%"
       overflow="hidden"
       bg="#04200A"
       display="flex"

@@ -10,7 +10,6 @@ import {
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { IoArrowBackSharp } from "react-icons/io5";
 import styled from "styled-components";
 
 import TabBar from "@/components/TabBar";
@@ -45,6 +44,38 @@ const Container = styled.div`
 
 const RAYDIUM_MIGRATION_COMPLETED = "raydium_migration_completed";
 
+interface BreadcrumbProps {
+  loading: boolean;
+  currentPage?: string;
+}
+
+const Breadcrumb: React.FC<BreadcrumbProps> = ({ loading, currentPage }) => {
+  const router = useRouter();
+
+  return (
+    <HStack width="100%" alignItems="center" p="20px" mt="12px">
+      {!loading && (
+        <Box
+          display="flex"
+          alignItems="center"
+          gap="20px"
+          cursor="pointer"
+          onClick={() => router.push("/")}
+          className="knf"
+        >
+          <Text fontSize="18px" cursor="pointer">
+            <span style={{ color: "#959595" }} onClick={() => router.push("/")}>
+              HOME /
+            </span>{" "}
+            {/* {currentPage.toUpperCase()} */}
+            TICKER
+          </Text>
+        </Box>
+      )}
+    </HStack>
+  );
+};
+
 function CoinModule() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -56,7 +87,7 @@ function CoinModule() {
   const [completionPercent, setCompletionPercent] = useState<number>(0);
   const [tokenHolders, setTokenHolders] = useState<string>("0");
   const [candlestickData, setCandlestickData] = useState<CandlestickResponse>();
-  const [selectedTab, setSelectedTab] = useState("Info");
+  const [selectedTab, setSelectedTab] = useState<number>(0);
   const [pumpfunData, setPumpfunData] = useState<PumpfunCoinResponse>();
 
   const isLargeScreen = useBreakpointValue({ base: false, md: true });
@@ -193,7 +224,7 @@ function CoinModule() {
   }
 
   if (!isLargeScreen && agentDetails) {
-    if (selectedTab === "Info") {
+    if (selectedTab === 0) {
       return (
         <Box
           width="100%"
@@ -202,30 +233,57 @@ function CoinModule() {
           flexDirection="column"
           padding="1rem"
         >
+          <Breadcrumb loading={loading} />
+          <HStack width="100%" alignItems="center" p="20px" />
           <Box
             display="flex"
             flexDirection="column"
             w="full"
             mr="auto"
             flexGrow={1}
-            px={8}
             gap={8}
           >
-            <CoinHeaderModule {...agentDetails} market_cap={marketCap || "0"} />
+            <Stack padding="0 1rem" bg="#1B1B1E" flexGrow="1" width="100%">
+              {agentDetails ? (
+                <>
+                  <CoinHeaderModule
+                    {...agentDetails}
+                    market_cap={marketCap || "0"}
+                  />
+
+                  {pumpfunData ? (
+                    <iframe
+                      height="400px"
+                      width="100%"
+                      id="geckoterminal-embed"
+                      title="GeckoTerminal Embed"
+                      src={`https://www.geckoterminal.com/solana/pools/${pumpfunData.raydium_pool}?embed=1&info=0&swaps=0`}
+                      frameBorder="0"
+                      allow="clipboard-write"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <MemoizedChart
+                      mintKey={agentDetails.mint_public_key}
+                      symbol={agentDetails.ticker}
+                    />
+                  )}
+                </>
+              ) : null}
+            </Stack>
             <VStack width="100%" alignItems="flex-start" flexGrow={1}>
               <AboutModule
                 {...agentDetails}
                 current_real_token_reserves={realTokenReserve}
                 sol_reserve={realSolReserve}
               />
-              {/* <ProgressModule completionPercent={completionPercent ?? 0} /> */}
             </VStack>
           </Box>
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </Box>
       );
     }
-    if (selectedTab === "Charts") {
+    if (selectedTab === 1) {
       return (
         <Box
           width="100%"
@@ -234,38 +292,7 @@ function CoinModule() {
           flexDirection="column"
           padding="1rem"
         >
-          {pumpfunData ? (
-            <iframe
-              height="400px"
-              width="100%"
-              id="geckoterminal-embed"
-              title="GeckoTerminal Embed"
-              src={`https://www.geckoterminal.com/solana/pools/${pumpfunData.raydium_pool}?embed=1&info=0&swaps=0`}
-              frameBorder="0"
-              allow="clipboard-write"
-              allowFullScreen
-            />
-          ) : (
-            <MemoizedChart
-              mintKey={agentDetails.mint_public_key}
-              symbol={agentDetails.ticker}
-            />
-          )}
-
-          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-        </Box>
-      );
-    }
-    if (selectedTab === "Buy/Sell") {
-      return (
-        <Box
-          width="100%"
-          display="flex"
-          height="80vh"
-          flexDirection="column"
-          padding="1rem"
-        >
-          <Box flex="1" />
+          <Breadcrumb loading={loading} />
           <Box display="flex" flexDirection="column-reverse">
             <TradeModule
               currentPrice={price || "0"}
@@ -278,7 +305,7 @@ function CoinModule() {
         </Box>
       );
     }
-    if (selectedTab === "Comments") {
+    if (selectedTab === 2) {
       return (
         <Box
           width="100%"
@@ -288,6 +315,7 @@ function CoinModule() {
           padding="1rem"
           gap="20px"
         >
+          <Breadcrumb loading={loading} />
           <ActivityBar agentId={agentDetails.id} />
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </Box>
@@ -297,20 +325,7 @@ function CoinModule() {
 
   return (
     <Container>
-      <HStack width="100%" alignItems="center" p="20px" mt="12px">
-        {!loading && (
-          <Box
-            display="flex"
-            alignItems="center"
-            gap="20px"
-            cursor="pointer"
-            onClick={() => router.push("/")}
-          >
-            <IoArrowBackSharp />
-            <Text>BACK</Text>
-          </Box>
-        )}
-      </HStack>
+      <Breadcrumb loading={loading} />
       <HStack
         justifyContent="space-evenly"
         alignItems="start"
@@ -319,41 +334,42 @@ function CoinModule() {
         width="100%"
         p="20px"
       >
-        <Stack padding="0 1rem" bg="#1B1B1E" flexGrow="1">
-          {loading ? (
-            <Spinner />
-          ) : agentDetails ? (
-            <>
-              <CoinHeaderModule
-                {...agentDetails}
-                market_cap={marketCap || "0"}
-              />
+        <VStack width="100%" maxWidth="800px">
+          <Stack padding="0 1rem" bg="#1B1B1E" flexGrow="1" width="100%">
+            {agentDetails ? (
+              <>
+                <CoinHeaderModule
+                  {...agentDetails}
+                  market_cap={marketCap || "0"}
+                />
 
-              {pumpfunData ? (
-                <iframe
-                  height="400px"
-                  width="100%"
-                  id="geckoterminal-embed"
-                  title="GeckoTerminal Embed"
-                  src={`https://www.geckoterminal.com/solana/pools/${pumpfunData.raydium_pool}?embed=1&info=0&swaps=0`}
-                  frameBorder="0"
-                  allow="clipboard-write"
-                  allowFullScreen
-                />
-              ) : (
-                <MemoizedChart
-                  mintKey={agentDetails.mint_public_key}
-                  symbol={agentDetails.ticker}
-                />
-              )}
-            </>
-          ) : null}
+                {pumpfunData ? (
+                  <iframe
+                    height="400px"
+                    width="100%"
+                    id="geckoterminal-embed"
+                    title="GeckoTerminal Embed"
+                    src={`https://www.geckoterminal.com/solana/pools/${pumpfunData.raydium_pool}?embed=1&info=0&swaps=0`}
+                    frameBorder="0"
+                    allow="clipboard-write"
+                    allowFullScreen
+                  />
+                ) : (
+                  <MemoizedChart
+                    mintKey={agentDetails.mint_public_key}
+                    symbol={agentDetails.ticker}
+                  />
+                )}
+              </>
+            ) : null}
+          </Stack>
+
           {loading ? (
             <Spinner />
           ) : agentDetails ? (
             <ActivityBar agentId={agentDetails.id} />
           ) : null}
-        </Stack>
+        </VStack>
         <Box padding="0" alignItems="flex-start" maxWidth="320px">
           {loading ? (
             <Spinner />

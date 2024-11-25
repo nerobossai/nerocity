@@ -13,7 +13,7 @@ function ActivityBar({ agentId }: { agentId: string }) {
   };
 
   return (
-    <Box>
+    <Box width="100%">
       <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
         <TabList
           borderBottom="1px solid #272727"
