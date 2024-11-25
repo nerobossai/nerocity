@@ -10,28 +10,31 @@ function Banner() {
 
     ws.onopen = () => console.log("Connected to WebSocket server");
     ws.onclose = (event) => console.log("WebSocket closed:", event);
-    ws.onerror = (error) => console.error("WebSocket error:", error);
-    ws.onmessage = (event) => console.log("Message received:", event.data);
+    // ws.onerror = (error) => console.error("WebSocket error:", error);
+    // ws.onmessage = (event) => console.log("Message received:", event.data);
 
-    // ws.onmessage = (event) => {
-    //   try {
-    //     const data = JSON.parse(event.data);
-    //     console.log("dddd", data);
-    //     // setMessages((prev) => [data, ...prev].slice(0, 4)); // Keep the latest 4 messages
-    //   } catch (err) {
-    //     console.error("Error parsing WebSocket message:", err);
-    //   }
-    // };
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("dddd", data);
+        setMessages(data.slice(0, 4)); // Keep the latest 4 messages
+      } catch (err) {
+        console.error("Error parsing WebSocket message:", err);
+      }
+    };
 
-    // ws.onerror = (error) => {
-    //   console.error("WebSocket error:", error);
-    // };
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
 
     return () => {
       ws.close();
     };
   }, []);
 
+  if (messages.length === 0) {
+    return null;
+  }
   return (
     <HStack
       height="40px"
@@ -39,24 +42,23 @@ function Banner() {
       fontSize="12px"
       py="10px"
       overflow="hidden"
-      bg="green.400"
+      bg="#04200A"
       display="flex"
       gap="20px"
     >
-      <Box color="green.100">+12.12 SOL OF TEST TICKER BOUGHT</Box>
-      <Box color="#FF3838">+12.12 SOL OF TEST TICKER SOLD</Box>
-      <Box color="green.100">+12.12 SOL OF TEST TICKER BOUGHT</Box>
-      <Box color="#FF3838">-12.12 SOL OF TEST TICKER SOLD</Box>
       {messages.map((message, index) => (
-        <Box
-          key={index}
-          color={message.is_buy ? "green.100" : "#FF3838"}
-        >
-          {`${message.is_buy ? "+" : "-"}${(
-            message.token_amount / 10 ** 9
-          ).toFixed(2)} ${message.symbol.toUpperCase()} ${message.is_buy ? "BOUGHT" : "SOLD"
+        <>
+          {" "}
+          {console.log("message", message)}
+          <Box key={index} color={message.is_buy ? "green.100" : "#FF3838"}>
+            {`${message.is_buy ? "+" : "-"}${(
+              message.token_amount /
+              10 ** 9
+            ).toFixed(2)} ${message.symbol?.toUpperCase()} ${
+              message?.is_buy ? "BOUGHT" : "SOLD"
             }`}
-        </Box>
+          </Box>
+        </>
       ))}
     </HStack>
   );

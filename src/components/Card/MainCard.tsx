@@ -6,19 +6,20 @@ import {
   Image,
   Stack,
   Text,
+  useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 
-import { timeDifference } from "@/utils/timeDifference";
-
+import CreatedAtComponent from "../Created";
 import { StarSticker } from "../Svgs/Star";
 import type { CardProps } from "./index";
-import CreatedAtComponent from "../Created";
 
 function MainCard(props: CardProps) {
   const navigator = useRouter();
+  const isMediumScreen = useBreakpointValue({ base: false, md: true });
+
   const handleClick = () => {
     if (props.onClick) {
       props.onClick();
@@ -31,8 +32,8 @@ function MainCard(props: CardProps) {
       padding="20px"
       width="100%"
       marginTop="20px"
-      border="1px solid #5B2AA9"
-      bg="indigo.300"
+      border="1px solid #6F5034"
+      bg="brown.300"
       display="flex"
       flexDirection={{ base: "column", md: "row" }}
       justifyContent="center"
@@ -48,6 +49,7 @@ function MainCard(props: CardProps) {
         alignItems="start"
         spacing="1rem"
         gap="1rem"
+        flexDirection={{ base: "column", md: "row" }}
       >
         <Image
           boxSize="6rem"
@@ -69,15 +71,19 @@ function MainCard(props: CardProps) {
       </HStack>
       <Grid
         templateColumns={{
-          base: "repeat(2, 1fr)", // 2 columns for small screens
-          md: "repeat(3, 1fr)", // 3 columns for medium screens
-          lg: "repeat(6, 1fr)", // 6 columns for large screens
+          base: "repeat(2, 1fr)",
+          sm: "repeat(3, 1fr)",
+          md: "repeat(3, 1fr)",
+          lg: "repeat(6, 1fr)",
         }}
         textTransform="uppercase"
         gap="2rem"
       >
-        <CreatedAtComponent timeStamp={parseInt(props.created_at.toString())}/>
-        <VStack alignItems="flex-end">
+        <CreatedAtComponent
+          timeStamp={parseInt(props.created_at.toString())}
+          alignItems={isMediumScreen ? "flex-end" : "flex-start"}
+        />
+        <VStack alignItems={{ base: "flex-start", md: "flex-end" }}>
           <Text fontSize="12px" color="text.100">
             CREATOR
           </Text>
@@ -85,25 +91,25 @@ function MainCard(props: CardProps) {
             {props.created_by}
           </Text>
         </VStack>
-        <VStack alignItems="flex-end">
+        <VStack alignItems={{ base: "flex-start", md: "flex-end" }}>
           <Text fontSize="12px" color="text.100">
             MCAP
           </Text>
           <Text fontSize="14px">{props.market_cap}</Text>
         </VStack>
-        <VStack alignItems="flex-end">
+        <VStack alignItems={{ base: "flex-start", md: "flex-end" }}>
           <Text fontSize="12px" color="text.100">
             HOLDERS
           </Text>
           <Text fontSize="14px">{props.fee_basis_points}</Text>
         </VStack>
-        <VStack alignItems="flex-end">
+        <VStack alignItems={{ base: "flex-start", md: "flex-end" }}>
           <Text fontSize="12px" color="text.100">
             COMMENTS
           </Text>
           <Text fontSize="14px">{props.replies}</Text>
         </VStack>
-        <VStack alignItems="flex-end">
+        <VStack alignItems={{ base: "flex-start", md: "flex-end" }}>
           <Text fontSize="12px" color="text.100">
             24H
           </Text>

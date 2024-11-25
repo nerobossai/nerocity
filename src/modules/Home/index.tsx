@@ -1,4 +1,12 @@
-import { Box, Button, HStack, Spinner, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  Spinner,
+  Stack,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -25,6 +33,7 @@ function HomeModule() {
   const [feedLoading, setFeedLoading] = useState(false);
   const [feed, setFeed] = useState<any>([]);
   const [overlord, setOverlord] = useState<AgentResponse>();
+  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 
   const fetchFeed = async () => {
     try {
@@ -66,33 +75,39 @@ function HomeModule() {
 
   return (
     <Container>
-      <Stack justifyContent="center" alignItems="center">
+      <Stack justifyContent="center" alignItems="center" px="50px">
         <Stack
           justifyContent="center"
-          py="1rem"
           alignItems="center"
           marginBottom="20px"
-          px="10%"
           gap="40px"
         >
           {overlord && <MainCard {...overlord} />}
           <HStack
             width="100%"
-            alignItems="center"
-            bg="linear-gradient(100.39deg, #290D57 -0.99%, #653CA8 112.46%)"
+            alignItems={{ base: "flex-start", lg: "center" }}
+            flexDirection={{ base: "column", lg: "row" }}
+            bg="linear-gradient(100deg, #571F0D -0.99%, #5E220F 64.54%, #642410 112.46%)"
             display="flex"
             justifyContent="space-between"
+            marginTop={!overlord || feed.length === 0 ? "50px" : "0"}
           >
             <Text
               fontSize="24px"
               className="knf"
               textTransform="uppercase"
-              margin="20px"
+              margin={{ base: "20px 20px 0 20px", lg: "20px" }}
             >
               Your agent can make it rain.
             </Text>
-            <Box flexGrow="1" display={{ base: "none", lg: "block" }}>
-              <HomeSticker />
+            <Box
+              flexGrow="1"
+              display={{ base: "none", lg: "block" }}
+              overflow="hidden"
+            >
+              <Box width="100%" height="100%" mr="auto" right="0" top="0">
+                <HomeSticker />
+              </Box>
             </Box>
             <Button
               _hover={{

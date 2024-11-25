@@ -142,7 +142,7 @@ function Header() {
 
   return (
     <HStack
-      bg="indigo.100"
+      bg="brown.100"
       height="70px"
       pl="40px"
       py="1rem"
@@ -157,7 +157,7 @@ function Header() {
         <Box
           px="2rem"
           display="flex"
-          bg="indigo.200"
+          bg="brown.200"
           width="60%"
           alignItems="center"
           gap="20px"

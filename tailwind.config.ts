@@ -4,6 +4,9 @@ const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      backgroundImage: {
+        'custom-gradient': 'linear-gradient(100deg, #571F0D -0.99%, #5E220F 64.54%, #642410 112.46%)',
+      },
       colors: {
         transparent: "transparent",
         white: "#ffffff",
@@ -66,7 +69,12 @@ const config: Config = {
           "900": "#B9171A",
           "950": "#B9171A",
         },
-        input: "#1F1F22"
+        input: "#1F1F22",
+        brown: {
+          "100": "#571F0D",
+          "200": "#3C2708",
+          "300": "#371E06"
+        }
         // primary: {
         //   "50": "#f6f6f6",
         //   "100": "#e7e7e7",

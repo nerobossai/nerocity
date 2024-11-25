@@ -1,8 +1,14 @@
-import { Heading, HStack, Image, Text, VStack } from "@chakra-ui/react";
+import {
+  Heading,
+  HStack,
+  Image,
+  Text,
+  useBreakpointValue,
+  VStack,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import { timeDifference } from "@/utils/timeDifference";
 import CreatedAtComponent from "../Created";
 
 interface CardProps {
@@ -21,13 +27,15 @@ interface CardProps {
 function DataTable({ feed }: { feed: CardProps[] }) {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState("");
+  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   return (
-    <VStack bg="#1B1B1E" width="100%" px="2rem">
+    <VStack bg="#1B1B1E" width="100%" overflowX="auto">
       <table
         style={{
           width: "100%",
           borderCollapse: "separate",
-          borderSpacing: "0 20px", // Space between rows
+          borderSpacing: "0 20px",
+          padding: "0 20px", // Space between rows
         }}
       >
         <thead>
@@ -37,31 +45,55 @@ function DataTable({ feed }: { feed: CardProps[] }) {
             >
               Ticker
             </th>
-            <th
-              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
-            >
-              Created
-            </th>
-            <th
-              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
-            >
-              Creator
-            </th>
+            {isLargeScreen && (
+              <>
+                <th
+                  style={{
+                    color: "#656565",
+                    textAlign: "right",
+                    padding: "1rem",
+                  }}
+                >
+                  Created
+                </th>
+                <th
+                  style={{
+                    color: "#656565",
+                    textAlign: "right",
+                    padding: "1rem",
+                  }}
+                >
+                  Creator
+                </th>
+              </>
+            )}
             <th
               style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
             >
               MCAP
             </th>
-            <th
-              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
-            >
-              Holders
-            </th>
-            <th
-              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
-            >
-              Comments
-            </th>
+            {isLargeScreen && (
+              <>
+                <th
+                  style={{
+                    color: "#656565",
+                    textAlign: "right",
+                    padding: "1rem",
+                  }}
+                >
+                  Holders
+                </th>
+                <th
+                  style={{
+                    color: "#656565",
+                    textAlign: "right",
+                    padding: "1rem",
+                  }}
+                >
+                  Comments
+                </th>
+              </>
+            )}
             <th
               style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
             >
@@ -118,28 +150,35 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                   </HStack>
                 </td>
                 {/* Remaining Columns */}
-                <td
-                  style={{
-                    textAlign: "right",
-                    color: "white",
-                    padding: "1rem",
-                    borderTop: "1px solid #343434",
-                    borderBottom: "1px solid #343434",
-                  }}
-                >
-                  <CreatedAtComponent timeStamp={parseInt(data.created_at.toString())} noHeader />
-                </td>
-                <td
-                  style={{
-                    textAlign: "right",
-                    color: "#00C2FF",
-                    padding: "1rem",
-                    borderTop: "1px solid #343434",
-                    borderBottom: "1px solid #343434",
-                  }}
-                >
-                  {data.created_by}
-                </td>
+                {isLargeScreen && (
+                  <>
+                    <td
+                      style={{
+                        textAlign: "right",
+                        color: "white",
+                        padding: "1rem",
+                        borderTop: "1px solid #343434",
+                        borderBottom: "1px solid #343434",
+                      }}
+                    >
+                      <CreatedAtComponent
+                        timeStamp={parseInt(data.created_at.toString())}
+                        noHeader
+                      />
+                    </td>
+                    <td
+                      style={{
+                        textAlign: "right",
+                        color: "#00C2FF",
+                        padding: "1rem",
+                        borderTop: "1px solid #343434",
+                        borderBottom: "1px solid #343434",
+                      }}
+                    >
+                      {data.created_by}
+                    </td>
+                  </>
+                )}
                 <td
                   style={{
                     textAlign: "right",
@@ -151,28 +190,32 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                 >
                   {data.market_cap}
                 </td>
-                <td
-                  style={{
-                    textAlign: "right",
-                    color: "white",
-                    padding: "1rem",
-                    borderTop: "1px solid #343434",
-                    borderBottom: "1px solid #343434",
-                  }}
-                >
-                  {data.fee_basis_points}
-                </td>
-                <td
-                  style={{
-                    textAlign: "right",
-                    color: "white",
-                    padding: "1rem",
-                    borderTop: "1px solid #343434",
-                    borderBottom: "1px solid #343434",
-                  }}
-                >
-                  {data.replies}
-                </td>
+                {isLargeScreen && (
+                  <>
+                    <td
+                      style={{
+                        textAlign: "right",
+                        color: "white",
+                        padding: "1rem",
+                        borderTop: "1px solid #343434",
+                        borderBottom: "1px solid #343434",
+                      }}
+                    >
+                      {data.fee_basis_points}
+                    </td>
+                    <td
+                      style={{
+                        textAlign: "right",
+                        color: "white",
+                        padding: "1rem",
+                        borderTop: "1px solid #343434",
+                        borderBottom: "1px solid #343434",
+                      }}
+                    >
+                      {data.replies}
+                    </td>
+                  </>
+                )}
                 <td
                   style={{
                     textAlign: "right",
