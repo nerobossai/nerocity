@@ -2,8 +2,11 @@ import {
   Box,
   Button,
   Center,
+  Grid,
+  GridItem,
   HStack,
   Input,
+  Progress,
   Stack,
   Text,
   useToast,
@@ -29,6 +32,7 @@ import PromptScreen from "./promptScreen";
 import { agentApiClient } from "./services/agentApiClient";
 import { trackAgentCreation } from "./services/analytics";
 import SuccessScreen from "./successScreen";
+import { LiaTelegram } from "react-icons/lia";
 
 const Container = styled.div`
   width: 100%;
@@ -85,6 +89,7 @@ function CreateAgentModule() {
   const [ticker, setTicker] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [website, setWebsite] = useState("");
   const [twitterLinking, setTwitterLinking] = useState(false);
   const [telegramHandle, setTelegramHandle] = useState("");
   const [loading, setLoading] = useState(false);
@@ -95,11 +100,11 @@ function CreateAgentModule() {
     metadataUri: string;
   }>();
   const [twtToken, setTwtToken] = useState<string>();
-  const [traits, setTraits] = useState([]);
   const [screen, setScreen] = useState(1);
   const router = useRouter();
 
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
+  const [coinPercentage, setCoinPercentage] = useState<number>(0);
 
   const toggleTrait = (trait: string) => {
     setSelectedTraits((prev) =>
@@ -369,17 +374,21 @@ function CreateAgentModule() {
         px={{ base: "0", md: "10%" }}
         alignItems="center"
         py="1rem"
+        maxWidth="1200px"
+        margin="auto"
+        mb="20px"
       >
         <Box
-          display="flex"
-          alignItems="center"
+          width="100%"
           gap="20px"
-          cursor="pointer"
-          marginLeft="40px"
-          onClick={() => router.push("/")}
+          height="100%"
+          padding="4px 9px"
+          display="flex"
+          flexDirection="column"
+          justifyContent="space-between"
+          className="knf"
         >
-          <IoArrowBackSharp />
-          <Text>BACK</Text>
+          <Text fontSize="18px" cursor="pointer"><span style={{ color: "#959595" }} onClick={() => router.push("/")}>HOME / </span> CREATE AGENT</Text>
         </Box>
       </HStack>
       {screen === 1 ? (
@@ -394,7 +403,7 @@ function CreateAgentModule() {
             gap="20px"
             height="100%"
             px="1rem"
-            py="20px"
+            py="24px"
             display="flex"
             bg="#021F05"
             flexDirection="column"
@@ -424,7 +433,7 @@ function CreateAgentModule() {
             </HStack>
           </Box>
           <VStack alignItems="start" justifyContent="start">
-            <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
+            <Text color="#4A4A55" fontSize="14px">
               Agent Name & PFP
             </Text>
             <Input
@@ -435,16 +444,16 @@ function CreateAgentModule() {
               value={name}
               fontSize="16px"
               height="60px"
-              textTransform="uppercase"
+
             />
             {errors.name && (
-              <Text color="red.500" fontSize="12px" textTransform="uppercase">
+              <Text color="red.500" fontSize="12px">
                 *{errors.name}
               </Text>
             )}
           </VStack>
           <VStack alignItems="start" justifyContent="start">
-            <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
+            <Text color="#4A4A55" fontSize="14px">
               Ticker
             </Text>
             <Input
@@ -455,16 +464,16 @@ function CreateAgentModule() {
               value={ticker}
               fontSize="16px"
               height="60px"
-              textTransform="uppercase"
+
             />
             {errors.ticker && (
-              <Text color="red.500" fontSize="12px" textTransform="uppercase">
+              <Text color="red.500" fontSize="12px">
                 *{errors.ticker}
               </Text>
             )}
           </VStack>
           <VStack alignItems="start" justifyContent="start">
-            <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
+            <Text color="#4A4A55" fontSize="14px">
               Biography
             </Text>
             <Input
@@ -475,11 +484,11 @@ function CreateAgentModule() {
               value={description}
               fontSize="16px"
               height="60px"
-              textTransform="uppercase"
+
             />
           </VStack>
           <VStack alignItems="start">
-            <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
+            <Text color="#4A4A55" fontSize="14px">
               Add Image
             </Text>
             <Box
@@ -500,7 +509,7 @@ function CreateAgentModule() {
                 backgroundColor="grey.75"
                 _hover={{ backgroundColor: "grey.75" }}
                 cursor="pointer"
-                textTransform="uppercase"
+
               >
                 Choose file
               </Button>
@@ -512,17 +521,17 @@ function CreateAgentModule() {
               {tokenM
                 ? tokenM.metadata.name
                 : file && (
-                    <Text ml={3} p={2} borderRadius="md" fontSize="sm">
-                      {file.name}
-                    </Text>
-                  )}
+                  <Text ml={3} p={2} borderRadius="md" fontSize="sm">
+                    {file.name}
+                  </Text>
+                )}
             </Box>
           </VStack>
           <VStack alignItems="start" justifyContent="start">
-            <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
+            <Text color="#4A4A55" fontSize="14px">
               Traits
             </Text>
-            <HStack>
+            <HStack flexWrap="wrap">
               {predefinedTraits.map((trait) => (
                 <Button
                   key={trait}
@@ -537,55 +546,130 @@ function CreateAgentModule() {
               ))}
             </HStack>
           </VStack>
-          <VStack
-            alignItems="start"
-            justifyContent="start"
-            textTransform="uppercase"
+          <Grid
+            templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+            gap={4}
           >
+            <GridItem>
+              <VStack
+                alignItems="start"
+                justifyContent="start"
+
+              >
+                <Text color="#4A4A55" fontSize="14px">
+                  Twitter/ X
+                </Text>
+                <Button
+                  color="primary"
+                  _hover={{
+                    opacity: 0.8,
+                  }}
+                  height="60px"
+                  width="100%"
+                  padding="1.5rem"
+                  backgroundColor="#7E5313"
+                  onClick={handleTwitterConnect}
+                  isLoading={twitterLinking}
+                  disabled={!!twtToken}
+                  display="flex"
+                  justifyContent="start"
+                  gap="20px"
+
+                >
+                  <RiTwitterXFill size="15px" />
+
+                  <span>
+                    {twtToken ? "connected" : "Connect Twitter/X"}
+                  </span>
+                </Button>
+              </VStack>
+            </GridItem>
+            <GridItem>
+              <VStack
+                alignItems="start"
+                justifyContent="start"
+
+              >
+                <Text color="#4A4A55" fontSize="14px">
+                  Telegram
+                </Text>
+                <Button
+                  color="primary"
+                  _hover={{
+                    opacity: 0.8,
+                  }}
+                  height="60px"
+                  width="100%"
+                  padding="1.5rem"
+                  backgroundColor="#7E5313"
+                  onClick={handleTwitterConnect}
+                  isLoading={twitterLinking}
+                  disabled={!!twtToken}
+                  display="flex"
+                  justifyContent="start"
+                  gap="20px"
+
+                >
+                  <LiaTelegram size="20px" />
+
+                  <span>
+                    {twtToken ? "Connected Telegram" : "Connect Telegram"}
+                  </span>
+                </Button>
+              </VStack>
+            </GridItem>
+          </Grid>
+
+          <VStack alignItems="start" justifyContent="start">
             <Text color="#4A4A55" fontSize="14px">
-              Twitter (optional) Your AI Agent will tweet every 30 minutes.
+              Website
             </Text>
-            <Button
-              color="primary"
-              _hover={{
-                opacity: 0.8,
-              }}
+            <Input
+              backgroundColor="input"
+              border={0}
+              focusBorderColor="input"
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="Enter your AI agents website"
+              value={description}
+              fontSize="16px"
               height="60px"
-              width="100%"
-              padding="1.5rem"
-              backgroundColor="#4F4FCF"
-              onClick={handleTwitterConnect}
-              isLoading={twitterLinking}
-              disabled={!!twtToken}
-              display="flex"
-              justifyContent="space-between"
-              textTransform="uppercase"
-            >
-              <span>
-                {twtToken ? "connected" : "Connect Twitter/X account"}
-              </span>
-              <RiTwitterXFill size="15px" />
-            </Button>
-            <Text
-              color="grey.600"
-              opacity={0.5}
-              fontSize="12px"
-              textTransform="uppercase"
-            >
-              *Connect your agent's twitter account and your agent will start
-              posting autonomously
-            </Text>
+
+            />
           </VStack>
-          {/* <VStack alignItems="start" justifyContent="start" paddingBottom="1rem">
-          <Text>Telegram (optional)</Text>
-          <Input
-            backgroundColor="grey.100"
-            border={0}
-            focusBorderColor="input"
-            onChange={(e) => setTelegramHandle(e.target.value)}
-            value={telegramHandle}
-          />
-        </VStack> */}
+          <VStack alignItems="start" justifyContent="start">
+            <Text color="#4A4A55" fontSize="14px">
+              % of coins for dev
+            </Text>
+            <HStack width="100%">
+              {[0, 10, 20, 30].map((trait) => (
+                <Button
+                  key={trait}
+                  variant="solid"
+                  fontSize="12px"
+                  flexGrow="1"
+                  flexWrap="wrap"
+                  border={coinPercentage === trait ? "0.5px solid white" : "0.5px solid #959595"}
+                  color={coinPercentage === trait ? "black" : "#959595"}
+                  bg={coinPercentage === trait ? "white" : "#1B1B1D"}
+                  onClick={() => setCoinPercentage(trait)}
+                >
+                  {trait}%
+                </Button>
+              ))}
+            </HStack>
+            <Box position="relative" width="100%" mb="10px">
+              <Progress backgroundColor="#323232" color="white" height='36px' value={coinPercentage} width="100%" />
+              <Text
+                position="absolute"
+                top="50%"
+                left="50%"
+                color="#959595"
+                transform="translate(-50%, -50%)"
+                fontWeight="bold"
+              >{coinPercentage}%
+              </Text>
+            </Box>
+          </VStack>
           <Center>
             <Button
               width="100%"
@@ -595,10 +679,11 @@ function CreateAgentModule() {
               bg="#18CA2A"
               border="1px solid #1FEF34"
               isLoading={loading}
-              onClick={handleSubmit}
+              // onClick={handleSubmit}
+              onClick={() => setScreen(3)}
               height="46px"
               color="white"
-              textTransform="uppercase"
+
               marginBottom="20px"
             >
               Create Agent

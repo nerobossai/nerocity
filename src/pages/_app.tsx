@@ -24,6 +24,35 @@ const theme = extendTheme({
   colors: tailwindConfig.theme?.colors,
   components: {
     Tabs: tabsTheme,
+    Button: {
+      baseStyle: {
+        borderRadius: "0",
+      },
+    },
+    Input: {
+      variants: {
+        outline: {
+          field: {
+            borderRadius: "0",
+          },
+        },
+        filled: {
+          field: {
+            borderRadius: "0",
+          },
+        },
+        flushed: {
+          field: {
+            borderRadius: "0",
+          },
+        },
+        unstyled: {
+          field: {
+            borderRadius: "0",
+          },
+        },
+      }
+    }
   },
   fonts: {
     body: "JetBrains Mono",
