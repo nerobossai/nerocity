@@ -95,14 +95,17 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
             >
               ENTER APP
             </Button>
-            <Button
-              bg="#FF7249"
-              color="white"
-              width="100%"
-              _hover={{ opacity: 0.8 }}
-            >
-              BUY $NEROBOSS
-            </Button>
+            <a href="https://raydium.io/swap/?inputMint=sol&outputMint=5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump" target="_blank" style={{width:"100%"}}>
+
+              <Button
+                bg="#FF7249"
+                color="white"
+                width="100%"
+                _hover={{ opacity: 0.8 }}
+              >
+                BUY $NEROBOSS
+              </Button>
+            </a>
             <HStack gap="20px" color="#E0D2FD">
               <Link>Twitter</Link>
               <Link>Docs</Link>

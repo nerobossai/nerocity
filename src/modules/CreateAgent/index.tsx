@@ -176,7 +176,7 @@ function CreateAgentModule() {
         file: file!,
         // twitter: twitterHandle,
         telegram: telegramHandle,
-        // website?: string;
+        website: website
       };
 
       let tMeta;
@@ -434,6 +434,10 @@ function CreateAgentModule() {
                 color="black"
                 fontSize="12px"
                 _hover={{ opacity: 0.8 }}
+                onClick={() =>{
+                  setPromptDescription("");
+                  setScreen(1);
+                }}
               >
                 Start Over
               </Button>
@@ -617,8 +621,8 @@ function CreateAgentModule() {
               border={0}
               focusBorderColor="input"
               onChange={(e) => setWebsite(e.target.value)}
+              value={website}
               placeholder="Enter your AI agents website"
-              value={description}
               fontSize="16px"
               height="60px"
             />

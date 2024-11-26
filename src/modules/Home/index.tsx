@@ -22,6 +22,7 @@ import MainScreen from "./mainScreen";
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
 import { useScreenStore } from "@/stores/useScreenStore";
+import useUserStore from "@/stores/useUserStore";
 
 const Container = styled.div`
   width: 100%;
@@ -38,6 +39,7 @@ function HomeModule() {
   const { screen, setScreen } = useScreenStore();
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   const [filter, setFilter] = useState("");
+  const { isAuthenticated } = useUserStore();
 
   const modifyFeed = async (resp: any) => {
     await Promise.all(
@@ -143,8 +145,10 @@ function HomeModule() {
               _hover={{
                 opacity: 0.8,
               }}
+              opacity={isAuthenticated ? 1 : 0.8}
+              disabled={!isAuthenticated}
               borderRadius="0"
-              onClick={() => navigator.push(Paths.createAgent)}
+              onClick={() => isAuthenticated && navigator.push(Paths.createAgent)}
               margin="20px"
             >
               CREATE AGENT
