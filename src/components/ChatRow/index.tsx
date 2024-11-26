@@ -10,9 +10,8 @@ function ChatRowComponent(props: any) {
     <VStack
       width="100%"
       alignItems="flex-start"
-      backgroundColor={props.is_agent ? "#1F2E22" : "transparent"}
-      padding="0 0.5rem"
-      borderRadius="0.5rem"
+      backgroundColor={props.is_agent ? "#04200A" : "transparent"}
+      padding={props.is_agent ? "1rem 0.5rem" : "0 0.5rem"}
       fontSize="12px"
     >
       <HStack

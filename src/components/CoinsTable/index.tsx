@@ -48,9 +48,9 @@ function CoinsTable({ feed }: any) {
               >
                 {button.label}
               </Button>
-              <Box position="absolute" top="-10px" left="-10px">
+              {/* <Box position="absolute" top="-10px" left="-10px">
                 {button.icon}
-              </Box>
+              </Box> */}
             </Box>
           ))}
         </HStack>

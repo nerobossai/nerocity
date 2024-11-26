@@ -227,102 +227,104 @@ function CoinModule() {
     if (selectedTab === 0) {
       return (
         <>
-        <Box
-          width="100%"
-          display="flex"
-          height="80vh"
-          flexDirection="column"
-          padding="1rem"
-        >
-          <Breadcrumb loading={loading} />
-          <HStack width="100%" alignItems="center" p="20px" />
           <Box
+            width="100%"
             display="flex"
+            height="80vh"
             flexDirection="column"
-            w="full"
-            mr="auto"
-            flexGrow={1}
-            gap={8}
+            padding="1rem"
           >
-            <Stack padding="0 1rem" bg="#1B1B1E" flexGrow="1" width="100%">
-              {agentDetails ? (
-                <>
-                  <CoinHeaderModule
-                    {...agentDetails}
-                    market_cap={marketCap || "0"}
-                  />
+            <Breadcrumb loading={loading} />
+            <HStack width="100%" alignItems="center" p="20px" />
+            <Box
+              display="flex"
+              flexDirection="column"
+              w="full"
+              mr="auto"
+              flexGrow={1}
+              gap={8}
+            >
+              <Stack padding="0 1rem" bg="#1B1B1E" flexGrow="1" width="100%">
+                {agentDetails ? (
+                  <>
+                    <CoinHeaderModule
+                      {...agentDetails}
+                      market_cap={marketCap || "0"}
+                    />
 
-                  {pumpfunData ? (
-                    <iframe
-                      height="400px"
-                      width="100%"
-                      id="geckoterminal-embed"
-                      title="GeckoTerminal Embed"
-                      src={`https://www.geckoterminal.com/solana/pools/${pumpfunData.raydium_pool}?embed=1&info=0&swaps=0`}
-                      frameBorder="0"
-                      allow="clipboard-write"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <MemoizedChart
-                      mintKey={agentDetails.mint_public_key}
-                      symbol={agentDetails.ticker}
-                    />
-                  )}
-                </>
-              ) : null}
-            </Stack>
-            <VStack width="100%" alignItems="flex-start" flexGrow={1}>
-              <AboutModule
-                {...agentDetails}
-                current_real_token_reserves={realTokenReserve}
-                sol_reserve={realSolReserve}
-              />
-            </VStack>
+                    {pumpfunData ? (
+                      <iframe
+                        height="400px"
+                        width="100%"
+                        id="geckoterminal-embed"
+                        title="GeckoTerminal Embed"
+                        src={`https://www.geckoterminal.com/solana/pools/${pumpfunData.raydium_pool}?embed=1&info=0&swaps=0`}
+                        frameBorder="0"
+                        allow="clipboard-write"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <MemoizedChart
+                        mintKey={agentDetails.mint_public_key}
+                        symbol={agentDetails.ticker}
+                      />
+                    )}
+                  </>
+                ) : null}
+              </Stack>
+              <VStack width="100%" alignItems="flex-start" flexGrow={1}>
+                <AboutModule
+                  {...agentDetails}
+                  current_real_token_reserves={realTokenReserve}
+                  sol_reserve={realSolReserve}
+                />
+              </VStack>
+            </Box>
           </Box>
-          
-        </Box>
-        <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </>
       );
     }
     if (selectedTab === 1) {
-      return (<>
-        <Box
-          width="100%"
-          display="flex"
-          height="80vh"
-          flexDirection="column"
-          padding="1rem"
-        >
-          <Breadcrumb loading={loading} />
-          <Box display="flex" flexDirection="column-reverse">
-            <TradeModule
-              currentPrice={price || "0"}
-              tokenDetails={agentDetails}
-              holders={tokenHolders}
-              pumpfunData={pumpfunData}
-            />
-          </Box>
-        </Box>          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+      return (
+        <>
+          <Box
+            width="100%"
+            display="flex"
+            height="80vh"
+            flexDirection="column"
+            padding="1rem"
+          >
+            <Breadcrumb loading={loading} />
+            <Box display="flex" flexDirection="column-reverse">
+              <TradeModule
+                currentPrice={price || "0"}
+                tokenDetails={agentDetails}
+                holders={tokenHolders}
+                pumpfunData={pumpfunData}
+              />
+            </Box>
+          </Box>{" "}
+          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </>
       );
     }
     if (selectedTab === 2) {
       return (
         <>
-        <Box
-          width="100%"
-          display="flex"
-          minHeight="80vh"
-          flexDirection="column"
-          padding="1rem"
-          gap="20px"
-        >
-          <Breadcrumb loading={loading} />
-          <ActivityBar agentId={agentDetails.id} />
-        </Box>          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} /></>
-
+          <Box
+            width="100%"
+            display="flex"
+            minHeight="80vh"
+            flexDirection="column"
+            padding="1rem"
+            gap="20px"
+          >
+            <Breadcrumb loading={loading} />
+            <ActivityBar agentId={agentDetails.id} />
+          </Box>{" "}
+          <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        </>
       );
     }
   }

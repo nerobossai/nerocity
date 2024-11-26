@@ -4,7 +4,6 @@ import {
   Input,
   Spinner,
   Stack,
-  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -23,12 +22,23 @@ import { coinApiClient } from "./services/coinApiClient";
 
 const AddComment = ({ comment, setComment, isAuthenticated }: any) => {
   return (
-    <Box width="100%" bg="#454545" display="flex" padding="0.5rem" my="10px">
+    <Box
+      width="100%"
+      bg="#1B1B1D"
+      display="flex"
+      padding="0.5rem"
+      my="10px"
+      border="0.5px solid #959595"
+    >
       <Input
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         flexGrow="1"
-        placeholder="Add a comment"
+        placeholder={
+          isAuthenticated
+            ? "Add a comment"
+            : "Connect your wallet to engage & comment."
+        }
         outline="none"
         border="none"
         disabled={!isAuthenticated}
@@ -45,7 +55,7 @@ const AddComment = ({ comment, setComment, isAuthenticated }: any) => {
         borderRadius="0"
         disabled={!isAuthenticated}
       >
-        POST
+        {isAuthenticated ? "POST" : "CONNECT WALLET"}
       </Button>
     </Box>
   );
@@ -133,7 +143,7 @@ function ChatModule(props: { agentId: string }) {
       />
       {(chats?.chats || []).map((data, r) => {
         return (
-          <Stack key={r}>
+          <Stack key={r} gap="0.5rem">
             <ChatRowComponent {...data} />
             Display this Stack only if reply button is clicked
             {selectedMessageId === data.message_id && (
@@ -156,7 +166,7 @@ function ChatModule(props: { agentId: string }) {
             <Box
               display="flex"
               paddingRight="20px"
-              gap="20px"
+              gap="10px"
               marginLeft="0.5rem"
             >
               <Box
@@ -178,7 +188,7 @@ function ChatModule(props: { agentId: string }) {
                 alignItems="center"
                 cursor="pointer"
               >
-                <FaRegHeart /> Like
+                <FaRegHeart />
               </Box>
               <Box
                 fontSize="12px"

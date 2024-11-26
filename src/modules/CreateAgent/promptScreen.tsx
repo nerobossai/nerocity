@@ -21,7 +21,7 @@ function PromptScreen({ handleGenerateAgent, loading }: IPromptScreen) {
         alignItems="start"
         justifyContent="start"
         margin="auto"
-        width={{base:"100%", md:"500px"}}
+        width={{ base: "100%", md: "500px" }}
       >
         <Text color="#4A4A55" fontSize="14px" textTransform="uppercase">
           Description for your ideal agent

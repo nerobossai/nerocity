@@ -18,9 +18,9 @@ import { HomeSticker } from "@/components/Svgs/homeSticker";
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 
+import MainScreen from "./mainScreen";
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
-import { HomeStickerBack } from "@/components/Svgs/HomeStickerBack";
 
 const Container = styled.div`
   width: 100%;
@@ -34,6 +34,7 @@ function HomeModule() {
   const [feedLoading, setFeedLoading] = useState(false);
   const [feed, setFeed] = useState<any>([]);
   const [overlord, setOverlord] = useState<AgentResponse>();
+  const [screen, setScreen] = useState(0);
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 
   const fetchFeed = async () => {
@@ -74,6 +75,9 @@ function HomeModule() {
     fetchFeed();
   }, []);
 
+  if (screen === 0) {
+    return <MainScreen setScreen={setScreen} />;
+  }
   return (
     <Container>
       <Stack justifyContent="center" alignItems="center" px="20px">
@@ -92,6 +96,8 @@ function HomeModule() {
             display="flex"
             justifyContent="space-between"
             marginTop={!overlord || feed.length === 0 ? "50px" : "0"}
+            overflow="hidden"
+            maxHeight={{ base: "auto", lg: "80px" }}
           >
             <Text
               fontSize="24px"

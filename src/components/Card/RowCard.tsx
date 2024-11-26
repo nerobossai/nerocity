@@ -128,27 +128,35 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     borderBottom: "1px solid #343434",
                   }}
                 >
-                  <HStack spacing="1rem" width="100%" alignItems={isSmallScreen ? "flex-start" :"center"}>
+                  <HStack
+                    spacing="1rem"
+                    width="100%"
+                    alignItems={isSmallScreen ? "flex-start" : "center"}
+                  >
                     <Image
                       boxSize={!isSmallScreen ? "4rem" : "2rem"}
                       objectFit="cover"
                       src={data.image}
                       alt="Ticker Image"
                     />
-                    <VStack alignItems="flex-start" spacing="0" >
+                    <VStack alignItems="flex-start" spacing="0">
                       <Heading as="h4" size="sm" fontSize="16px" color="white">
                         {data.ticker}
                       </Heading>
-                      <Text fontSize="12px" wordBreak="break-all">{data.name}</Text>
-                      {!isSmallScreen && <Text
-                        fontSize="12px"
-                        color="gray.500"
-                        maxWidth="200px"
-                        overflow="hidden"
-                        wordBreak="break-all"
-                      >
-                        {data.description.slice(0, 20)}...
-                      </Text>}
+                      <Text fontSize="12px" wordBreak="break-all">
+                        {data.name}
+                      </Text>
+                      {!isSmallScreen && (
+                        <Text
+                          fontSize="12px"
+                          color="gray.500"
+                          maxWidth="200px"
+                          overflow="hidden"
+                          wordBreak="break-all"
+                        >
+                          {data.description.slice(0, 20)}...
+                        </Text>
+                      )}
                     </VStack>
                   </HStack>
                 </td>
@@ -189,7 +197,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     padding: "1rem",
                     borderTop: "1px solid #343434",
                     borderBottom: "1px solid #343434",
-                    fontSize: isLargeScreen ? "16px" : "12px"
+                    fontSize: isLargeScreen ? "16px" : "12px",
                   }}
                 >
                   {data.market_cap}
