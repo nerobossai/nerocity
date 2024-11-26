@@ -169,7 +169,7 @@ function ChatModule(props: { agentId: string }) {
               gap="10px"
               marginLeft="0.5rem"
             >
-              <Box
+              {/* <Box
                 fontSize="12px"
                 color="#8C8C8C"
                 backgroundColor="transparent"
@@ -189,7 +189,7 @@ function ChatModule(props: { agentId: string }) {
                 cursor="pointer"
               >
                 <FaRegHeart />
-              </Box>
+              </Box> */}
               <Box
                 fontSize="12px"
                 color="#8C8C8C"

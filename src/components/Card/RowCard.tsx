@@ -22,6 +22,7 @@ interface CardProps {
   market_cap: string;
   fee_basis_points: string;
   replies: string;
+  twenty_four_hr_changes?: number;
 }
 
 function DataTable({ feed }: { feed: CardProps[] }) {
@@ -232,13 +233,13 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                   style={{
                     textAlign: "right",
                     padding: "1rem",
-                    color: "#00FF29",
+                    color: !data.twenty_four_hr_changes ? "white" : data.twenty_four_hr_changes < 0 ?  "red" :"#00FF29",
                     borderTop: "1px solid #343434",
                     borderBottom: "1px solid #343434",
                     borderRight: "1px solid #343434",
                   }}
                 >
-                  +{data.replies}%
+                  {!data.twenty_four_hr_changes ? "--" : data.twenty_four_hr_changes < 0 ?  "-" + data.twenty_four_hr_changes + "%" : "+" + data.twenty_four_hr_changes +"%"}
                 </td>
               </tr>
             ) : null,

@@ -152,7 +152,7 @@ function Header() {
       gap="40px"
       justifyContent={{ base: "space-between", md: "block" }}
     >
-      <Link href="/">{isLargeScreen ? <Logo /> : <LogoSmall />}</Link>
+      <Box onClick={() => router.push("/")}>{isLargeScreen ? <Logo /> : <LogoSmall />}</Box>
       <Box padding="20px" display={{ base: "none", lg: "block" }}>
         <Box
           px="2rem"

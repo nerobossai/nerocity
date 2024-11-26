@@ -113,7 +113,7 @@ function MainCard(props: CardProps) {
           <Text fontSize="12px" color="text.100">
             24H
           </Text>
-          <Text fontSize="14px">120%</Text>
+          <Text fontSize="14px">{props.twenty_four_hr_changes}</Text>
         </VStack>
         <Box position="absolute" bottom="0" right="0">
           <StarSticker />

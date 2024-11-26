@@ -106,3 +106,29 @@ body {
     margin-top: 12px;
   }
 }
+
+/* styles.css */
+.gradient-background {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+      100deg,
+      #571f0d -0.99%,
+      #5e220f 64.54%,
+      #642410 112.46%
+    ),
+    #4a13a5;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  padding: 2rem;
+  overflow: hidden;
+}
+

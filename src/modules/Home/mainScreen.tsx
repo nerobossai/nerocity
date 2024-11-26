@@ -5,6 +5,10 @@ import styled from "styled-components";
 import { Computer } from "@/components/Svgs/HomeScreen/Computer";
 import { Logo } from "@/components/Svgs/Logo";
 import Image from "next/image";
+import { SingleEye } from "@/components/Svgs/HomeScreen/singleEye";
+import { Hands } from "@/components/Svgs/HomeScreen/Hands";
+import { Eyes } from "@/components/Svgs/HomeScreen/Eyes";
+import { IndexFinger } from "@/components/Svgs/HomeScreen/indexFinger";
 
 const Container = styled.div`
   width: 100vw;
@@ -46,7 +50,7 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
     padding="2rem"
   >
       <HStack width="100%" height="100%" justifyContent="center">
-        {/* <HStack width="100%" height="100%" alignItems="center" justifyContent="center" display={{base:"none", md:"flex"}}>
+        <HStack width="100%" height="100%" alignItems="center" justifyContent="center" display={{base:"none", md:"flex"}}>
           <Box flexGrow="1">
             <Hands />
           </Box>
@@ -57,11 +61,12 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
             <IndexFinger />
           </Box>
           
-        </HStack> */}
+        </HStack>
         <VStack
-          p="40px"
+          p="20px 40px"
           border="1px solid white"
           height="100%"
+          minWidth={{base: "auto", sm: "450px"}}
         >
           <VStack gap="2rem">
             <Logo width="250px" height="60px" />
@@ -104,7 +109,7 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
             </HStack>
           </VStack>
         </VStack>
-        {/* <HStack width="100%" height="100%" alignItems="center" justifyContent="center" display={{base:"none", md:"flex"}}>
+        <HStack width="100%" height="100%" alignItems="center" justifyContent="center" display={{base:"none", md:"flex"}}>
           <Box flexGrow="1">
             <SingleEye />
           </Box>
@@ -115,7 +120,7 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
             <Eyes />
           </Box>
           
-        </HStack> */}
+        </HStack>
       </HStack>
     </Box>
   );
