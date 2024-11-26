@@ -189,7 +189,7 @@ function ProfileModule() {
       >
         <HStack alignItems="center" gap="10px">
           <Image boxSize="64px" src={profile?.profile_pic} />
-          <Text fontSize="32px">@{profile?.username.slice(0, 6) ?? ""}</Text>
+          <Text fontSize="32px">{profile?.public_key?.slice(0, 6) ?? ""}</Text>
         </HStack>
         <VStack width="100%">
           <Tabs

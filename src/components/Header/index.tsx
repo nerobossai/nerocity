@@ -7,8 +7,10 @@ import {
   Input,
   Text,
   useBreakpointValue,
+  VStack,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { MdArrowOutward } from "react-icons/md";
 import {
   WalletModalProvider,
   WalletMultiButton,
@@ -28,6 +30,7 @@ import * as AuthUtils from "@/utils/AuthUtils";
 import ProfileModalComponent from "../ProfileModal";
 import { Logo } from "../Svgs/Logo";
 import { LogoSmall } from "../Svgs/LogoSmall";
+import { CiLogout } from "react-icons/ci";
 
 const Container = styled.header`
   /* max-width: 490px; */
@@ -192,7 +195,7 @@ function Header() {
         </a>
         <Text> MCAP $12M</Text>
       </HStack>
-      <HStack flexGrow="1" justifyContent="flex-end">
+      <HStack flexGrow="1" justifyContent="flex-end" position="relative">
         {isAuthenticated ? (
           <>
             <Button
@@ -211,13 +214,28 @@ function Header() {
               <FaWallet />
               <span>{walletAddress}</span>
             </Button>
-            <ProfileModalComponent
+            <VStack zIndex="100" position="absolute" gap="20px"  display={isOpen ? "block" : "none"} alignItems="flex-start" fontSize="12px" right="10" border="0.5px solid grey" transform="translateY(70px)" bg="#1a1a1c"  color="white" padding="1rem">
+              
+              <HStack 
+                onClick={() => {
+                  setIsOpen(false);
+                  router.push(`/profile/${profile.profile?.username}`);
+                }}
+              cursor="pointer" justifyContent="flex-start"><Text color="text.100">{profile.profile.public_key.slice(0, 6) + "..." + profile.profile.public_key.slice(0, 3)}</Text>
+              <MdArrowOutward color="#737373"/></HStack>
+
+              <HStack cursor="pointer" gap="50px" marginTop="10px" onClick={() => {
+                setIsOpen(false); handleDisconnect();
+              }}><Text>DISCONNECT</Text>
+              <CiLogout color="white" /></HStack>
+            </VStack>
+            {/* <ProfileModalComponent
               userDetails={profile.profile ?? profile}
               isOpen={isOpen && isAuthenticated}
               onClose={() => setIsOpen(false)}
               disconnect={handleDisconnect}
               isDisconnecting={isDisconnecting}
-            />{" "}
+            />{" "} */}
           </>
         ) : (
           <WalletModalProvider>
