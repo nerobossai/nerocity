@@ -1,15 +1,15 @@
 import {
-  Avatar,
   Box,
   HStack,
+  Image,
   Spinner,
   Stack,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
@@ -27,7 +27,7 @@ import { profileApiClient } from "./services/profileApiClient";
 const Container = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   padding: 1rem;
 `;
@@ -49,6 +49,7 @@ function ProfileModule() {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isHovered, setIsHovered] = useState<number | string>("");
   const [coinsHeldData, setCoinsHeldData] = useState<CoinsHeldData[]>([]);
 
   useEffect(() => {
@@ -150,76 +151,253 @@ function ProfileModule() {
 
   return (
     <Container>
-      <Stack padding="2rem" borderRadius="1rem" gap="20px">
-        <VStack alignItems="center" gap="10px">
-          <Avatar boxSize="30px" src={profile?.profile_pic} />
-          <p className="text-sm">Username: @{profile?.username ?? ""}</p>
-        </VStack>
-        <VStack>
-          <HStack borderBottom="2px solid grey" padding="1rem">
-            <Box
-              padding="1rem 2rem"
-              fontSize="12px"
-              cursor="pointer"
-              borderRadius="10px"
-              backgroundColor={selectedTab === 0 ? "grey.100" : ""}
-              onClick={() => setSelectedTab(0)}
-            >
-              Coins Held
-            </Box>
-            <Box
-              padding="1rem 2rem"
-              fontSize="12px"
-              cursor="pointer"
-              borderRadius="10px"
-              backgroundColor={selectedTab === 1 ? "grey.100" : ""}
-              onClick={() => setSelectedTab(1)}
-            >
-              Coins created
-            </Box>
-          </HStack>
+      <HStack
+        width="100%"
+        px={{ base: "0", md: "10%" }}
+        alignItems="center"
+        py="1rem"
+        maxWidth="1200px"
+        margin="auto"
+        mb="20px"
+      >
+        <Box
+          width="100%"
+          gap="20px"
+          height="100%"
+          padding="4px 9px"
+          display="flex"
+          flexDirection="column"
+          justifyContent="space-between"
+          className="knf"
+        >
+          <Text fontSize="18px" cursor="pointer">
+            <span style={{ color: "#959595" }} onClick={() => router.push("/")}>
+              HOME /{" "}
+            </span>{" "}
+            PROFILE
+          </Text>
+        </Box>
+      </HStack>
+      <Stack
+        width="100%"
+        px={{ base: "0", md: "15%" }}
+        alignItems="flex-start"
+        py="1rem"
+        maxWidth="1200px"
+        margin="auto"
+        mb="20px"
+      >
+        <HStack alignItems="center" gap="10px">
+          <Image boxSize="64px" src={profile?.profile_pic} />
+          <Text fontSize="32px">@{profile?.username.slice(0, 6) ?? ""}</Text>
+        </HStack>
+        <VStack width="100%">
+          <Tabs
+            index={selectedTab}
+            onChange={setSelectedTab}
+            variant="unstyled"
+            width="100%"
+          >
+            <TabList width="100%" pt="10px" mt="10px">
+              <Tab
+                _selected={{
+                  color: "white",
+                  borderBottom: "2px solid",
+                  borderColor: "blue.500",
+                }}
+                color={selectedTab === 0 ? "white" : "#4A4A55"}
+                borderBottom="2px solid"
+                borderColor={selectedTab === 0 ? "blue.500" : "transparent"}
+                display="flex"
+                alignItems="center"
+                gap="5px"
+              >
+                <span>COINS HELD</span>{" "}
+              </Tab>
+              <Tab
+                _selected={{
+                  color: "white",
+                  borderBottom: "2px solid",
+                  borderColor: "blue.500",
+                }}
+                color={selectedTab === 1 ? "white" : "#4A4A55"}
+                borderBottom="2px solid"
+                borderColor={selectedTab === 1 ? "blue.500" : "transparent"}
+              >
+                AGENTS CREATED
+              </Tab>
+            </TabList>
+
+            <TabPanels>
+              <TabPanel />
+              <TabPanel />
+            </TabPanels>
+          </Tabs>
           {loading ? (
             <Spinner marginTop={20} />
           ) : (
-            <Table variant="unstyled">
-              <Thead>
-                <Tr>
-                  <Th>Name</Th>
-                  {selectedTab === 0 ? (
-                    <>
-                      <Th>Coins</Th>
-                      <Th>Value</Th>
-                    </>
-                  ) : (
-                    <>
-                      <Th>Price</Th>
-                      <Th>Market Cap</Th>
-                    </>
-                  )}
-                </Tr>
-              </Thead>
-              <Tbody>
-                {selectedTab === 0
-                  ? coinsHeldData.map((coin, index) => (
-                      <Tr key={index}>
-                        <>
-                          <Td>{coin.name}</Td>
-                          <Td>{coin.ticker}</Td>
-                          <Td>{coin.balance}</Td>
-                        </>
-                      </Tr>
-                    ))
-                  : coinsData.map((coin) => (
-                      <Tr key={coin.id}>
-                        <Td>{coin.name}</Td>
-                        <Td>
-                          <SubscriptText value={coin.price} />
-                        </Td>
-                        <Td>{coin.market_cap}</Td>
-                      </Tr>
-                    ))}
-              </Tbody>
-            </Table>
+            <VStack bg="#1B1B1E" width="100%" overflowX="auto">
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "separate",
+                  borderSpacing: "0 20px",
+                  padding: "0 20px",
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style={{
+                        color: "#656565",
+                        textAlign: "left",
+                        padding: "1rem",
+                      }}
+                    >
+                      Name
+                    </th>
+                    {selectedTab === 0 ? (
+                      <>
+                        <th
+                          style={{
+                            color: "#656565",
+                            textAlign: "left",
+                            padding: "1rem",
+                          }}
+                        >
+                          Coins
+                        </th>
+                        <th
+                          style={{
+                            color: "#656565",
+                            textAlign: "left",
+                            padding: "1rem",
+                          }}
+                        >
+                          Value
+                        </th>
+                      </>
+                    ) : (
+                      <>
+                        <th
+                          style={{
+                            color: "#656565",
+                            textAlign: "left",
+                            padding: "1rem",
+                          }}
+                        >
+                          Price
+                        </th>
+                        <th
+                          style={{
+                            color: "#656565",
+                            padding: "1rem",
+                            textAlign: "left",
+                          }}
+                        >
+                          Market Cap
+                        </th>
+                      </>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedTab === 0
+                    ? coinsHeldData.map((coin, id) => (
+                        <tr
+                          key={id}
+                          // @ts-ignore
+                          style={{
+                            backgroundColor:
+                              isHovered === id ? "#2D2D2D" : "transparent",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => router.push(`/${id}`)}
+                          onMouseEnter={() => setIsHovered(id)}
+                          onMouseLeave={() => setIsHovered("")}
+                        >
+                          <td
+                            style={{
+                              height: "80px",
+                              padding: "1rem",
+                              borderLeft: "1px solid #343434",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.name}
+                          </td>
+                          <td
+                            style={{
+                              padding: "1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.ticker}
+                          </td>
+                          <td
+                            style={{
+                              padding: "1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                              borderRight: "1px solid #343434",
+                            }}
+                          >
+                            {coin.balance}
+                          </td>
+                        </tr>
+                      ))
+                    : coinsData.map((coin, id) => (
+                        <tr
+                          key={coin.ticker}
+                          // @ts-ignore
+                          style={{
+                            backgroundColor:
+                              isHovered === coin.ticker
+                                ? "#2D2D2D"
+                                : "transparent",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => router.push(`/${coin.ticker}`)}
+                          onMouseEnter={() => setIsHovered(coin.ticker)}
+                          onMouseLeave={() => setIsHovered("")}
+                        >
+                          <td
+                            style={{
+                              height: "80px",
+                              padding: "0.5rem 1rem",
+                              borderLeft: "1px solid #343434",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.name}
+                          </td>
+                          <td
+                            style={{
+                              padding: "0.5rem 1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            <SubscriptText value={coin.price} />
+                          </td>
+                          <td
+                            style={{
+                              padding: "0.5rem 1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                              borderRight: "1px solid #343434",
+                            }}
+                          >
+                            {coin.market_cap}
+                          </td>
+                        </tr>
+                      ))}
+                </tbody>
+              </table>
+            </VStack>
           )}
         </VStack>
       </Stack>

@@ -113,14 +113,14 @@ class ApiClient extends BaseApiClient {
     try {
       let endpoint = "";
       if (filter === "") {
-        endpoint = ApiEndpoints.public.feed
+        endpoint = ApiEndpoints.public.feed;
       } else {
-        endpoint  =  "/api/v1/" + filter;
+        endpoint = `/api/v1/${filter}`;
       }
 
       const resp = await this.apiCall({
         type: "GET",
-        url:  endpoint,
+        url: endpoint,
       });
       return resp.data;
     } catch (err: any) {

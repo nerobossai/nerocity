@@ -17,12 +17,12 @@ import CoinsTable from "@/components/CoinsTable";
 import { HomeSticker } from "@/components/Svgs/homeSticker";
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
+import { useScreenStore } from "@/stores/useScreenStore";
+import useUserStore from "@/stores/useUserStore";
 
 import MainScreen from "./mainScreen";
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
-import { useScreenStore } from "@/stores/useScreenStore";
-import useUserStore from "@/stores/useUserStore";
 
 const Container = styled.div`
   width: 100%;
@@ -60,7 +60,7 @@ function HomeModule() {
         }
       }),
     );
-  }
+  };
   const fetchFeed = async (filter: string) => {
     try {
       setFeedLoading(true);
@@ -148,7 +148,9 @@ function HomeModule() {
               opacity={isAuthenticated ? 1 : 0.8}
               disabled={!isAuthenticated}
               borderRadius="0"
-              onClick={() => isAuthenticated && navigator.push(Paths.createAgent)}
+              onClick={() =>
+                isAuthenticated && navigator.push(Paths.createAgent)
+              }
               margin="20px"
             >
               CREATE AGENT
@@ -166,7 +168,13 @@ function HomeModule() {
               <Spinner />
             </Box>
           ) : (
-            <CoinsTable feed={feed} setFeed={setFeed} setFeedLoading={setFeedLoading} filter={filter} setFilter={setFilter} />
+            <CoinsTable
+              feed={feed}
+              setFeed={setFeed}
+              setFeedLoading={setFeedLoading}
+              filter={filter}
+              setFilter={setFilter}
+            />
           )}
         </Stack>
       </Stack>

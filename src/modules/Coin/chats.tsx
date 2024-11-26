@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import React, { useEffect, useState } from "react";
-import { FaRegHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa6";
 
 import ChatModelComponent from "@/components/ChatModel";

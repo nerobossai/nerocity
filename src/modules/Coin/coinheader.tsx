@@ -51,18 +51,18 @@ function CoinHeaderModule(props: CardProps) {
         spacing="4"
         flexDirection={isLargeScreen ? "row" : "column"}
       >
-        <VStack alignItems="flex-start">
+        <VStack alignItems="flex-start" gap="0">
           <Text fontSize="32px">{props.ticker}</Text>
-          <Text fontSize="16px">{props.name}</Text>
+          <Text fontSize="16px" mb="4px">{props.name}</Text>
         </VStack>
 
         <VStack justifyContent="flex-start" spacing="0" pt="10px">
           <HStack
-            spacing="2"
             gap="15px"
             alignItems="flex-start"
             flexDirection={isLargeScreen ? "row" : "column"}
             width="100%"
+            height="100%"
             flexWrap="wrap"
           >
             <Box
@@ -102,6 +102,8 @@ function CoinHeaderModule(props: CardProps) {
               gap="8px"
               color="secondary"
               wordBreak="break-all"
+              // lineHeight="1"
+              transform= "translateY(2px)"
             >
               CA:0x12389897989....oiui4{" "}
               <FaCopy

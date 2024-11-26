@@ -5,7 +5,13 @@ import ActivityTable from "./activityTable";
 import ChatModule from "./chats";
 import TopHolders from "./topHolders";
 
-function ActivityBar({ agentId }: { agentId: string }) {
+function ActivityBar({
+  agentId,
+  replies,
+}: {
+  agentId: string;
+  replies: string;
+}) {
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabChange = (index: number) => {
@@ -43,7 +49,7 @@ function ActivityBar({ agentId }: { agentId: string }) {
               color={activeTab === 0 ? "black" : "#282828"}
               padding="2px 5px"
             >
-              1000
+              {replies}
             </Box>
           </Tab>
           <Tab

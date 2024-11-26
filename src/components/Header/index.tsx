@@ -5,7 +5,6 @@ import {
   Button,
   HStack,
   Input,
-  Link,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
@@ -22,13 +21,13 @@ import styled from "styled-components";
 
 import { trackWalletConnect } from "@/modules/Home/services/analytics";
 import { authApiClient } from "@/modules/Home/services/authApiClient";
+import { useSearchStore } from "@/stores/useSearchStore";
 import useUserStore from "@/stores/useUserStore";
 import * as AuthUtils from "@/utils/AuthUtils";
 
 import ProfileModalComponent from "../ProfileModal";
 import { Logo } from "../Svgs/Logo";
 import { LogoSmall } from "../Svgs/LogoSmall";
-import { useSearchStore } from "@/stores/useSearchStore";
 
 const Container = styled.header`
   /* max-width: 490px; */
@@ -154,7 +153,9 @@ function Header() {
       gap="40px"
       justifyContent={{ base: "space-between", md: "block" }}
     >
-      <Box onClick={() => router.push("/")}>{isLargeScreen ? <Logo /> : <LogoSmall />}</Box>
+      <Box onClick={() => router.push("/")} cursor="pointer">
+        {isLargeScreen ? <Logo /> : <LogoSmall />}
+      </Box>
       <Box padding="20px" display={{ base: "none", lg: "block" }}>
         <Box
           px="2rem"
@@ -180,13 +181,16 @@ function Header() {
           />
         </Box>
       </Box>
-      <HStack display={{base:"none", md:"flex"}}>
-        <a href="https://raydium.io/swap/?inputMint=sol&outputMint=5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump" target="_blank">
-      <Button color="#571F0D" bg="white" padding="0px 12px">
-          BUY $NEROBOSS
-        </Button>
+      <HStack display={{ base: "none", md: "flex" }}>
+        <a
+          href="https://raydium.io/swap/?inputMint=sol&outputMint=5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump"
+          target="_blank"
+        >
+          <Button color="#571F0D" bg="white" padding="0px 12px">
+            BUY $NEROBOSS
+          </Button>
         </a>
-      <Text> MCAP $12M</Text>
+        <Text> MCAP $12M</Text>
       </HStack>
       <HStack flexGrow="1" justifyContent="flex-end">
         {isAuthenticated ? (

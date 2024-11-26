@@ -6,7 +6,7 @@ import {
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import DataTable from "../Card/RowCard";
 import { AllCoins } from "../Svgs/AllCoins";
@@ -23,10 +23,6 @@ const buttonData = [
 
 function CoinsTable({ feed, setFeedLoading, setFeed, filter, setFilter }: any) {
   const isMediumScreen = useBreakpointValue({ base: false, md: true });
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <VStack width="100%" gap="1rem" marginTop="20px">

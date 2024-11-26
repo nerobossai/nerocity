@@ -50,7 +50,11 @@ interface BreadcrumbProps {
   ticker: string;
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ loading, currentPage, ticker }) => {
+const Breadcrumb: React.FC<BreadcrumbProps> = ({
+  loading,
+  currentPage,
+  ticker,
+}) => {
   const router = useRouter();
 
   return (
@@ -235,7 +239,10 @@ function CoinModule() {
             flexDirection="column"
             padding="1rem"
           >
-            <Breadcrumb loading={loading} ticker={agentDetails.ticker ?? "TICKER"} />
+            <Breadcrumb
+              loading={loading}
+              ticker={agentDetails.ticker ?? "TICKER"}
+            />
             <HStack width="100%" alignItems="center" p="20px" />
             <Box
               display="flex"
@@ -296,7 +303,10 @@ function CoinModule() {
             flexDirection="column"
             padding="1rem"
           >
-            <Breadcrumb loading={loading} ticker={agentDetails.ticker ?? "TICKER"} />
+            <Breadcrumb
+              loading={loading}
+              ticker={agentDetails.ticker ?? "TICKER"}
+            />
             <Box display="flex" flexDirection="column-reverse">
               <TradeModule
                 currentPrice={price || "0"}
@@ -321,8 +331,14 @@ function CoinModule() {
             padding="1rem"
             gap="20px"
           >
-            <Breadcrumb loading={loading} ticker={agentDetails.ticker ?? "TICKER"}  />
-            <ActivityBar agentId={agentDetails.id} />
+            <Breadcrumb
+              loading={loading}
+              ticker={agentDetails.ticker ?? "TICKER"}
+            />
+            <ActivityBar
+              agentId={agentDetails.id}
+              replies={agentDetails.replies}
+            />
           </Box>{" "}
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </>
@@ -374,7 +390,10 @@ function CoinModule() {
           {loading ? (
             <Spinner />
           ) : agentDetails ? (
-            <ActivityBar agentId={agentDetails.id} />
+            <ActivityBar
+              agentId={agentDetails.id}
+              replies={agentDetails.replies}
+            />
           ) : null}
         </VStack>
         <Box padding="0" alignItems="flex-start" maxWidth="320px">

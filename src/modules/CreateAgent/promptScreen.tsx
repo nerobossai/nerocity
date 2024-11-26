@@ -8,7 +8,12 @@ interface IPromptScreen {
   description: string;
   setDescription: (v: string) => void;
 }
-function PromptScreen({ handleGenerateAgent, loading, description, setDescription }: IPromptScreen) {
+function PromptScreen({
+  handleGenerateAgent,
+  loading,
+  description,
+  setDescription,
+}: IPromptScreen) {
   const [error, setError] = useState("");
   return (
     <Stack

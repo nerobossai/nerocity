@@ -176,7 +176,7 @@ function CreateAgentModule() {
         file: file!,
         // twitter: twitterHandle,
         telegram: telegramHandle,
-        website: website
+        website,
       };
 
       let tMeta;
@@ -434,7 +434,7 @@ function CreateAgentModule() {
                 color="black"
                 fontSize="12px"
                 _hover={{ opacity: 0.8 }}
-                onClick={() =>{
+                onClick={() => {
                   setPromptDescription("");
                   setScreen(1);
                 }}
