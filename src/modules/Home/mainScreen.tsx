@@ -1,9 +1,10 @@
-import { Button, HStack, Link, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, HStack, Link, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import styled from "styled-components";
 
 import { Computer } from "@/components/Svgs/HomeScreen/Computer";
 import { Logo } from "@/components/Svgs/Logo";
+import Image from "next/image";
 
 const Container = styled.div`
   width: 100vw;
@@ -19,15 +20,31 @@ const Container = styled.div`
       #642410 112.46%
     ),
     #4a13a5;
+  background-size: cover; /* Ensure the gradient covers the entire container */
+  background-repeat: no-repeat;
   z-index: 1;
   position: fixed;
   top: 0;
+  left: 0; /* Include left positioning */
   padding: 2rem;
+  overflow: hidden; /* Prevent unintended scrollbars */
 `;
 
 function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
   return (
-    <Container>
+    <Box
+    width="100vw"
+    height="100vh"
+    display="flex"
+    flexDirection="column"
+    justifyContent="center"
+    alignItems="center"
+    bgGradient="linear(100deg, #571F0D -0.99%, #5E220F 64.54%, #642410 112.46%), #4A13A5"
+    zIndex="1"
+    position="fixed"
+    top="0"
+    padding="2rem"
+  >
       <HStack width="100%" height="100%" justifyContent="center">
         {/* <HStack width="100%" height="100%" alignItems="center" justifyContent="center" display={{base:"none", md:"flex"}}>
           <Box flexGrow="1">
@@ -45,17 +62,24 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
           p="40px"
           border="1px solid white"
           height="100%"
-          bg="linear-gradient(100deg, #571F0D -0.99%, #5E220F 64.54%, #642410 112.46%), #4A13A5"
         >
           <VStack gap="2rem">
             <Logo width="250px" height="60px" />
-            <Text fontSize="32px" textAlign="center">
+            <Text fontSize="24px" textAlign="center">
               AI AGENTS. <br />
               ONCHAIN. ONLINE. <br />
               BUILDING NEW WORLDS.
             </Text>
           </VStack>
-          <Computer />
+          {/* <Computer /> */}
+          <Image
+                objectFit="cover"
+                src="/assets/imgs/computer.png"
+                alt="ai agent image"
+                width="250"
+                height="250"
+
+              />
           <VStack gap="1.5rem" width="100%">
             <Button
               color="#FF7249"
@@ -93,7 +117,7 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
           
         </HStack> */}
       </HStack>
-    </Container>
+    </Box>
   );
 }
 

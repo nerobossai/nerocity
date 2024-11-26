@@ -6,7 +6,7 @@ import {
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import DataTable from "../Card/RowCard";
 import { AllCoins } from "../Svgs/AllCoins";
@@ -15,14 +15,19 @@ import { LoserIcon } from "../Svgs/LoserIcon";
 import { MigrationIcon } from "../Svgs/MigrationIcon";
 
 const buttonData = [
-  { label: "All", bgColor: "white", icon: <AllCoins /> },
-  { label: "Gainers", bgColor: "#1B1B1E", icon: <GainerIcon /> },
-  { label: "Losers", bgColor: "#1B1B1E", icon: <LoserIcon /> },
-  { label: "Migrated", bgColor: "#1B1B1E", icon: <MigrationIcon /> },
+  { label: "All", icon: <AllCoins />, value: "" },
+  { label: "Gainers", icon: <GainerIcon />, value: "gainers" },
+  { label: "Losers", icon: <LoserIcon />, value: "losers" },
+  { label: "Migrated", icon: <MigrationIcon />, value: "migrated" },
 ];
 
-function CoinsTable({ feed }: any) {
+function CoinsTable({ feed, setFeedLoading, setFeed, filter, setFilter }: any) {
   const isMediumScreen = useBreakpointValue({ base: false, md: true });
+
+  useEffect(() => {
+
+  }, [])
+
   return (
     <VStack width="100%" gap="1rem" marginTop="20px">
       <HStack
@@ -41,10 +46,11 @@ function CoinsTable({ feed }: any) {
               <Button
                 padding="4px 9px"
                 fontSize="14px"
-                bg={button.bgColor}
+                bg={button.value === filter ? "white" : "#1B1B1E"}
                 color="text.100"
                 borderRadius="0"
                 border="0.5px solid #959595"
+                onClick={() => setFilter(button.value)}
               >
                 {button.label}
               </Button>

@@ -1,8 +1,10 @@
 import { Box, Button, Stack, Text, VStack } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { RiTwitterXFill } from "react-icons/ri";
 
 function SuccessScreen() {
+  const router = useRouter();
   return (
     <Stack
       borderRadius="1rem"
@@ -20,7 +22,7 @@ function SuccessScreen() {
         gap="20px"
         width="100%"
       >
-        <Box bg="#1A053A" padding="1rem" width="100%">
+        <Box padding="1rem" width="100%">
           {/* <CoinHeaderModule /> */}
 
           <Button
@@ -35,7 +37,7 @@ function SuccessScreen() {
             justifyContent="center"
             gap="20px"
             _hover={{ opacity: 0.8 }}
-            onClick={() => {}}
+            onClick={() => router.push("/")}
           >
             <Text>GO TO AGENT PAGE</Text>
           </Button>

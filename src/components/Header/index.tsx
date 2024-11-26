@@ -6,6 +6,7 @@ import {
   HStack,
   Input,
   Link,
+  Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -152,12 +153,11 @@ function Header() {
       justifyContent={{ base: "space-between", md: "block" }}
     >
       <Link href="/">{isLargeScreen ? <Logo /> : <LogoSmall />}</Link>
-      <Box flexGrow="1" padding="20px" display={{ base: "none", md: "block" }}>
+      <Box padding="20px" display={{ base: "none", lg: "block" }}>
         <Box
           px="2rem"
           display="flex"
           bg="brown.200"
-          width="60%"
           alignItems="center"
           gap="20px"
         >
@@ -176,7 +176,13 @@ function Header() {
           />
         </Box>
       </Box>
-      <HStack>
+      <HStack display={{base:"none", md:"flex"}}>
+      <Button color="#571F0D" bg="white" padding="0px 12px">
+          BUY $NEROBOSS
+        </Button>
+      <Text> MCAP $12M</Text>
+      </HStack>
+      <HStack flexGrow="1" justifyContent="flex-end">
         {isAuthenticated ? (
           <>
             <Button

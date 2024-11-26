@@ -5,9 +5,10 @@ import { CiWallet } from "react-icons/ci";
 interface IPromptScreen {
   handleGenerateAgent: (v: string) => void;
   loading: boolean;
+  description: string;
+  setDescription: (v: string) => void;
 }
-function PromptScreen({ handleGenerateAgent, loading }: IPromptScreen) {
-  const [description, setDescription] = useState("");
+function PromptScreen({ handleGenerateAgent, loading, description, setDescription }: IPromptScreen) {
   const [error, setError] = useState("");
   return (
     <Stack
@@ -56,6 +57,7 @@ function PromptScreen({ handleGenerateAgent, loading }: IPromptScreen) {
           justifyContent="center"
           gap="20px"
           _hover={{ opacity: 0.8 }}
+          opacity={loading ? 0.8 : 1}
           disabled={loading}
           onClick={() => {
             if (!description) {

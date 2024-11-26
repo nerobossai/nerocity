@@ -21,6 +21,7 @@ import { pumpFunSdk } from "@/services/pumpfun";
 import MainScreen from "./mainScreen";
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
+import { useScreenStore } from "@/stores/useScreenStore";
 
 const Container = styled.div`
   width: 100%;
@@ -34,13 +35,34 @@ function HomeModule() {
   const [feedLoading, setFeedLoading] = useState(false);
   const [feed, setFeed] = useState<any>([]);
   const [overlord, setOverlord] = useState<AgentResponse>();
-  const [screen, setScreen] = useState(0);
+  const { screen, setScreen } = useScreenStore();
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
+  const [filter, setFilter] = useState("");
 
-  const fetchFeed = async () => {
+  const modifyFeed = async (resp: any) => {
+    await Promise.all(
+      resp.agents.map(async (data: any, idx: number) => {
+        const tmp = await pumpFunSdk.getBondingCurveAccount(
+          new PublicKey(data.mint_public_key),
+        );
+        const solPrice = await homeApiClient.solPrice();
+        if (resp.agents[idx]) {
+          resp.agents[idx].market_cap = (
+            ((tmp?.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) *
+            solPrice.solana.usd
+          )
+            .toFixed(3)
+            .toString();
+
+          resp.agents[idx].complete = tmp?.complete;
+        }
+      }),
+    );
+  }
+  const fetchFeed = async (filter: string) => {
     try {
       setFeedLoading(true);
-      const resp = await homeApiClient.feed();
+      const resp = await homeApiClient.feed(filter);
       await Promise.all(
         resp.agents.map(async (data, idx) => {
           const tmp = await pumpFunSdk.getBondingCurveAccount(
@@ -72,8 +94,8 @@ function HomeModule() {
   };
 
   useEffect(() => {
-    fetchFeed();
-  }, []);
+    fetchFeed(filter);
+  }, [filter]);
 
   if (screen === 0) {
     return <MainScreen setScreen={setScreen} />;
@@ -140,7 +162,7 @@ function HomeModule() {
               <Spinner />
             </Box>
           ) : (
-            <CoinsTable feed={feed} />
+            <CoinsTable feed={feed} setFeed={setFeed} setFeedLoading={setFeedLoading} filter={filter} setFilter={setFilter} />
           )}
         </Stack>
       </Stack>

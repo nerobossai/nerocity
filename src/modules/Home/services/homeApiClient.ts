@@ -109,11 +109,18 @@ class ApiClient extends BaseApiClient {
     super({});
   }
 
-  async feed(): Promise<FeedSuccessResponse> {
+  async feed(filter: string): Promise<FeedSuccessResponse> {
     try {
+      let endpoint = "";
+      if (filter === "") {
+        endpoint = ApiEndpoints.public.feed
+      } else {
+        endpoint  =  "/api/v1/" + filter;
+      }
+
       const resp = await this.apiCall({
         type: "GET",
-        url: ApiEndpoints.public.feed,
+        url:  endpoint,
       });
       return resp.data;
     } catch (err: any) {

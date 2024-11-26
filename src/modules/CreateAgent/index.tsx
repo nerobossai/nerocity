@@ -104,6 +104,7 @@ function CreateAgentModule() {
 
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
   const [coinPercentage, setCoinPercentage] = useState<number>(0);
+  const [promptDescription, setPromptDescription] = useState("");
 
   const toggleTrait = (trait: string) => {
     setSelectedTraits((prev) =>
@@ -399,6 +400,8 @@ function CreateAgentModule() {
         <PromptScreen
           handleGenerateAgent={handleGenerateAgent}
           loading={loading}
+          description={promptDescription}
+          setDescription={setPromptDescription}
         />
       ) : screen === 2 ? (
         <Stack borderRadius="1rem" gap="20px" maxWidth="1200px" margin="auto">
@@ -674,8 +677,8 @@ function CreateAgentModule() {
               bg="#18CA2A"
               border="1px solid #1FEF34"
               isLoading={loading}
-              // onClick={handleSubmit}
-              onClick={() => setScreen(3)}
+              onClick={handleSubmit}
+              // onClick={() => setScreen(3)}
               height="46px"
               color="white"
               marginBottom="20px"

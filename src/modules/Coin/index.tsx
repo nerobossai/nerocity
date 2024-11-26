@@ -47,9 +47,10 @@ const RAYDIUM_MIGRATION_COMPLETED = "raydium_migration_completed";
 interface BreadcrumbProps {
   loading: boolean;
   currentPage?: string;
+  ticker: string;
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ loading, currentPage }) => {
+const Breadcrumb: React.FC<BreadcrumbProps> = ({ loading, currentPage, ticker }) => {
   const router = useRouter();
 
   return (
@@ -68,7 +69,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ loading, currentPage }) => {
               HOME /
             </span>{" "}
             {/* {currentPage.toUpperCase()} */}
-            TICKER
+            {ticker}
           </Text>
         </Box>
       )}
@@ -234,7 +235,7 @@ function CoinModule() {
             flexDirection="column"
             padding="1rem"
           >
-            <Breadcrumb loading={loading} />
+            <Breadcrumb loading={loading} ticker={agentDetails.ticker ?? "TICKER"} />
             <HStack width="100%" alignItems="center" p="20px" />
             <Box
               display="flex"
@@ -295,7 +296,7 @@ function CoinModule() {
             flexDirection="column"
             padding="1rem"
           >
-            <Breadcrumb loading={loading} />
+            <Breadcrumb loading={loading} ticker={agentDetails.ticker ?? "TICKER"} />
             <Box display="flex" flexDirection="column-reverse">
               <TradeModule
                 currentPrice={price || "0"}
@@ -320,7 +321,7 @@ function CoinModule() {
             padding="1rem"
             gap="20px"
           >
-            <Breadcrumb loading={loading} />
+            <Breadcrumb loading={loading} ticker={agentDetails.ticker ?? "TICKER"}  />
             <ActivityBar agentId={agentDetails.id} />
           </Box>{" "}
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
@@ -331,7 +332,7 @@ function CoinModule() {
 
   return (
     <Container>
-      <Breadcrumb loading={loading} />
+      <Breadcrumb loading={loading} ticker={agentDetails?.ticker ?? "TICKER"} />
       <HStack
         justifyContent="space-evenly"
         alignItems="start"
