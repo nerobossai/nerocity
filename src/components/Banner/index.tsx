@@ -16,7 +16,6 @@ function Banner() {
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        console.log("dddd", data);
         setMessages(data.slice(0, 4)); // Keep the latest 4 messages
       } catch (err) {
         console.error("Error parsing WebSocket message:", err);

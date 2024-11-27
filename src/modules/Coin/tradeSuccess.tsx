@@ -29,6 +29,17 @@ function TradeSuccess({
   tokenDetails: AgentResponse;
   successDetails: ISuccessDetails;
 }) {
+  const tweetText = encodeURIComponent(`"🎰 WHALE ALERT! (jk it's just me)
+Dropped $${successDetails.solAmount} like my last braincell
+Scored ${successDetails.tickerAmount} $${tokenDetails.ticker} tokens! 🤑
+My wallet: crying in empty
+My $${tokenDetails.ticker} stack: absolutely thicc
+Financial advice? Nah, I just like the agent 🤖
+
+Find this absolute unit: ${window.location.href}`);
+
+  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
+
   return (
     <Stack
       spacing="0.5rem"
@@ -56,18 +67,20 @@ function TradeSuccess({
         </HStack>
       </VStack>
       <HStack mt="5px">
-        <Button
-          padding="12px 16px"
-          bg="white"
-          color="black"
-          borderRadius="0"
-          display="flex"
-          gap="10px"
-          alignItems="center"
-        >
-          <Text>SHARE</Text>
-          <RiTwitterXFill />
-        </Button>
+        <a href={twitterShareUrl} target="_blank" rel="noopener noreferrer">
+          <Button
+            padding="12px 16px"
+            bg="white"
+            color="black"
+            borderRadius="0"
+            display="flex"
+            gap="10px"
+            alignItems="center"
+          >
+            <Text>SHARE</Text>
+            <RiTwitterXFill />
+          </Button>
+        </a>
       </HStack>
 
       <VStack

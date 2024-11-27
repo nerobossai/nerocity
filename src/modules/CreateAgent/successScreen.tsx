@@ -141,11 +141,7 @@ function SuccessScreen(props: ISuccessScreenProps) {
           alignItems="center"
         >
           <Text flexGrow="1">Share on X for maximum engagement</Text>
-          <a
-            href={twitterShareUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={twitterShareUrl} target="_blank" rel="noopener noreferrer">
             <Button
               fontSize="12px"
               borderRadius="0"
@@ -157,7 +153,8 @@ function SuccessScreen(props: ISuccessScreenProps) {
               gap="10px"
             >
               TWEET NOW <RiTwitterXFill />
-            </Button></a>
+            </Button>
+          </a>
         </Box>
         <Box
           padding="20px"
