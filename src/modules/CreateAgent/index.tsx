@@ -147,10 +147,10 @@ function CreateAgentModule() {
     const nameValidation = nameSchema.safeParse(name);
     const tickerValidation = tickerSchema.safeParse(ticker);
     const descriptionValidation = descriptionSchema.safeParse(description);
-    const websiteValidation = linkSchema.safeParse(website);
+    const websiteValidation = linkSchema.safeParse("");
     const telegramValidation = linkSchema.safeParse(telegramHandle);
 
-    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || ! !telegramValidation.success || !websiteValidation.success) {
+    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || (!telegramValidation.success && telegramHandle !== "" ) || (!websiteValidation.success && website !== "" )) {
       setErrors({
         name: nameValidation.success
           ? undefined
@@ -161,10 +161,10 @@ function CreateAgentModule() {
         description: descriptionValidation.success
           ? undefined
           : descriptionValidation?.error?.issues[0]?.message,
-        website: websiteValidation.success
+        website: website === "" ? undefined : websiteValidation.success
           ? undefined
           : websiteValidation?.error?.issues[0]?.message,
-        telegram: telegramValidation.success
+        telegram: telegramHandle === "" ? undefined : telegramValidation.success
           ? undefined
           : telegramValidation?.error?.issues[0]?.message,
       });
@@ -287,7 +287,7 @@ function CreateAgentModule() {
     const telegramValidation = linkSchema.safeParse(telegramHandle);
     console.log("t", nameValidation.success, tickerValidation.success);
 
-    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || ! !telegramValidation.success || !websiteValidation.success) {
+    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || (!telegramValidation.success && telegramHandle !== "" ) || (!websiteValidation.success && website !== "" )) {
       setErrors({
         name: nameValidation.success
           ? undefined
@@ -298,10 +298,10 @@ function CreateAgentModule() {
         description: descriptionValidation.success
           ? undefined
           : descriptionValidation?.error?.issues[0]?.message,
-        website: websiteValidation.success
+        website: website === "" ? undefined : websiteValidation.success
           ? undefined
           : websiteValidation?.error?.issues[0]?.message,
-        telegram: telegramValidation.success
+        telegram: telegramHandle === "" ? undefined : telegramValidation.success
           ? undefined
           : telegramValidation?.error?.issues[0]?.message,
       });
