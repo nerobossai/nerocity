@@ -16,6 +16,7 @@ import { RiTwitterXFill } from "react-icons/ri";
 import { SingleEye } from "@/components/Svgs/HomeScreen/singleEye";
 
 interface ISuccessScreenProps {
+  id: string;
   name: string;
   ticker: string;
   description: string;
@@ -28,10 +29,10 @@ interface ISuccessScreenProps {
 function SuccessScreen(props: ISuccessScreenProps) {
   const router = useRouter();
   const tweetText =
-    encodeURIComponent(`"🎭 YOOO! Just dropped $${props.ticker} on @Nerocity! 🔥
+    encodeURIComponent(`"🎭 YOOO! Just dropped $${props.ticker} on @nerocityai! 🔥
       🤪 What this bad boy can do:
       ${props.description}
-      Find this absolute unit: https://nerocity.ai/`);
+      Find this absolute unit: https://nerocity.ai/${props.id}`);
 
   const twitterShareUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
 
