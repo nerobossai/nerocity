@@ -103,6 +103,7 @@ function CreateAgentModule() {
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [progressMessage, setProgressMessage] = useState<string>("");
   const [ticker, setTicker] = useState("");
+  const [mintPubKey, setMintPubKey] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [website, setWebsite] = useState("");
@@ -150,7 +151,7 @@ function CreateAgentModule() {
     const websiteValidation = linkSchema.safeParse("");
     const telegramValidation = linkSchema.safeParse(telegramHandle);
 
-    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || (!telegramValidation.success && telegramHandle !== "" ) || (!websiteValidation.success && website !== "" )) {
+    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || (!telegramValidation.success && telegramHandle !== "") || (!websiteValidation.success && website !== "")) {
       setErrors({
         name: nameValidation.success
           ? undefined
@@ -241,6 +242,7 @@ function CreateAgentModule() {
         twtToken,
         txnHash: txnResp,
       });
+      setMintPubKey(tokenMint.publicKey.toString());
       trackAgentCreation({
         agent_address: tokenMint.publicKey.toString(),
         timestamp: Date.now(),
@@ -287,7 +289,7 @@ function CreateAgentModule() {
     const telegramValidation = linkSchema.safeParse(telegramHandle);
     console.log("t", nameValidation.success, tickerValidation.success);
 
-    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || (!telegramValidation.success && telegramHandle !== "" ) || (!websiteValidation.success && website !== "" )) {
+    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || (!telegramValidation.success && telegramHandle !== "") || (!websiteValidation.success && website !== "")) {
       setErrors({
         name: nameValidation.success
           ? undefined
@@ -779,6 +781,7 @@ function CreateAgentModule() {
           name={name}
           description={description}
           file={file}
+          id={mintPubKey}
           ticker={ticker}
           coins_percentage_for_dev={coinPercentage}
           website={website}
