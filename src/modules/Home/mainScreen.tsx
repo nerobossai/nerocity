@@ -114,7 +114,7 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
             </a>
             <HStack gap="20px" color="#E0D2FD">
               <Link href="https://x.com/nerocityai">Twitter</Link>
-              <Link>Docs</Link>
+              <Link href="https://nerocity.gitbook.io/docs/">Docs</Link>
             </HStack>
           </VStack>
         </VStack>

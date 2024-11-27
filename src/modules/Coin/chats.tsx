@@ -4,6 +4,7 @@ import {
   Input,
   Spinner,
   Stack,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -245,8 +246,9 @@ function ChatModule(props: { agentId: string }) {
                 alignItems="center"
                 cursor="pointer"
               >
-                <FaRegComment /> Reply
+                <FaRegComment /> <Text color="text.100">Show {data.replies.length} replies</Text> 
               </Box>
+              
             </Box>
           </Stack>
         );

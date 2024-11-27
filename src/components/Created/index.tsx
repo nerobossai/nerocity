@@ -46,7 +46,7 @@ function CreatedAtComponent({
           CREATED
         </Text>
       )}
-      <Text fontSize={fontSize}>{timeDifference(Date.now(), timeStamp)}</Text>
+      <Text fontSize={fontSize} textAlign="right">{timeDifference(Date.now(), timeStamp)}</Text>
       <Text fontSize="12px" color="text.100">
         {formattedTime}
       </Text>
