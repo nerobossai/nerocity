@@ -103,7 +103,7 @@ function TimerScreen() {
                     </Box>
                 </HStack>
                 <Text textAlign="center">
-                    Early access & 20% lifetime discount <br />
+                    Early access & 20% for a month <br />
                     for NFT holders.
                 </Text>
                 <Button onClick={handleVerifyNFT}>

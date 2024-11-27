@@ -9,9 +9,9 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { CiStar } from "react-icons/ci";
-import { FaCopy } from "react-icons/fa";
+import { FaCheckCircle, FaCopy } from "react-icons/fa";
 import { IoIosLink } from "react-icons/io";
 import { LiaTelegram } from "react-icons/lia";
 import { RiTwitterXFill } from "react-icons/ri";
@@ -21,15 +21,16 @@ import type { CardProps } from "@/components/Card";
 
 function extractFirstAndLastFour(url: string) {
   const extractedPart = url.split('/').pop();
-  
+
   const first4 = extractedPart?.slice(0, 4);
   const last4 = extractedPart?.slice(-4);
 
-  return first4 + "...." + last4 
+  return first4 + "...." + last4
 };
 
 function CoinHeaderModule(props: CardProps) {
   const isLargeScreen = useBreakpointValue({ base: false, md: true });
+  const [copied, setCopied] = useState(false);
   const router = useRouter();
   const toast = useToast();
 
@@ -42,6 +43,14 @@ function CoinHeaderModule(props: CardProps) {
       position: "bottom-right",
     });
   };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(window.location.href.split('/').pop() as string);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000)
+  }
 
   return (
     <HStack
@@ -117,9 +126,29 @@ function CoinHeaderModule(props: CardProps) {
                   cursor="pointer"
                 />
               )}
+              <Box
+                display={{ base: "none", lg: "flex" }}
+                alignItems="center"
+                fontSize="12px"
+                gap="8px"
+                color="secondary"
+                wordBreak="break-all"
+                // lineHeight="1"
+                transform="translateY(2px)"
+              >
+                <HStack cursor="pointer" onClick={handleCopy}>
+                  <Text>CA:{extractFirstAndLastFour(window.location.href)}{" "}</Text>
+                  {copied ? <FaCheckCircle /> : <FaCopy
+                    className="cursor-pointer"
+                  />}
+                </HStack>
+                <a href={"https://solscan.io/account/" + window.location.href.split('/').pop()} target="_blank" rel="noopener noreferrer">
+                  <IoIosLink size={15} style={{ marginLeft: "6px" }} />
+                </a>
+              </Box>
             </Box>
             <Box
-              display="flex"
+              display={{ base: "flex", lg: "none" }}
               alignItems="center"
               fontSize="12px"
               gap="8px"
@@ -135,7 +164,9 @@ function CoinHeaderModule(props: CardProps) {
                 }
                 className="cursor-pointer"
               />
+              <IoIosLink size={15} />
             </Box>
+
             {/* <HStack>
               <CiStar size={20} color="secondary" />
               <IoIosLink size={15} color="secondary" />
