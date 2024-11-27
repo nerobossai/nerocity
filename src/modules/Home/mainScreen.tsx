@@ -113,7 +113,7 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
               </Button>
             </a>
             <HStack gap="20px" color="#E0D2FD">
-              <Link>Twitter</Link>
+              <Link href="https://x.com/nerocityai">Twitter</Link>
               <Link>Docs</Link>
             </HStack>
           </VStack>

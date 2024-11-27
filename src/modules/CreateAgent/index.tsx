@@ -344,6 +344,7 @@ function CreateAgentModule() {
       setTokenM(twtData.tokenMetadata);
       setTwtToken(twtData.twtToken);
       setScreen(2);
+      setPromptDescription(twtData.prompt ?? '');
     } catch (err) {
       logger.error(err);
     } finally {

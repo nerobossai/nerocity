@@ -41,7 +41,6 @@ function PromptScreen({
           value={description}
           width="100%"
           height="500px"
-          textTransform="uppercase"
           resize="none"
           placeholder="Enter description. Be as long and detailed as you want. You can always edit your generated agent"
         />

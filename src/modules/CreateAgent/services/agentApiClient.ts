@@ -46,6 +46,7 @@ export type TwitterOauthBody = {
   image: string;
   tokenMetadata: { metadata: TokenMetadata; metadataUri: string };
   telegram?: string;
+  prompt?: string;
 };
 
 export type TwitterOauthResponse = {
