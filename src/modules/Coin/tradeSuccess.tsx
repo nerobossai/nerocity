@@ -15,7 +15,7 @@ import SubscriptText from "@/components/SubscriptText";
 import { BoughtTrade } from "@/components/Svgs/BoughtTrade";
 
 import type { AgentResponse } from "../Home/services/homeApiClient";
-
+import { IoRefresh } from "react-icons/io5";
 interface ISuccessDetails {
   bought: boolean;
   tickerAmount: number;
@@ -25,9 +25,11 @@ interface ISuccessDetails {
 function TradeSuccess({
   tokenDetails,
   successDetails,
+  setScreen
 }: {
   tokenDetails: AgentResponse;
   successDetails: ISuccessDetails;
+  setScreen: (v: number) => void;
 }) {
   const tweetText = encodeURIComponent(`"🎰 WHALE ALERT! (jk it's just me)
 Dropped $${successDetails.solAmount} like my last braincell
@@ -81,6 +83,19 @@ Find this absolute unit: ${window.location.href}`);
             <RiTwitterXFill />
           </Button>
         </a>
+        <Button
+          padding="12px 16px"
+          bg="white"
+          color="black"
+          borderRadius="0"
+          display="flex"
+          gap="10px"
+          alignItems="center"
+          onClick={() => setScreen(0)}
+        >
+          <IoRefresh />
+          <Text>Trade Again</Text>
+        </Button>
       </HStack>
 
       <VStack
