@@ -3,9 +3,8 @@ import React, { useEffect, useState } from "react";
 
 import ActivityTable from "./activityTable";
 import ChatModule from "./chats";
-import TopHolders from "./topHolders";
-import { ActivityDetails, coinApiClient } from "./services/coinApiClient";
-
+import type { ActivityDetails } from "./services/coinApiClient";
+import { coinApiClient } from "./services/coinApiClient";
 
 function ActivityBar({
   agentId,
@@ -24,14 +23,14 @@ function ActivityBar({
   useEffect(() => {
     const fetchData = async () => {
       const body = {
-        mintAddress: agentId
-      }
+        mintAddress: agentId,
+      };
       const data: any = await coinApiClient.fetchActivities(body);
       console.log("daata", data);
       setActivities(data.trades);
-    }
+    };
     fetchData();
-  }, [])
+  }, []);
 
   return (
     <Box width="100%">

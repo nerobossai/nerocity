@@ -184,7 +184,7 @@ function CreateAgentModule() {
         // twitter: twitterHandle,
         telegram: telegramHandle,
         website,
-        prompt: promptDescription
+        prompt: promptDescription,
       };
 
       let tMeta;
@@ -301,7 +301,7 @@ function CreateAgentModule() {
         // twitter: twitterHandle,
         telegram: telegramHandle,
         // website?: string;
-        prompt: promptDescription
+        prompt: promptDescription,
       };
 
       const tMeta = await pumpFunSdk.createTokenMetadata(createTokenMetadata);

@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 import SubscriptText from "@/components/SubscriptText";
@@ -28,7 +29,6 @@ import { trackBuy, trackSell } from "./services/analytics";
 import type { PumpfunCoinResponse } from "./services/coinApiClient";
 import TradeFailure from "./tradeFailure";
 import TradeSuccess from "./tradeSuccess";
-import { useRouter } from "next/router";
 
 export type TradeModuleProps = {
   currentPrice: string;

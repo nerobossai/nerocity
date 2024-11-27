@@ -47,16 +47,14 @@ function Banner() {
       gap="20px"
     >
       {messages.map((message, index) => (
-        <>
-          <Box key={index} color={message.is_buy ? "green.100" : "#FF3838"}>
-            {`${message.is_buy ? "+" : "-"}${(
-              message.token_amount /
-              10 ** 9
-            ).toFixed(2)} ${message.symbol?.toUpperCase()} ${
-              message?.is_buy ? "BOUGHT" : "SOLD"
-            }`}
-          </Box>
-        </>
+        <Box key={index} color={message.is_buy ? "green.100" : "#FF3838"}>
+          {`${message.is_buy ? "+" : "-"}${(
+            message.token_amount /
+            10 ** 9
+          ).toFixed(2)} ${message.symbol?.toUpperCase()} ${
+            message?.is_buy ? "BOUGHT" : "SOLD"
+          }`}
+        </Box>
       ))}
     </HStack>
   );

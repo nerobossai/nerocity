@@ -62,6 +62,17 @@ export const METADATA_SEED = "metadata";
 
 export const DEFAULT_DECIMALS = 6;
 
+export const FEES = Object.freeze({
+  platform: {
+    type: "flat",
+    amount: 0.12,
+  },
+  trade_fees: {
+    type: "percent",
+    amount: 0.85,
+  },
+});
+
 export class PumpFunSDK {
   public program: Program<PumpFun>;
 
@@ -117,12 +128,19 @@ export class PumpFunSDK {
     }
 
     let platformFeesInSol;
-    try {
-      const solPrice = await homeApiClient.solPrice();
-      platformFeesInSol = 2 * parseFloat((1 / solPrice.solana.usd).toFixed(3));
-    } catch (err) {
-      console.log(err);
-      platformFeesInSol = 0.01;
+
+    if (FEES.platform.type === "flat") {
+      platformFeesInSol = FEES.platform.amount;
+    } else {
+      try {
+        const solPrice = await homeApiClient.solPrice();
+        platformFeesInSol =
+          FEES.platform.amount *
+          parseFloat((1 / solPrice.solana.usd).toFixed(3));
+      } catch (err) {
+        console.log(err);
+        platformFeesInSol = 0.01;
+      }
     }
 
     const createResults = await sendTx(
@@ -153,7 +171,13 @@ export class PumpFunSDK {
       commitment,
     );
 
-    const platformFeesInSol = ((2 / 100) * buyAmountSol) / LAMPORTS_PER_SOL;
+    let platformFeesInSol;
+    if (FEES.trade_fees.type === "flat") {
+      platformFeesInSol = FEES.trade_fees.amount;
+    } else {
+      platformFeesInSol =
+        ((FEES.trade_fees.amount / 100) * buyAmountSol) / LAMPORTS_PER_SOL;
+    }
 
     const buyResults = await sendTx(
       this.connection,

@@ -194,7 +194,7 @@ class ApiClient extends BaseApiClient {
       return Promise.reject(getErrorMessageFromAxios(err));
     }
   }
-  
+
   async fetchActivities(data: any): Promise<SuccessResponse> {
     try {
       const resp = await this.secureApiCall({

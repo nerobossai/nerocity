@@ -10,18 +10,24 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
-import { ActivityDetails } from "./services/coinApiClient";
+
 import { timeDifference } from "@/utils/timeDifference";
 
+import type { ActivityDetails } from "./services/coinApiClient";
 
 function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
-
   if (activities.length === 0) {
     return (
-      <Box width="100%" height="80px" display="flex" justifyContent="center" alignItems="center">
+      <Box
+        width="100%"
+        height="80px"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
         No recent Activity
       </Box>
-    )
+    );
   }
   return (
     <VStack bg="#1B1B1E" width="100%" px="2rem">
@@ -47,21 +53,17 @@ function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
         </Thead>
         <Tbody>
           {activities.map((activity: ActivityDetails, id: number) => (
-            <Box
-              as="tr"
-              key={id}
-              display="table-row"
-              mb="20px"
-              fontSize="12px"
-            >
+            <Box as="tr" key={id} display="table-row" mb="20px" fontSize="12px">
               <Td textAlign="left" color="white" border="0">
                 <Text>{activity.username ?? "--"}</Text>
               </Td>
               <Td textAlign="left" color="white" border="0">
-                <Text>{timeDifference(
-                Date.now(),
-                parseInt(activity.timestamp.toString(), 10),
-              )}</Text>
+                <Text>
+                  {timeDifference(
+                    Date.now(),
+                    parseInt(activity.timestamp.toString(), 10),
+                  )}
+                </Text>
               </Td>
               <Td textAlign="right" color="white" border="0">
                 <Text>{activity.token_amount}</Text>

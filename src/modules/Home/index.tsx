@@ -21,12 +21,12 @@ import { pumpFunSdk } from "@/services/pumpfun";
 import { useScreenStore } from "@/stores/useScreenStore";
 import { useSearchStore } from "@/stores/useSearchStore";
 import useUserStore from "@/stores/useUserStore";
+import { getTokenHolders } from "@/utils/getTokenHolders";
 import useDebounce from "@/utils/useDebounce";
 
 import MainScreen from "./mainScreen";
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
-import { getTokenHolders } from "@/utils/getTokenHolders";
 
 const Container = styled.div`
   width: 100%;
@@ -116,14 +116,14 @@ function HomeModule() {
         setOverlord(sortedAgents[0]);
         setFirst(false);
       }
-      const agents = resp.agents;
+      const { agents } = resp;
       const agentsWithHolders = await Promise.all(
         agents.map(async (agent) => {
           const holder = await getTokenHolders(agent.mint_public_key);
           return { ...agent, holder };
-        })
+        }),
       );
-      
+
       setFeed(agentsWithHolders);
 
       // setFeed(resp.agents);
