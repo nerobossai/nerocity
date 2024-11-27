@@ -13,6 +13,24 @@ export type SuccessResponse = {
   message: string;
 };
 
+export interface ActivityDetails {
+  signature: string;
+  mint: string;
+  sol_amount: number;
+  token_amount: number;
+  is_buy: boolean;
+  user: string;
+  timestamp: number;
+  tx_index: number;
+  username: string | null;
+  profile_image: string | null;
+  slot: number;
+}
+
+export type ActivityResponse = {
+  trades: ActivityDetails[];
+};
+
 export type SendMessageData = {
   agent_id: string;
   message: string;
@@ -172,6 +190,19 @@ class ApiClient extends BaseApiClient {
         url: `https://api.geckoterminal.com/api/v2/networks/solana/pools/${poolid}`,
       });
       return resp.data.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+  
+  async fetchActivities(data: any): Promise<SuccessResponse> {
+    try {
+      const resp = await this.secureApiCall({
+        type: "POST",
+        url: ApiEndpoints.chat.activity,
+        body: data,
+      });
+      return resp.data;
     } catch (err: any) {
       return Promise.reject(getErrorMessageFromAxios(err));
     }

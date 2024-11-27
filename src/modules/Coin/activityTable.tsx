@@ -10,17 +10,19 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
+import { ActivityDetails } from "./services/coinApiClient";
+import { timeDifference } from "@/utils/timeDifference";
 
-interface ActivityProps {
-  id: string;
-  account: string;
-  activity: string;
-  value: string;
-  sol: string;
-  txn: string;
-}
 
-function ActivityTable({ activities }: { activities: ActivityProps[] }) {
+function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
+
+  if (activities.length === 0) {
+    return (
+      <Box width="100%" height="80px" display="flex" justifyContent="center" alignItems="center">
+        No recent Activity
+      </Box>
+    )
+  }
   return (
     <VStack bg="#1B1B1E" width="100%" px="2rem">
       <Table as="table" width="100%">
@@ -44,35 +46,31 @@ function ActivityTable({ activities }: { activities: ActivityProps[] }) {
           </Tr>
         </Thead>
         <Tbody>
-          {activities.map((activity: ActivityProps) => (
+          {activities.map((activity: ActivityDetails, id: number) => (
             <Box
               as="tr"
-              key={activity.id}
+              key={id}
               display="table-row"
-              bg="#242424"
-              mb="20px" // Gap between rows
-              border="1px solid #343434"
-              borderRadius="8px" // Optional rounded corners
+              mb="20px"
+              fontSize="12px"
             >
-              {/* Account Column */}
-              <Td textAlign="left" color="white">
-                <Text>{activity.account}</Text>
+              <Td textAlign="left" color="white" border="0">
+                <Text>{activity.username ?? "--"}</Text>
               </Td>
-              {/* Activity Column */}
-              <Td textAlign="left" color="white">
-                <Text>{activity.activity}</Text>
+              <Td textAlign="left" color="white" border="0">
+                <Text>{timeDifference(
+                Date.now(),
+                parseInt(activity.timestamp.toString(), 10),
+              )}</Text>
               </Td>
-              {/* Value Column */}
-              <Td textAlign="right" color="white">
-                <Text>{activity.value}</Text>
+              <Td textAlign="right" color="white" border="0">
+                <Text>{activity.token_amount}</Text>
               </Td>
-              {/* SOL Column */}
-              <Td textAlign="right" color="white">
-                <Text>{activity.sol}</Text>
+              <Td textAlign="right" color="white" border="0">
+                <Text>{activity.sol_amount}</Text>
               </Td>
-              {/* TXN Column */}
-              <Td textAlign="right" color="white">
-                <Text>{activity.txn}</Text>
+              <Td textAlign="right" color="creator" border="0">
+                <Text>{activity.tx_index}</Text>
               </Td>
             </Box>
           ))}

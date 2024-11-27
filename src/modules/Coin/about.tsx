@@ -56,7 +56,7 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
 
         <VStack gap="5px" alignItems="flex-start">
           <Text color="text.100">24H</Text>
-          <Text fontSize="12px">+120%</Text>
+          <Text fontSize="12px">{props.twenty_four_hr_changes ?? "--"}</Text>
         </VStack>
       </Grid>
 

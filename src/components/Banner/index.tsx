@@ -48,8 +48,6 @@ function Banner() {
     >
       {messages.map((message, index) => (
         <>
-          {" "}
-          {console.log("message", message)}
           <Box key={index} color={message.is_buy ? "green.100" : "#FF3838"}>
             {`${message.is_buy ? "+" : "-"}${(
               message.token_amount /

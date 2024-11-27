@@ -23,6 +23,7 @@ export const ApiEndpoints = Object.freeze({
   chat: {
     send: "/chat/send",
     fetch: "/chat/fetch/:agent_id",
+    activity: "/leaderboard/api/v1/activity"
   },
   profile: {
     fetchByPublicKey: "/profile/get/:public_key",

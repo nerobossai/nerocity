@@ -28,6 +28,7 @@ import { trackBuy, trackSell } from "./services/analytics";
 import type { PumpfunCoinResponse } from "./services/coinApiClient";
 import TradeFailure from "./tradeFailure";
 import TradeSuccess from "./tradeSuccess";
+import { useRouter } from "next/router";
 
 export type TradeModuleProps = {
   currentPrice: string;
@@ -38,6 +39,7 @@ export type TradeModuleProps = {
 
 function TradeModule(props: TradeModuleProps) {
   const toast = useToast();
+  const router = useRouter();
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
   const [active, setActive] = useState("buy");
