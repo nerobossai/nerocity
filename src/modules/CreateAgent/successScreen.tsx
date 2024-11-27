@@ -97,7 +97,7 @@ function SuccessScreen(props: ISuccessScreenProps) {
             </Stack>
             <Stack mt="20px">
               <Text fontSize="12px" color="secondary">
-                % of coins for dev
+                Amount of SOL to spend to buy AI agent tokens
               </Text>
               <p>{props.coins_percentage_for_dev}%</p>
             </Stack>

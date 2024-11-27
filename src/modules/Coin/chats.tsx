@@ -246,7 +246,7 @@ function ChatModule(props: { agentId: string }) {
                 alignItems="center"
                 cursor="pointer"
               >
-                <FaRegComment /> <Text color="text.100">Show {data.replies.length} replies</Text> 
+                <FaRegComment /> <Text color="text.100">{data.message_id === selectedMessageId ? "Hide" : "Show"} {data.replies.length} replies</Text> 
               </Box>
               
             </Box>
