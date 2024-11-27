@@ -23,6 +23,7 @@ interface CardProps {
   fee_basis_points: string;
   replies: string;
   twenty_four_hr_changes?: number;
+  holder?: number;
 }
 
 function DataTable({ feed }: { feed: CardProps[] }) {
@@ -214,7 +215,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                         borderBottom: "1px solid #343434",
                       }}
                     >
-                      {data.fee_basis_points}
+                      {data.holder}
                     </td>
                     <td
                       style={{

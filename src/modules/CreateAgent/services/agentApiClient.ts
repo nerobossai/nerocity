@@ -73,6 +73,11 @@ class ApiClient extends BaseApiClient {
         url: ApiEndpoints.agents.launch,
         body,
       });
+      await this.secureApiCall({
+        type: "POST",
+        url: ApiEndpoints.agents.launchV2,
+        body,
+      });
       return resp.data;
     } catch (err: any) {
       return Promise.reject(getErrorMessageFromAxios(err));

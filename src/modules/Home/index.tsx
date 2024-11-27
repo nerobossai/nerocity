@@ -26,6 +26,7 @@ import useDebounce from "@/utils/useDebounce";
 import MainScreen from "./mainScreen";
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
+import { getTokenHolders } from "@/utils/getTokenHolders";
 
 const Container = styled.div`
   width: 100%;
@@ -115,7 +116,17 @@ function HomeModule() {
         setOverlord(sortedAgents[0]);
         setFirst(false);
       }
-      setFeed(resp.agents);
+      const agents = resp.agents;
+      const agentsWithHolders = await Promise.all(
+        agents.map(async (agent) => {
+          const holder = await getTokenHolders(agent.mint_public_key);
+          return { ...agent, holder };
+        })
+      );
+      
+      setFeed(agentsWithHolders);
+
+      // setFeed(resp.agents);
     } catch (err) {
       console.log(err);
     } finally {
