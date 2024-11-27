@@ -89,6 +89,7 @@ function ChatModule(props: { agentId: string }) {
     try {
       setLoading(true);
       const chats = await coinApiClient.fetchChats(props.agentId);
+      setSelectedMessageId(chats.chats.length <= 0 ? undefined : chats.chats[chats.chats.length-1]?.message_id);
       console.log(chats);
       setChats(chats);
     } catch (err) {
