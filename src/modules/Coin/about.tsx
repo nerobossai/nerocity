@@ -42,7 +42,7 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
         </VStack>
         <VStack gap="5px" alignItems="flex-start">
           <Text color="text.100">MCAP</Text>
-          <Text fontSize="12px">{props.market_cap}</Text>
+          <Text fontSize="12px">${props.market_cap}</Text>
         </VStack>
         <VStack gap="5px" alignItems="flex-start">
           <Text color="text.100">CREATOR</Text>

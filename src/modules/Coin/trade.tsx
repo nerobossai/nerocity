@@ -409,7 +409,7 @@ function TradeModule(props: TradeModuleProps) {
                 <SubscriptText value={props.currentPrice} />
               )}
             </Text>
-            <HStack
+            {/* <HStack
               width="100%"
               justifyContent="space-between"
               color="text.100"
@@ -435,7 +435,7 @@ function TradeModule(props: TradeModuleProps) {
             >
               <Text textAlign="left">Minimum</Text>
               <Text textAlign="right">TICKER</Text>
-            </HStack>
+            </HStack> */}
           </Box>
         </Stack>
       ) : screenNumber === 1 ? (

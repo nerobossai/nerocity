@@ -15,8 +15,18 @@ import { FaCopy } from "react-icons/fa";
 import { IoIosLink } from "react-icons/io";
 import { LiaTelegram } from "react-icons/lia";
 import { RiTwitterXFill } from "react-icons/ri";
+import { AiOutlineGlobal } from "react-icons/ai";
 
 import type { CardProps } from "@/components/Card";
+
+function extractFirstAndLastFour(url: string) {
+  const extractedPart = url.split('/').pop();
+  
+  const first4 = extractedPart?.slice(0, 4);
+  const last4 = extractedPart?.slice(-4);
+
+  return first4 + "...." + last4 
+};
 
 function CoinHeaderModule(props: CardProps) {
   const isLargeScreen = useBreakpointValue({ base: false, md: true });
@@ -96,6 +106,17 @@ function CoinHeaderModule(props: CardProps) {
                   cursor="pointer"
                 />
               )}
+              {props.social && props.social.website ? (
+                <Link href={props.social?.website} isExternal>
+                  <AiOutlineGlobal size="1.5rem" />
+                </Link>
+              ) : (
+                <AiOutlineGlobal
+                  size="1.5rem"
+                  onClick={() => handleMissingLink("Website")}
+                  cursor="pointer"
+                />
+              )}
             </Box>
             <Box
               display="flex"
@@ -107,18 +128,18 @@ function CoinHeaderModule(props: CardProps) {
               // lineHeight="1"
               transform="translateY(2px)"
             >
-              CA:0x12389897989....oiui4{" "}
+              CA:{extractFirstAndLastFour(window.location.href)}{" "}
               <FaCopy
                 onClick={() =>
-                  navigator.clipboard.writeText("0x12389897989....oiui4")
+                  navigator.clipboard.writeText(window.location.href.split('/').pop() as string)
                 }
                 className="cursor-pointer"
               />
             </Box>
-            <HStack>
+            {/* <HStack>
               <CiStar size={20} color="secondary" />
               <IoIosLink size={15} color="secondary" />
-            </HStack>
+            </HStack> */}
           </HStack>
         </VStack>
       </HStack>
