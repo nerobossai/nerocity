@@ -91,9 +91,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const endpoint = useMemo(() => RPC_NODE_URL, [network]);
 
   const wallets = useMemo(
-    () => [
-      new PhantomWalletAdapter(),
-      [network],
+    () =>
+      [new PhantomWalletAdapter()],
+    [network],
   );
 
   if (!isMounted) {
