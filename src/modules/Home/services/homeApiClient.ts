@@ -128,6 +128,20 @@ class ApiClient extends BaseApiClient {
     }
   }
 
+  async searchFeed(searchText: string): Promise<FeedSuccessResponse> {
+    try {
+      let endpoint = "/leaderboard/api/v1/search?query=" + searchText;
+
+      const resp = await this.apiCall({
+        type: "GET",
+        url: endpoint,
+      });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
   async overlord(): Promise<AgentResponse> {
     try {
       const resp = await this.apiCall({

@@ -6,6 +6,7 @@ import {
   Stack,
   Text,
   useBreakpointValue,
+  useToast,
 } from "@chakra-ui/react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
@@ -23,6 +24,8 @@ import useUserStore from "@/stores/useUserStore";
 import MainScreen from "./mainScreen";
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
+import { useSearchStore } from "@/stores/useSearchStore";
+import useDebounce from "@/utils/useDebounce";
 
 const Container = styled.div`
   width: 100%;
@@ -35,11 +38,15 @@ function HomeModule() {
   const navigator = useRouter();
   const [feedLoading, setFeedLoading] = useState(false);
   const [feed, setFeed] = useState<any>([]);
+  const { searchText } = useSearchStore();
   const [overlord, setOverlord] = useState<AgentResponse>();
   const { screen, setScreen } = useScreenStore();
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   const [filter, setFilter] = useState("");
   const { isAuthenticated } = useUserStore();
+  const [first, setFirst] = useState(true);
+  const toast = useToast();
+  const debouncedQuery = useDebounce(searchText, 2000);
 
   const modifyFeed = async (resp: any) => {
     await Promise.all(
@@ -64,7 +71,25 @@ function HomeModule() {
   const fetchFeed = async (filter: string) => {
     try {
       setFeedLoading(true);
-      const resp = await homeApiClient.feed(filter);
+      let resp;
+      if (searchText !== '') {
+        const searchRes = await homeApiClient.searchFeed(searchText);
+        if (searchRes.agents.length > 0) {
+          resp = searchRes;
+        } else{
+          toast({
+            title: `No results found for the search query!`,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "bottom-right",
+          });
+          return;
+        }
+      } else{
+        resp = await homeApiClient.feed(filter);
+      }
+
       await Promise.all(
         resp.agents.map(async (data, idx) => {
           const tmp = await pumpFunSdk.getBondingCurveAccount(
@@ -86,7 +111,10 @@ function HomeModule() {
       const sortedAgents = [...resp.agents].sort(
         (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap),
       );
-      setOverlord(sortedAgents[0]);
+      if (first) {
+        setOverlord(sortedAgents[0]);
+        setFirst(false);
+      }
       setFeed(resp.agents);
     } catch (err) {
       console.log(err);
@@ -97,7 +125,7 @@ function HomeModule() {
 
   useEffect(() => {
     fetchFeed(filter);
-  }, [filter]);
+  }, [filter, debouncedQuery]);
 
   if (screen === 0) {
     return <MainScreen setScreen={setScreen} />;
