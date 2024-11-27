@@ -9,6 +9,7 @@ import {
   Progress,
   Stack,
   Text,
+  Textarea,
   useToast,
   VStack,
 } from "@chakra-ui/react";
@@ -67,12 +68,21 @@ const nameSchema = z
   )
   .min(1, "Name is required.");
 
+const descriptionSchema = z
+  .string()
+  .min(50, "Minimum 50 characters is required.");
+
 const tickerSchema = z
   .string()
   .regex(
     /^[A-Za-z]{1,6}$/,
     "Ticker must be 1-6 alphabetic characters with no spaces or numbers.",
   );
+
+const linkSchema = z
+  .string()
+  .url("Please enter a valid URL.")
+  .optional();
 
 const predefinedTraits = ["Snarky", "Morose", "Nerdy", "Romantic", "Horror"];
 
@@ -100,13 +110,13 @@ function CreateAgentModule() {
   const [telegramHandle, setTelegramHandle] = useState("");
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  const [errors, setErrors] = useState<{ name?: string; ticker?: string }>({});
+  const [errors, setErrors] = useState<{ name?: string; ticker?: string; description?: string; website?: string; telegram?: string; }>({});
   const [tokenM, setTokenM] = useState<{
     metadata: TokenMetadata;
     metadataUri: string;
   }>();
   const [twtToken, setTwtToken] = useState<string>();
-  const [screen, setScreen] = useState(1);
+  const [screen, setScreen] = useState(2);
   const router = useRouter();
 
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
@@ -136,9 +146,12 @@ function CreateAgentModule() {
   const handleSubmit = async () => {
     const nameValidation = nameSchema.safeParse(name);
     const tickerValidation = tickerSchema.safeParse(ticker);
+    const descriptionValidation = descriptionSchema.safeParse(description);
+    const websiteValidation = linkSchema.safeParse(website);
+    const telegramValidation = linkSchema.safeParse(telegramHandle);
     console.log("t", nameValidation.success, tickerValidation.success);
 
-    if (!nameValidation.success || !tickerValidation.success) {
+    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || ! !telegramValidation.success || !websiteValidation.success) {
       setErrors({
         name: nameValidation.success
           ? undefined
@@ -146,6 +159,15 @@ function CreateAgentModule() {
         ticker: tickerValidation.success
           ? undefined
           : tickerValidation?.error?.issues[0]?.message,
+        description: descriptionValidation.success
+          ? undefined
+          : descriptionValidation?.error?.issues[0]?.message,
+        website: websiteValidation.success
+          ? undefined
+          : websiteValidation?.error?.issues[0]?.message,
+        telegram: telegramValidation.success
+          ? undefined
+          : telegramValidation?.error?.issues[0]?.message,
       });
       return;
     }
@@ -255,9 +277,12 @@ function CreateAgentModule() {
   const handleTwitterConnect = async () => {
     const nameValidation = nameSchema.safeParse(name);
     const tickerValidation = tickerSchema.safeParse(ticker);
+    const descriptionValidation = descriptionSchema.safeParse(description);
+    const websiteValidation = linkSchema.safeParse(website);
+    const telegramValidation = linkSchema.safeParse(telegramHandle);
     console.log("t", nameValidation.success, tickerValidation.success);
 
-    if (!nameValidation.success || !tickerValidation.success) {
+    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || ! !telegramValidation.success || !websiteValidation.success) {
       setErrors({
         name: nameValidation.success
           ? undefined
@@ -265,6 +290,15 @@ function CreateAgentModule() {
         ticker: tickerValidation.success
           ? undefined
           : tickerValidation?.error?.issues[0]?.message,
+        description: descriptionValidation.success
+          ? undefined
+          : descriptionValidation?.error?.issues[0]?.message,
+        website: websiteValidation.success
+          ? undefined
+          : websiteValidation?.error?.issues[0]?.message,
+        telegram: telegramValidation.success
+          ? undefined
+          : telegramValidation?.error?.issues[0]?.message,
       });
       return;
     }
@@ -415,8 +449,8 @@ function CreateAgentModule() {
           setDescription={setPromptDescription}
         />
       ) : screen === 2 ? (
-        <Stack borderRadius="1rem" gap="20px" maxWidth="1200px" margin="auto">
-          <Box
+        <Stack borderRadius="1rem" gap="20px" maxWidth="1200px" margin="auto" minWidth={{ md: "500px", base: "100%" }}>
+          {/* <Box
             width="100%"
             gap="20px"
             height="100%"
@@ -453,10 +487,10 @@ function CreateAgentModule() {
                 Start Over
               </Button>
             </HStack>
-          </Box>
+          </Box> */}
           <VStack alignItems="start" justifyContent="start">
             <Text color="#4A4A55" fontSize="14px">
-              Agent Name & PFP
+              Agent Name
             </Text>
             <Input
               backgroundColor="grey.100"
@@ -481,7 +515,7 @@ function CreateAgentModule() {
               backgroundColor="input"
               border={0}
               focusBorderColor="input"
-              onChange={(e) => setTicker(e.target.value)}
+              onChange={(e) => setTicker(e.target.value.toUpperCase())}
               value={ticker}
               fontSize="16px"
               height="60px"
@@ -496,15 +530,21 @@ function CreateAgentModule() {
             <Text color="#4A4A55" fontSize="14px">
               Biography
             </Text>
-            <Input
+            <Textarea
               backgroundColor="input"
               border={0}
               focusBorderColor="input"
               onChange={(e) => setDescription(e.target.value)}
               value={description}
-              fontSize="16px"
-              height="60px"
+              placeholder="Enter your agent's origin story, personal traits, and defining characteristics. What drives them? What are their notable habits? This background shapes how your AI agent will engage with the community and approach market commentary"
+              fontSize="14px"
+              height="200px"
             />
+            {errors.description && (
+              <Text color="red.500" fontSize="12px">
+                *{errors.description}
+              </Text>
+            )}
           </VStack>
           <VStack alignItems="start">
             <Text color="#4A4A55" fontSize="14px">
@@ -545,7 +585,7 @@ function CreateAgentModule() {
                 )}
             </Box>
           </VStack>
-          <VStack alignItems="start" justifyContent="start">
+          {/* <VStack alignItems="start" justifyContent="start">
             <Text color="#4A4A55" fontSize="14px">
               Traits
             </Text>
@@ -563,12 +603,12 @@ function CreateAgentModule() {
                 </Button>
               ))}
             </HStack>
-          </VStack>
+          </VStack> */}
           <Grid templateColumns={{ base: "1fr", md: "repeat(1, 1fr)" }} gap={4}>
             <GridItem>
               <VStack alignItems="start" justifyContent="start">
                 <Text color="#4A4A55" fontSize="14px">
-                  Twitter/ X
+                  Twitter/ X (optional)
                 </Text>
                 <Button
                   color="primary"
@@ -625,7 +665,7 @@ function CreateAgentModule() {
 
           <VStack alignItems="start" justifyContent="start">
             <Text color="#4A4A55" fontSize="14px">
-              Telegram
+              Telegram Invite Link (optional)
             </Text>
             <Input
               backgroundColor="input"
@@ -637,11 +677,16 @@ function CreateAgentModule() {
               fontSize="16px"
               height="60px"
             />
+            {errors.telegram && (
+              <Text color="red.500" fontSize="12px">
+                *{errors.telegram}
+              </Text>
+            )}
           </VStack>
 
           <VStack alignItems="start" justifyContent="start">
             <Text color="#4A4A55" fontSize="14px">
-              Website
+              Website (optional)
             </Text>
             <Input
               backgroundColor="input"
@@ -653,6 +698,11 @@ function CreateAgentModule() {
               fontSize="16px"
               height="60px"
             />
+            {errors.website && (
+              <Text color="red.500" fontSize="12px">
+                *{errors.website}
+              </Text>
+            )}
           </VStack>
           <VStack alignItems="start" justifyContent="start">
             <Text color="#4A4A55" fontSize="14px">

@@ -37,7 +37,7 @@ export class Mixpanel {
     const propertiesToTrack = { ...properties };
     mixpanel.track(event, {
       ...propertiesToTrack,
-      product: "martian-fun-webapp",
+      product: "marvin-gg-webapp",
     });
   }
 }
