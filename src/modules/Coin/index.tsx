@@ -50,7 +50,7 @@ interface BreadcrumbProps {
   ticker: string;
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({
+export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   loading,
   currentPage,
   ticker,

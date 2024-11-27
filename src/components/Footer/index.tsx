@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react";
+import { Link, Text } from "@chakra-ui/react";
 import React from "react";
 import styled from "styled-components";
 
@@ -15,10 +15,10 @@ function Footer() {
   return (
     <Container>
       <Text color="primary.600" fontSize="12px">
-        Copyright &#169; 2024 Martian. All rights reserved.
+        Copyright &#169; All rights by Kegen Labs, Inc.
       </Text>
       <Text color="primary.600" fontSize="12px">
-        This site is protected by reCAPTCHA and the Google Privacy Policy and
+        This site is protected by reCAPTCHA and the Google <Link href="/privacy-policy">Privacy Policy</Link> and
         Terms of Service apply
       </Text>
     </Container>
