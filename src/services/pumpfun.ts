@@ -176,7 +176,11 @@ export class PumpFunSDK {
       platformFeesInSol = FEES.trade_fees.amount;
     } else {
       platformFeesInSol =
-        ((FEES.trade_fees.amount / 100) * buyAmountSol) / LAMPORTS_PER_SOL;
+        parseFloat(
+          parseFloat(
+            ((FEES.trade_fees.amount / 100) * buyAmountSol).toString(),
+          ).toFixed(8),
+        ) / LAMPORTS_PER_SOL;
     }
 
     const buyResults = await sendTx(
