@@ -73,11 +73,11 @@ function Header() {
   const vStackRef = useRef<HTMLDivElement>(null);
 
   const walletAddress = useMemo(() => {
-    if (profile && profile.profile && profile.profile.public_key) {
-      return `${profile.profile.public_key.slice(
+    if (profile && profile.profile && profile.profile.address) {
+      return `${profile.profile.address.slice(
         0,
         3,
-      )}...${profile.profile.public_key.slice(-3)}`;
+      )}...${profile.profile.address.slice(-3)}`;
     }
 
     return "tst...val";
