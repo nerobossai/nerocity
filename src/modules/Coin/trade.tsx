@@ -84,7 +84,7 @@ function TradeModule(props: TradeModuleProps) {
         setOutput((buy / 10 ** 6).toFixed(8));
         setDollarInput(
           parseFloat(amount) *
-            parseFloat(solPrice?.solana.usd.toString() || "1"),
+          parseFloat(solPrice?.solana.usd.toString() || "1"),
         );
       } else {
         const sell = tmp!.getSellPrice(parseInt(amount, 10), 100) / 100;
