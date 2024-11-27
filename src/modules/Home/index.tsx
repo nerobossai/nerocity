@@ -19,13 +19,13 @@ import { HomeSticker } from "@/components/Svgs/homeSticker";
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 import { useScreenStore } from "@/stores/useScreenStore";
+import { useSearchStore } from "@/stores/useSearchStore";
 import useUserStore from "@/stores/useUserStore";
+import useDebounce from "@/utils/useDebounce";
 
 import MainScreen from "./mainScreen";
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
-import { useSearchStore } from "@/stores/useSearchStore";
-import useDebounce from "@/utils/useDebounce";
 
 const Container = styled.div`
   width: 100%;
@@ -72,11 +72,11 @@ function HomeModule() {
     try {
       setFeedLoading(true);
       let resp;
-      if (searchText !== '') {
+      if (searchText !== "") {
         const searchRes = await homeApiClient.searchFeed(searchText);
         if (searchRes.agents.length > 0) {
           resp = searchRes;
-        } else{
+        } else {
           toast({
             title: `No results found for the search query!`,
             status: "error",
@@ -86,7 +86,7 @@ function HomeModule() {
           });
           return;
         }
-      } else{
+      } else {
         resp = await homeApiClient.feed(filter);
       }
 

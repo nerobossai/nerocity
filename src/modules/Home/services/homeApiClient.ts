@@ -130,7 +130,7 @@ class ApiClient extends BaseApiClient {
 
   async searchFeed(searchText: string): Promise<FeedSuccessResponse> {
     try {
-      let endpoint = "/leaderboard/api/v1/search?query=" + searchText;
+      const endpoint = `/leaderboard/api/v1/search?query=${searchText}`;
 
       const resp = await this.apiCall({
         type: "GET",

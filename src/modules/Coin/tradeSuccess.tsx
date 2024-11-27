@@ -11,10 +11,10 @@ import React from "react";
 import { GoArrowUpRight } from "react-icons/go";
 import { RiTwitterXFill } from "react-icons/ri";
 
+import SubscriptText from "@/components/SubscriptText";
 import { BoughtTrade } from "@/components/Svgs/BoughtTrade";
 
 import type { AgentResponse } from "../Home/services/homeApiClient";
-import SubscriptText from "@/components/SubscriptText";
 
 interface ISuccessDetails {
   bought: boolean;
@@ -22,7 +22,13 @@ interface ISuccessDetails {
   solAmount: number;
 }
 
-function TradeSuccess({ tokenDetails, successDetails }: { tokenDetails: AgentResponse, successDetails: ISuccessDetails }) {
+function TradeSuccess({
+  tokenDetails,
+  successDetails,
+}: {
+  tokenDetails: AgentResponse;
+  successDetails: ISuccessDetails;
+}) {
   return (
     <Stack
       spacing="0.5rem"
@@ -73,7 +79,10 @@ function TradeSuccess({ tokenDetails, successDetails }: { tokenDetails: AgentRes
         textTransform="uppercase"
       >
         <HStack width="100%" justifyContent="space-between">
-          <Text>Sol {successDetails.bought ? "paid" :"received"}</Text><Text><SubscriptText value={successDetails.solAmount.toString()}/></Text>
+          <Text>Sol {successDetails.bought ? "paid" : "received"}</Text>
+          <Text>
+            <SubscriptText value={successDetails.solAmount.toString()} />
+          </Text>
         </HStack>
         <HStack width="100%" justifyContent="space-between">
           <Text>SLIPPAGE</Text> <Text>1%</Text>

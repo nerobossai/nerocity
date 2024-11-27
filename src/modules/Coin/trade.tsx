@@ -52,8 +52,8 @@ function TradeModule(props: TradeModuleProps) {
   const [successDetails, setSuccesDetails] = useState({
     bought: true,
     tickerAmount: 0,
-    solAmount: 0
-  })
+    solAmount: 0,
+  });
 
   const buttons = [0.1, 0.5, 1, 5];
 
@@ -151,9 +151,9 @@ function TradeModule(props: TradeModuleProps) {
           });
           setSuccesDetails({
             bought: true,
-            tickerAmount: parseFloat(output??"0"),
-            solAmount: parseFloat(input)
-          })
+            tickerAmount: parseFloat(output ?? "0"),
+            solAmount: parseFloat(input),
+          });
           break;
         }
         case "sell": {
@@ -168,9 +168,9 @@ function TradeModule(props: TradeModuleProps) {
           });
           setSuccesDetails({
             bought: true,
-            tickerAmount: parseFloat(output??"0"),
-            solAmount: 0.00002334
-          })
+            tickerAmount: parseFloat(output ?? "0"),
+            solAmount: 0.00002334,
+          });
           break;
         }
         default: {
@@ -185,7 +185,6 @@ function TradeModule(props: TradeModuleProps) {
         position: "bottom-right",
       });
       setScreenNumber(1);
-
     } catch (err: any) {
       console.log(err);
       toast({
@@ -408,7 +407,10 @@ function TradeModule(props: TradeModuleProps) {
           </Box>
         </Stack>
       ) : screenNumber === 1 ? (
-        <TradeSuccess tokenDetails={props.tokenDetails} successDetails={successDetails}/>
+        <TradeSuccess
+          tokenDetails={props.tokenDetails}
+          successDetails={successDetails}
+        />
       ) : (
         <TradeFailure setScreenNumber={setScreenNumber} />
       )}

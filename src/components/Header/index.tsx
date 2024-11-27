@@ -10,15 +10,16 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { MdArrowOutward } from "react-icons/md";
 import {
   WalletModalProvider,
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
+import { CiLogout } from "react-icons/ci";
 import { FaWallet } from "react-icons/fa";
+import { MdArrowOutward } from "react-icons/md";
 import styled from "styled-components";
 
 import { trackWalletConnect } from "@/modules/Home/services/analytics";
@@ -27,10 +28,8 @@ import { useSearchStore } from "@/stores/useSearchStore";
 import useUserStore from "@/stores/useUserStore";
 import * as AuthUtils from "@/utils/AuthUtils";
 
-import ProfileModalComponent from "../ProfileModal";
 import { Logo } from "../Svgs/Logo";
 import { LogoSmall } from "../Svgs/LogoSmall";
-import { CiLogout } from "react-icons/ci";
 
 const Container = styled.header`
   /* max-width: 490px; */
@@ -71,6 +70,7 @@ function Header() {
   const [openHelp, setOpenHelp] = useState(false);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
   const isLargeScreen = useBreakpointValue({ base: false, sm: true });
+  const vStackRef = useRef<HTMLDivElement>(null);
 
   const walletAddress = useMemo(() => {
     if (profile && profile.profile && profile.profile.public_key) {
@@ -120,6 +120,23 @@ function Header() {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        vStackRef.current &&
+        !vStackRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (connected && !isAuthenticated && !isSigningIn) {
@@ -214,20 +231,50 @@ function Header() {
               <FaWallet />
               <span>{walletAddress}</span>
             </Button>
-            <VStack zIndex="100" position="absolute" gap="20px"  display={isOpen ? "block" : "none"} alignItems="flex-start" fontSize="12px" right="10" border="0.5px solid grey" transform="translateY(70px)" bg="#1a1a1c"  color="white" padding="1rem">
-              
-              <HStack 
+            <VStack
+              ref={vStackRef}
+              zIndex="100"
+              position="absolute"
+              gap="20px"
+              display={isOpen ? "block" : "none"}
+              alignItems="flex-start"
+              fontSize="12px"
+              right="10"
+              border="0.5px solid grey"
+              transform="translateY(70px)"
+              bg="#1a1a1c"
+              color="white"
+              padding="1rem"
+            >
+              <HStack
                 onClick={() => {
                   setIsOpen(false);
                   router.push(`/profile/${profile.profile?.username}`);
                 }}
-              cursor="pointer" justifyContent="flex-start"><Text color="text.100">{profile.profile.public_key.slice(0, 6) + "..." + profile.profile.public_key.slice(0, 3)}</Text>
-              <MdArrowOutward color="#737373"/></HStack>
+                cursor="pointer"
+                justifyContent="flex-start"
+              >
+                <Text color="text.100">
+                  {`${profile.profile.public_key.slice(
+                    0,
+                    6,
+                  )}...${profile.profile.public_key.slice(0, 3)}`}
+                </Text>
+                <MdArrowOutward color="#737373" />
+              </HStack>
 
-              <HStack cursor="pointer" gap="50px" marginTop="10px" onClick={() => {
-                setIsOpen(false); handleDisconnect();
-              }}><Text>DISCONNECT</Text>
-              <CiLogout color="white" /></HStack>
+              <HStack
+                cursor="pointer"
+                gap="50px"
+                marginTop="10px"
+                onClick={() => {
+                  setIsOpen(false);
+                  handleDisconnect();
+                }}
+              >
+                <Text>DISCONNECT</Text>
+                <CiLogout color="white" />
+              </HStack>
             </VStack>
             {/* <ProfileModalComponent
               userDetails={profile.profile ?? profile}

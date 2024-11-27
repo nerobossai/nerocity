@@ -19,7 +19,15 @@ import { trackComment, trackReply } from "./services/analytics";
 import type { ChatsResponse } from "./services/coinApiClient";
 import { coinApiClient } from "./services/coinApiClient";
 
-const AddComment = ({ comment, setComment, isAuthenticated, onSubmit, onFocus, onBlur, posting }: any) => {
+const AddComment = ({
+  comment,
+  setComment,
+  isAuthenticated,
+  onSubmit,
+  onFocus,
+  onBlur,
+  posting,
+}: any) => {
   const [value, setValue] = useState("");
   return (
     <Box
@@ -32,7 +40,10 @@ const AddComment = ({ comment, setComment, isAuthenticated, onSubmit, onFocus, o
     >
       <Input
         value={value}
-        onChange={(e) => { setValue(e.target.value); setComment(e.target.value)}}
+        onChange={(e) => {
+          setValue(e.target.value);
+          setComment(e.target.value);
+        }}
         flexGrow="1"
         placeholder={
           isAuthenticated
@@ -56,8 +67,9 @@ const AddComment = ({ comment, setComment, isAuthenticated, onSubmit, onFocus, o
         color="black"
         borderRadius="0"
         disabled={!isAuthenticated || posting}
-        onClick={() => { onSubmit();
-          setValue("")
+        onClick={() => {
+          onSubmit();
+          setValue("");
         }}
         opacity={posting ? 0.7 : 1}
         // display="flex"
@@ -66,7 +78,7 @@ const AddComment = ({ comment, setComment, isAuthenticated, onSubmit, onFocus, o
       >
         {/* <Spinner size="sm" mr="10px"/> */}
         {/* {true ? <Spinner /> : <></>} */}
-        {isAuthenticated ? posting ? "POSTING..." : "POST" : "CONNECT WALLET"}
+        {isAuthenticated ? (posting ? "POSTING..." : "POST") : "CONNECT WALLET"}
       </Button>
     </Box>
   );
@@ -89,7 +101,11 @@ function ChatModule(props: { agentId: string }) {
     try {
       setLoading(true);
       const chats = await coinApiClient.fetchChats(props.agentId);
-      setSelectedMessageId(chats.chats.length <= 0 ? undefined : chats.chats[chats.chats.length-1]?.message_id);
+      setSelectedMessageId(
+        chats.chats.length <= 0
+          ? undefined
+          : chats.chats[chats.chats.length - 1]?.message_id,
+      );
       console.log(chats);
       setChats(chats);
     } catch (err) {

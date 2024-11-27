@@ -17,12 +17,10 @@ import { Keypair } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { LiaTelegram } from "react-icons/lia";
 import { RiTwitterXFill } from "react-icons/ri";
 import styled from "styled-components";
 import z from "zod";
 
-import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
 import type { CreateTokenMetadata, TokenMetadata } from "@/services/types";
 import { tailwindConfig } from "@/styles/global";
@@ -77,6 +75,15 @@ const tickerSchema = z
   );
 
 const predefinedTraits = ["Snarky", "Morose", "Nerdy", "Romantic", "Horror"];
+
+const sampleData = {
+  name: "Agent Name",
+  ticker: "TICKER",
+  description:
+    "Hi, my name is marty and this is my complete description it does not matter how many lines or how big it is it willl all be shown here yayy",
+  coins_percentage_for_dev: 10,
+  file: null,
+};
 
 function CreateAgentModule() {
   const toast = useToast();
@@ -613,7 +620,6 @@ function CreateAgentModule() {
             </GridItem> */}
           </Grid>
 
-          
           <VStack alignItems="start" justifyContent="start">
             <Text color="#4A4A55" fontSize="14px">
               Telegram
@@ -710,7 +716,15 @@ function CreateAgentModule() {
           </Center>
         </Stack>
       ) : (
-        <SuccessScreen />
+        <SuccessScreen
+          telegram={telegramHandle}
+          name={name}
+          description={description}
+          file={file}
+          ticker={ticker}
+          coins_percentage_for_dev={coinPercentage}
+          website={website}
+        />
       )}
     </Container>
   );
