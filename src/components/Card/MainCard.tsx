@@ -124,7 +124,7 @@ function MainCard(props: CardProps) {
             {props.name}
           </Heading>
           <Text fontSize="12px" fontWeight="bold" color="text.100">
-            {props.description}
+            {props.description?.slice(0, 100)}...
           </Text>
         </VStack>
       </HStack>
