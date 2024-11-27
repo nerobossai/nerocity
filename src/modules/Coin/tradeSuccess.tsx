@@ -14,8 +14,15 @@ import { RiTwitterXFill } from "react-icons/ri";
 import { BoughtTrade } from "@/components/Svgs/BoughtTrade";
 
 import type { AgentResponse } from "../Home/services/homeApiClient";
+import SubscriptText from "@/components/SubscriptText";
 
-function TradeSuccess({ tokenDetails }: { tokenDetails: AgentResponse }) {
+interface ISuccessDetails {
+  bought: boolean;
+  tickerAmount: number;
+  solAmount: number;
+}
+
+function TradeSuccess({ tokenDetails, successDetails }: { tokenDetails: AgentResponse, successDetails: ISuccessDetails }) {
   return (
     <Stack
       spacing="0.5rem"
@@ -29,9 +36,9 @@ function TradeSuccess({ tokenDetails }: { tokenDetails: AgentResponse }) {
       <Box position="absolute" right="0" top="0">
         <BoughtTrade />
       </Box>
-      <Text fontSize="48px">BOUGHT!</Text>
+      <Text fontSize="48px">{successDetails.bought ? "BOUGHT!" : "SOLD"}</Text>
       <VStack alignItems="left">
-        <Text fontSize="24px">120,120,120.1212</Text>
+        <Text fontSize="24px">{successDetails.tickerAmount}</Text>
         <HStack>
           <Image
             boxSize="2rem"
@@ -66,7 +73,7 @@ function TradeSuccess({ tokenDetails }: { tokenDetails: AgentResponse }) {
         textTransform="uppercase"
       >
         <HStack width="100%" justifyContent="space-between">
-          <Text>Sol paid</Text> <Text>0.12 SOL</Text>
+          <Text>Sol {successDetails.bought ? "paid" :"received"}</Text><Text><SubscriptText value={successDetails.solAmount.toString()}/></Text>
         </HStack>
         <HStack width="100%" justifyContent="space-between">
           <Text>SLIPPAGE</Text> <Text>1%</Text>

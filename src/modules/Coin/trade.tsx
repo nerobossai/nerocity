@@ -49,6 +49,11 @@ function TradeModule(props: TradeModuleProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [selectedSol, setSelectedSol] = useState(0.1);
   const [screenNumber, setScreenNumber] = useState(0); // 0 for initial screen, 1 for success screen and 2 for failure screen
+  const [successDetails, setSuccesDetails] = useState({
+    bought: true,
+    tickerAmount: 0,
+    solAmount: 0
+  })
 
   const buttons = [0.1, 0.5, 1, 5];
 
@@ -90,9 +95,7 @@ function TradeModule(props: TradeModuleProps) {
         }
         setDollarInput(parseFloat(amount) * parseFloat(props.currentPrice));
       }
-      setScreenNumber(1);
     } catch (err) {
-      setScreenNumber(2);
       console.log(err);
     }
   };
@@ -146,6 +149,11 @@ function TradeModule(props: TradeModuleProps) {
             amount_of_coins_bought_sol: parseFloat(input),
             revenue_in_sol: platformFeesInSol,
           });
+          setSuccesDetails({
+            bought: true,
+            tickerAmount: parseFloat(output??"0"),
+            solAmount: parseFloat(input)
+          })
           break;
         }
         case "sell": {
@@ -158,6 +166,11 @@ function TradeModule(props: TradeModuleProps) {
             ),
             amount_of_coins_sold_token: parseFloat(input),
           });
+          setSuccesDetails({
+            bought: true,
+            tickerAmount: parseFloat(output??"0"),
+            solAmount: 0.00002334
+          })
           break;
         }
         default: {
@@ -171,6 +184,8 @@ function TradeModule(props: TradeModuleProps) {
         status: "success",
         position: "bottom-right",
       });
+      setScreenNumber(1);
+
     } catch (err: any) {
       console.log(err);
       toast({
@@ -179,6 +194,7 @@ function TradeModule(props: TradeModuleProps) {
         status: "error",
         position: "bottom-right",
       });
+      setScreenNumber(2);
     } finally {
       setSubmitting(false);
     }
@@ -392,7 +408,7 @@ function TradeModule(props: TradeModuleProps) {
           </Box>
         </Stack>
       ) : screenNumber === 1 ? (
-        <TradeSuccess tokenDetails={props.tokenDetails} />
+        <TradeSuccess tokenDetails={props.tokenDetails} successDetails={successDetails}/>
       ) : (
         <TradeFailure setScreenNumber={setScreenNumber} />
       )}

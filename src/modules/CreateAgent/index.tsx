@@ -217,13 +217,14 @@ function CreateAgentModule() {
           tokenMetadata,
         },
       });
-      navigator.replace(Paths.home);
+      // navigator.replace(Paths.home);
       toast({
         title: "Success",
         description: "Ai Agent Coin launched",
         status: "success",
         position: "bottom-right",
       });
+      setScreen(3);
     } catch (err) {
       console.log(err);
       toast({
@@ -241,7 +242,6 @@ function CreateAgentModule() {
     setName("");
     setDescription("");
     setTicker("");
-    setScreen(1);
   };
 
   const handleTwitterConnect = async () => {
@@ -334,6 +334,7 @@ function CreateAgentModule() {
       setTelegramHandle(twtData.telegram || "");
       setTokenM(twtData.tokenMetadata);
       setTwtToken(twtData.twtToken);
+      setScreen(2);
     } catch (err) {
       logger.error(err);
     } finally {
@@ -424,7 +425,10 @@ function CreateAgentModule() {
                 color="black"
                 fontSize="12px"
                 _hover={{ opacity: 0.8 }}
-                onClick={handleRegenerate}
+                onClick={() => {
+                  setPromptDescription("");
+                  setScreen(1);
+                }}
               >
                 Regenerate
               </Button>
@@ -434,10 +438,7 @@ function CreateAgentModule() {
                 color="black"
                 fontSize="12px"
                 _hover={{ opacity: 0.8 }}
-                onClick={() => {
-                  setPromptDescription("");
-                  setScreen(1);
-                }}
+                onClick={handleRegenerate}
               >
                 Start Over
               </Button>
@@ -553,7 +554,7 @@ function CreateAgentModule() {
               ))}
             </HStack>
           </VStack>
-          <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
+          <Grid templateColumns={{ base: "1fr", md: "repeat(1, 1fr)" }} gap={4}>
             <GridItem>
               <VStack alignItems="start" justifyContent="start">
                 <Text color="#4A4A55" fontSize="14px">
@@ -581,7 +582,7 @@ function CreateAgentModule() {
                 </Button>
               </VStack>
             </GridItem>
-            <GridItem>
+            {/* <GridItem>
               <VStack alignItems="start" justifyContent="start">
                 <Text color="#4A4A55" fontSize="14px">
                   Telegram
@@ -609,8 +610,25 @@ function CreateAgentModule() {
                   </span>
                 </Button>
               </VStack>
-            </GridItem>
+            </GridItem> */}
           </Grid>
+
+          
+          <VStack alignItems="start" justifyContent="start">
+            <Text color="#4A4A55" fontSize="14px">
+              Telegram
+            </Text>
+            <Input
+              backgroundColor="input"
+              border={0}
+              focusBorderColor="input"
+              onChange={(e) => setTelegramHandle(e.target.value)}
+              value={telegramHandle}
+              placeholder="Enter your Telegram Handle"
+              fontSize="16px"
+              height="60px"
+            />
+          </VStack>
 
           <VStack alignItems="start" justifyContent="start">
             <Text color="#4A4A55" fontSize="14px">

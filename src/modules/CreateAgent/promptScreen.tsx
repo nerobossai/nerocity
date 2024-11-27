@@ -73,7 +73,7 @@ function PromptScreen({
           }}
         >
           <CiWallet size={20} />
-          <Text>{loading ? "GENERATING" : "GENERATE AGENT"}</Text>
+          <Text>{loading ? "GENERATING...." : "GENERATE AGENT"}</Text>
         </Button>
       </VStack>
     </Stack>
