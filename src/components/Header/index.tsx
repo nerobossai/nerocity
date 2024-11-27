@@ -30,6 +30,14 @@ import * as AuthUtils from "@/utils/AuthUtils";
 
 import { Logo } from "../Svgs/Logo";
 import { LogoSmall } from "../Svgs/LogoSmall";
+import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
+
+function formatToShortLink(number: any) {
+  if (number >= 1_000_000) {
+    return (number / 1_000_000).toFixed(1) + "M";
+  }
+  return number.toString();
+}
 
 const Container = styled.header`
   /* max-width: 490px; */
@@ -71,6 +79,7 @@ function Header() {
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
   const isLargeScreen = useBreakpointValue({ base: false, sm: true });
   const vStackRef = useRef<HTMLDivElement>(null);
+  const [marketCap, setMarketCap] = useState("");
 
   const walletAddress = useMemo(() => {
     if (profile && profile.profile && profile.profile.address) {
@@ -149,6 +158,14 @@ function Header() {
     }
   }, [connected, publicKey]);
 
+  useEffect(() => {
+    const fetchMarketCap = async () => {
+      const data = await coinApiClient.fetchPumpfunData("5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump");
+      setMarketCap(formatToShortLink(data.usd_market_cap))
+    }
+    fetchMarketCap();
+  }, [])
+
   const handleDisconnect = async () => {
     try {
       setIsDisconnecting(true);
@@ -210,7 +227,7 @@ function Header() {
             BUY $NEROBOSS
           </Button>
         </a>
-        <Text> MCAP $12M</Text>
+        <Text> MCAP ${marketCap}</Text>
       </HStack>
       <HStack flexGrow="1" justifyContent="flex-end" position="relative">
         {isAuthenticated ? (
