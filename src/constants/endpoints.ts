@@ -21,6 +21,7 @@ export const ApiEndpoints = Object.freeze({
   },
   coins: {
     transactions: "/coins/transactions",
+    trade: "/leaderboard/api/v1/trade",
   },
   chat: {
     send: "/chat/send",

@@ -207,6 +207,19 @@ class ApiClient extends BaseApiClient {
       return Promise.reject(getErrorMessageFromAxios(err));
     }
   }
+
+  async sendTrade(data: any): Promise<any> {
+    try {
+      const resp = await this.apiCall({
+        type: "POST",
+        url: ApiEndpoints.coins.trade,
+        body: data,
+      });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
 }
 
 export const coinApiClient = new ApiClient();

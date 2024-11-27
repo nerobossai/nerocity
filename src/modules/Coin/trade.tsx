@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 import SubscriptText from "@/components/SubscriptText";
-import { pumpFunSdk } from "@/services/pumpfun";
+import { FEES, pumpFunSdk } from "@/services/pumpfun";
 import { getGeckoterminalLink } from "@/utils";
 import { logger } from "@/utils/Logger";
 
@@ -26,7 +26,10 @@ import type {
 } from "../Home/services/homeApiClient";
 import { homeApiClient } from "../Home/services/homeApiClient";
 import { trackBuy, trackSell } from "./services/analytics";
-import type { PumpfunCoinResponse } from "./services/coinApiClient";
+import {
+  coinApiClient,
+  type PumpfunCoinResponse,
+} from "./services/coinApiClient";
 import TradeFailure from "./tradeFailure";
 import TradeSuccess from "./tradeSuccess";
 
@@ -59,6 +62,14 @@ function TradeModule(props: TradeModuleProps) {
 
   const buttons = [0.1, 0.5, 1, 5];
 
+  const sendTrade = async (data: any) => {
+    try {
+      await coinApiClient.sendTrade(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const fetchPrice = async () => {
     try {
       setLoading(true);
@@ -76,7 +87,7 @@ function TradeModule(props: TradeModuleProps) {
       if (!amount) return;
 
       const tmp = await pumpFunSdk.getBondingCurveAccount(
-        new PublicKey(props.tokenDetails.mint_public_key),
+        new PublicKey(props.tokenDetails.mint_public_key)
       );
 
       if (active === "buy") {
@@ -84,7 +95,7 @@ function TradeModule(props: TradeModuleProps) {
         setOutput((buy / 10 ** 6).toFixed(8));
         setDollarInput(
           parseFloat(amount) *
-          parseFloat(solPrice?.solana.usd.toString() || "1"),
+            parseFloat(solPrice?.solana.usd.toString() || "1")
         );
       } else {
         const sell = tmp!.getSellPrice(parseInt(amount, 10), 100) / 100;
@@ -122,14 +133,14 @@ function TradeModule(props: TradeModuleProps) {
           new PublicKey(publicKey),
           new PublicKey(props.tokenDetails.mint_public_key),
           parseFloat(input) * LAMPORTS_PER_SOL,
-          100,
+          100
         );
       } else {
         txn = await pumpFunSdk.sell(
           new PublicKey(publicKey),
           new PublicKey(props.tokenDetails.mint_public_key),
           parseFloat(input) * 10 ** 6,
-          100,
+          100
         );
       }
 
@@ -145,7 +156,8 @@ function TradeModule(props: TradeModuleProps) {
       // for analytics
       switch (active) {
         case "buy": {
-          const platformFeesInSol = (2 / 100) * parseFloat(input);
+          const platformFeesInSol =
+            (FEES.trade_fees.amount / 100) * parseFloat(input);
           trackBuy({
             agent_address: props.tokenDetails.mint_public_key,
             timestamp: Date.now(),
@@ -156,6 +168,12 @@ function TradeModule(props: TradeModuleProps) {
               platformFeesInSol * (solPrice?.solana.usd || 169.551),
             amount_of_coins_bought_sol: parseFloat(input),
             revenue_in_sol: platformFeesInSol,
+          });
+          sendTrade({
+            ticker: props.tokenDetails.ticker,
+            mintAddress: props.tokenDetails.mint_public_key,
+            isBuy: true,
+            amount: parseFloat(input),
           });
           setSuccesDetails({
             bought: true,
@@ -170,9 +188,15 @@ function TradeModule(props: TradeModuleProps) {
             timestamp: Date.now(),
             wallet_address: publicKey.toString(),
             amount_of_coins_sold_dollar: parseFloat(
-              dollarInput?.toString() || "0",
+              dollarInput?.toString() || "0"
             ),
             amount_of_coins_sold_token: parseFloat(input),
+          });
+          sendTrade({
+            ticker: props.tokenDetails.ticker,
+            mintAddress: props.tokenDetails.mint_public_key,
+            isBuy: false,
+            amount: parseFloat(input),
           });
           setSuccesDetails({
             bought: true,
