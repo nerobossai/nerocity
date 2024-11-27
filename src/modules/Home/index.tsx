@@ -27,6 +27,7 @@ import useDebounce from "@/utils/useDebounce";
 import MainScreen from "./mainScreen";
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
+import TimerScreen from "@/components/Banner/timer";
 
 const Container = styled.div`
   width: 100%;
@@ -150,6 +151,7 @@ function HomeModule() {
           marginBottom="20px"
           gap="40px"
         >
+          <TimerScreen />
           {overlord && <MainCard {...overlord} />}
           <HStack
             width="100%"
@@ -158,7 +160,7 @@ function HomeModule() {
             bg="linear-gradient(100deg, #571F0D -0.99%, #5E220F 64.54%, #642410 112.46%)"
             display="flex"
             justifyContent="space-between"
-            marginTop={!overlord || feed.length === 0 ? "50px" : "0"}
+            marginTop={!overlord || feed.length === 0 ? "0px" : "0"}
             overflow="hidden"
             maxHeight={{ base: "auto", lg: "80px" }}
           >
