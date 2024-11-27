@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import React from "react";
 import styled from "styled-components";
 
+import Banner from "@/components/Banner";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
@@ -31,6 +32,7 @@ const Main = (props: IPropType) => {
     <Container $noHeaderOnMobile={noHeaderOnMobile}>
       <GoogleAnalytics gaId="G-7KQEXTEH06" />
       <Header />
+      <Banner />
       {children}
       {nofooter ? null : <Footer />}
     </Container>

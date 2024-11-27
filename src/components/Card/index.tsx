@@ -27,6 +27,7 @@ export type CardProps = {
   current_token_total_supply?: number;
   onClick?: any;
   completionPercent?: number;
+  twenty_four_hr_changes?: number;
   social?: {
     twitter: string;
     telegram: string;

@@ -1,17 +1,8 @@
-import {
-  HStack,
-  Image,
-  Link,
-  Stack,
-  Text,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
+import { Grid, Stack, Text, useToast, VStack } from "@chakra-ui/react";
 import React from "react";
-import { LiaTelegram } from "react-icons/lia";
-import { RiTwitterXFill } from "react-icons/ri";
 
 import type { CardProps } from "@/components/Card";
+import CreatedAtComponent from "@/components/Created";
 
 function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
   const toast = useToast();
@@ -27,8 +18,53 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
   };
 
   return (
-    <Stack fontSize="12px" spacing="1rem" marginTop="1rem">
-      <HStack justifyContent="start" alignItems="start" spacing="1rem">
+    <Stack
+      fontSize="12px"
+      spacing="1rem"
+      marginTop="42px"
+      border="1px solid #959595"
+      padding="1rem"
+      mb={{ base: "80px", lg: "0" }}
+      width="100%"
+    >
+      <Text my="10px">DETAILS</Text>
+      <Grid templateColumns="repeat(2, 1fr)" gap={4} width="100%">
+        <CreatedAtComponent
+          timeStamp={parseInt(props.created_at.toString(), 10)}
+          fontSize="12px"
+          alignItems="flex-start"
+        />
+        <VStack gap="5px" alignItems="flex-start">
+          <Text color="text.100">CREATOR</Text>
+          <Text fontSize="12px" color="#00C2FF">
+            {props.created_by}
+          </Text>
+        </VStack>
+        <VStack gap="5px" alignItems="flex-start">
+          <Text color="text.100">MCAP</Text>
+          <Text fontSize="12px">{props.market_cap}</Text>
+        </VStack>
+        <VStack gap="5px" alignItems="flex-start">
+          <Text color="text.100">CREATOR</Text>
+          <Text fontSize="12px">{props.created_by}</Text>
+        </VStack>
+
+        <VStack gap="5px" alignItems="flex-start">
+          <Text color="text.100">COMMENTS</Text>
+          <Text fontSize="12px">{props.replies}</Text>
+        </VStack>
+
+        <VStack gap="5px" alignItems="flex-start">
+          <Text color="text.100">24H</Text>
+          <Text fontSize="12px">+120%</Text>
+        </VStack>
+      </Grid>
+
+      <VStack alignItems="flex-start" gap="4px">
+        <Text color="text.100">ABOUT</Text>
+        <Text>{props.description}</Text>
+      </VStack>
+      {/* <HStack justifyContent="start" alignItems="start" spacing="1rem">
         <Image
           boxSize="5rem"
           objectFit="cover"
@@ -63,14 +99,7 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
             )}
           </HStack>
         </VStack>
-      </HStack>
-      <Text>
-        When the market cap reaches $69k all the liquidity from the bonding
-        curve will be deposited into Raydium and burned. <br /> <br /> There are{" "}
-        {props.current_real_token_reserves || 0} tokens still available for sale
-        in the bonding curve, and there is {props.sol_reserve || 0} SOL in the
-        bonding curve.
-      </Text>
+      </HStack> */}
     </Stack>
   );
 }

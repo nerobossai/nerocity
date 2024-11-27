@@ -1,14 +1,15 @@
 import {
   Box,
   Button,
+  Input,
   Spinner,
   Stack,
-  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import React, { useEffect, useState } from "react";
+import { FaRegComment } from "react-icons/fa6";
 
 import ChatModelComponent from "@/components/ChatModel";
 import ChatRowComponent from "@/components/ChatRow";
@@ -18,6 +19,70 @@ import { trackComment, trackReply } from "./services/analytics";
 import type { ChatsResponse } from "./services/coinApiClient";
 import { coinApiClient } from "./services/coinApiClient";
 
+const AddComment = ({
+  comment,
+  setComment,
+  isAuthenticated,
+  onSubmit,
+  onFocus,
+  onBlur,
+  posting,
+}: any) => {
+  const [value, setValue] = useState("");
+  return (
+    <Box
+      width="100%"
+      bg="#1B1B1D"
+      display="flex"
+      padding="0.5rem"
+      my="10px"
+      border="0.5px solid #959595"
+    >
+      <Input
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+          setComment(e.target.value);
+        }}
+        flexGrow="1"
+        placeholder={
+          isAuthenticated
+            ? "Add a comment"
+            : "Connect your wallet to engage & comment."
+        }
+        outline="none"
+        border="none"
+        onFocus={() => onFocus && onFocus()}
+        onBlur={() => onBlur && onBlur()}
+        disabled={!isAuthenticated}
+        _focus={{
+          border: "none",
+          boxShadow: "none",
+        }}
+      />
+      <Button
+        // padding="10px 20px"
+        bg="white"
+        fontSize="12px"
+        color="black"
+        borderRadius="0"
+        disabled={!isAuthenticated || posting}
+        onClick={() => {
+          onSubmit();
+          setValue("");
+        }}
+        opacity={posting ? 0.7 : 1}
+        // display="flex"
+        // gap="10px"
+        // alignItems="center"
+      >
+        {/* <Spinner size="sm" mr="10px"/> */}
+        {/* {true ? <Spinner /> : <></>} */}
+        {isAuthenticated ? (posting ? "POSTING..." : "POST") : "CONNECT WALLET"}
+      </Button>
+    </Box>
+  );
+};
 function ChatModule(props: { agentId: string }) {
   const toast = useToast();
   const { publicKey } = useWallet();
@@ -36,6 +101,11 @@ function ChatModule(props: { agentId: string }) {
     try {
       setLoading(true);
       const chats = await coinApiClient.fetchChats(props.agentId);
+      setSelectedMessageId(
+        chats.chats.length <= 0
+          ? undefined
+          : chats.chats[chats.chats.length - 1]?.message_id,
+      );
       console.log(chats);
       setChats(chats);
     } catch (err) {
@@ -93,43 +163,91 @@ function ChatModule(props: { agentId: string }) {
   }, []);
 
   return (
-    <Stack
-      backgroundColor="grey.50"
-      padding="1rem"
-      flexGrow="1"
-      marginBottom="4rem"
-    >
-      <Text>Chat with agent and users</Text>
+    <Stack paddingTop="1rem" flexGrow="1" marginBottom="4rem">
+      <AddComment
+        comment={comment}
+        setComment={setComment}
+        isAuthenticated={isAuthenticated}
+        onSubmit={handleSubmit}
+        posting={posting}
+        onFocus={() => setSelectedMessageId(undefined)}
+      />
       {(chats?.chats || []).map((data, r) => {
         return (
-          <Stack key={r}>
+          <Stack key={r} gap="0.5rem">
             <ChatRowComponent {...data} />
-            <Stack marginLeft="3rem">
-              {data.replies
-                .sort(
-                  (a, b) =>
-                    parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10),
-                )
-                .map((rData, v: number) => {
-                  return <ChatRowComponent {...rData} key={v} />;
-                })}
-              <Button
+            Display this Stack only if reply button is clicked
+            {selectedMessageId === data.message_id && (
+              <Stack marginLeft="3rem">
+                {data.replies
+                  .sort(
+                    (a, b) =>
+                      parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10),
+                  )
+                  .map((rData, v: number) => {
+                    return <ChatRowComponent {...rData} key={v} />;
+                  })}{" "}
+                <AddComment
+                  comment={comment}
+                  setComment={setComment}
+                  isAuthenticated={isAuthenticated}
+                  onSubmit={() => handleSubmit()}
+                  posting={posting}
+                  onBlur={() => {
+                    // setSelectedMessageId(undefined);
+                  }}
+                />
+              </Stack>
+            )}
+            <Box
+              display="flex"
+              paddingRight="20px"
+              gap="10px"
+              marginLeft="0.5rem"
+            >
+              {/* <Box
                 fontSize="12px"
-                color="white"
-                width="20%"
-                variant="ghosted"
-                backgroundColor="grey.100"
+                color="#8C8C8C"
+                backgroundColor="transparent"
                 _hover={{
                   opacity: 0.8,
                 }}
                 onClick={() => {
-                  setSelectedMessageId(data.message_id);
-                  onOpen();
+                  setSelectedMessageId(
+                    data.message_id === selectedMessageId
+                      ? undefined
+                      : data.message_id,
+                  );
                 }}
+                display="flex"
+                gap="5px"
+                alignItems="center"
+                cursor="pointer"
               >
-                Reply
-              </Button>
-            </Stack>
+                <FaRegHeart />
+              </Box> */}
+              <Box
+                fontSize="12px"
+                color="#8C8C8C"
+                backgroundColor="transparent"
+                _hover={{
+                  opacity: 0.8,
+                }}
+                onClick={() => {
+                  setSelectedMessageId(
+                    data.message_id === selectedMessageId
+                      ? undefined
+                      : data.message_id,
+                  );
+                }}
+                display="flex"
+                gap="5px"
+                alignItems="center"
+                cursor="pointer"
+              >
+                <FaRegComment /> Reply
+              </Box>
+            </Box>
           </Stack>
         );
       })}
@@ -144,33 +262,6 @@ function ChatModule(props: { agentId: string }) {
           <Spinner />
         </Box>
       )}
-      <Box display="flex" alignItems="flex-start">
-        <Button
-          fontSize={{ base: "8px", sm: "12px" }}
-          color="white"
-          variant="ghosted"
-          marginTop="0.5rem"
-          backgroundColor="grey.100"
-          _hover={{
-            opacity: 0.8,
-          }}
-          onClick={() => {
-            if (!isAuthenticated) {
-              toast({
-                title: "",
-                description: "Please connect wallet to message!",
-                status: "info",
-                position: "bottom-right",
-              });
-              return;
-            }
-            setSelectedMessageId(undefined);
-            onOpen();
-          }}
-        >
-          Post Message
-        </Button>
-      </Box>
       <ChatModelComponent
         isOpen={isOpen}
         onClose={() => {

@@ -12,7 +12,6 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useMemo, useState } from "react";
 
-import ReferralModule from "@/modules/Referral";
 import useUserStore from "@/stores/useUserStore";
 import { tailwindConfig } from "@/styles/global";
 import { tabsTheme } from "@/styles/tabsTheme";
@@ -25,11 +24,40 @@ const theme = extendTheme({
   colors: tailwindConfig.theme?.colors,
   components: {
     Tabs: tabsTheme,
+    Button: {
+      baseStyle: {
+        borderRadius: "0",
+      },
+    },
+    Input: {
+      variants: {
+        outline: {
+          field: {
+            borderRadius: "0",
+          },
+        },
+        filled: {
+          field: {
+            borderRadius: "0",
+          },
+        },
+        flushed: {
+          field: {
+            borderRadius: "0",
+          },
+        },
+        unstyled: {
+          field: {
+            borderRadius: "0",
+          },
+        },
+      },
+    },
   },
   fonts: {
-    body: "Tsukimi Rounded",
-    heading: "Tsukimi Rounded",
-    text: "Tsukimi Rounded",
+    body: "JetBrains Mono",
+    heading: "JetBrains Mono",
+    text: "JetBrains Mono",
   },
 });
 
@@ -91,11 +119,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <ChakraProvider theme={theme}>
           <Head>
             <link
-              href="https://fonts.googleapis.com/css2?family=Tsukimi+Rounded:wght@300;400;500;600;700&display=swap"
+              href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
               rel="stylesheet"
             />
           </Head>
-          <ReferralModule />
           <Component {...pageProps} />
         </ChakraProvider>
       </WalletProvider>

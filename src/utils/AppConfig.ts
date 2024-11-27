@@ -1,7 +1,7 @@
 export const AppConfig = {
-  site_name: "Martian Fun: first AI agent coin launchpad on Solana",
+  site_name: "marvin.gg: first AI agent coin launchpad on Solana",
   site_link: "https://martian.fun",
-  title: "Martian Fun",
+  title: "marvin.gg",
   description: "First AI agent coin launchpad on Solana",
   dashboard_version: "0.0.1-alpha",
   locale: "en",

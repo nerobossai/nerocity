@@ -1,13 +1,13 @@
 "use client";
 
 import {
-  Avatar,
+  Box,
   Button,
   HStack,
-  Link,
-  Stack,
+  Input,
   Text,
   useBreakpointValue,
+  VStack,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import {
@@ -15,17 +15,21 @@ import {
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { BiSearch } from "react-icons/bi";
+import { CiLogout } from "react-icons/ci";
+import { FaWallet } from "react-icons/fa";
+import { MdArrowOutward } from "react-icons/md";
 import styled from "styled-components";
 
 import { trackWalletConnect } from "@/modules/Home/services/analytics";
 import { authApiClient } from "@/modules/Home/services/authApiClient";
+import { useSearchStore } from "@/stores/useSearchStore";
 import useUserStore from "@/stores/useUserStore";
 import * as AuthUtils from "@/utils/AuthUtils";
 
-import HelpComponent from "../Help";
-import ProfileModalComponent from "../ProfileModal";
 import { Logo } from "../Svgs/Logo";
+import { LogoSmall } from "../Svgs/LogoSmall";
 
 const Container = styled.header`
   /* max-width: 490px; */
@@ -34,6 +38,7 @@ const Container = styled.header`
 
 function Header() {
   const router = useRouter();
+  const { searchText, setSearchText } = useSearchStore();
   const {
     isAuthenticated,
     profile,
@@ -64,7 +69,19 @@ function Header() {
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [openHelp, setOpenHelp] = useState(false);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
-  const isLargeScreen = useBreakpointValue({ base: false, md: true });
+  const isLargeScreen = useBreakpointValue({ base: false, sm: true });
+  const vStackRef = useRef<HTMLDivElement>(null);
+
+  const walletAddress = useMemo(() => {
+    if (profile && profile.profile && profile.profile.public_key) {
+      return `${profile.profile.public_key.slice(
+        0,
+        3,
+      )}...${profile.profile.public_key.slice(-3)}`;
+    }
+
+    return "tst...val";
+  }, [profile]);
 
   const handleSignin = async () => {
     try {
@@ -84,8 +101,7 @@ function Header() {
         isAuthenticated: true,
         token: resp.token,
       };
-
-      setUserProfile(profileObject.profile);
+      setUserProfile(profileObject);
       setToken(profileObject.token);
       setAuthenticated(true);
       setIsOpen(false);
@@ -106,11 +122,24 @@ function Header() {
   };
 
   useEffect(() => {
-    if (
-      connected &&
-      !isAuthenticated &&
-      !isSigningIn
-    ) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        vStackRef.current &&
+        !vStackRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (connected && !isAuthenticated && !isSigningIn) {
       setIsSigningIn(true);
       handleSignin()
         .then(() => {
@@ -135,74 +164,161 @@ function Header() {
   };
 
   return (
-    <Container className="dual-header">
-      <Stack
-        direction={["row"]}
-        justifyContent={["space-between"]}
-        padding="1rem"
-        // paddingBottom={"1rem"}
-      >
-        <HStack>
-          <Link href="/">
-            <Logo />
-          </Link>
-          <Text
-            className="sm:text-md pointer text-[12px]"
-            cursor="pointer"
-            onClick={() => setOpenHelp(true)}
-          >
-            how does it work?
-          </Text>
-          <HelpComponent isOpen={openHelp} onClose={() => setOpenHelp(false)} />
-        </HStack>
-        <HStack>
-          {isAuthenticated ? (
-            <>
-              <Button
-                onClick={() => setIsOpen(true)}
-                backgroundColor="grey.100"
-                color="primary"
-                display="flex"
-                gap="10px"
-                alignItems="center"
-                _hover={{ opacity: 0.8 }}
-                fontSize="14px"
-                fontWeight={300}
-              >
-                <Avatar
-                  boxSize="20px"
-                  src={profile?.profile_pic ?? profile?.profile?.profile_pic}
-                />
-                <Text>{profile?.username ?? profile?.profile?.username}</Text>
-              </Button>
-              <ProfileModalComponent
-                userDetails={profile.profile ?? profile}
-                isOpen={isOpen && isAuthenticated}
-                onClose={() => setIsOpen(false)}
-                disconnect={handleDisconnect}
-                isDisconnecting={isDisconnecting}
-              />{" "}
-            </>
-          ) : (
-            <WalletModalProvider>
-              <WalletMultiButton
-                style={{
-                  backgroundColor: "#262A2E",
-                  color: "white",
-                  fontFamily: "Tsukimi Rounded",
-                  fontSize,
-                  justifyContent: "space-around",
-                  whiteSpace: "nowrap",
-                  textAlign: "center",
-                  padding: "0.5rem 1rem",
-                  maxWidth: "200px",
+    <HStack
+      bg="brown.100"
+      height="70px"
+      pl="40px"
+      py="1rem"
+      align="center"
+      gap="40px"
+      justifyContent={{ base: "space-between", md: "block" }}
+    >
+      <Box onClick={() => router.push("/")} cursor="pointer">
+        {isLargeScreen ? <Logo /> : <LogoSmall />}
+      </Box>
+      <Box padding="20px" display={{ base: "none", lg: "block" }}>
+        <Box
+          px="2rem"
+          display="flex"
+          bg="brown.200"
+          alignItems="center"
+          gap="20px"
+        >
+          <BiSearch size={20} />
+          <Input
+            outline="none"
+            border="0"
+            flexGrow="1"
+            padding="0"
+            placeholder="Search for agent / coin"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            _focus={{
+              outline: "none",
+              border: "none",
+              boxShadow: "none",
+            }}
+          />
+        </Box>
+      </Box>
+      <HStack display={{ base: "none", md: "flex" }}>
+        <a
+          href="https://raydium.io/swap/?inputMint=sol&outputMint=5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump"
+          target="_blank"
+        >
+          <Button color="#571F0D" bg="white" padding="0px 12px">
+            BUY $NEROBOSS
+          </Button>
+        </a>
+        <Text> MCAP $12M</Text>
+      </HStack>
+      <HStack flexGrow="1" justifyContent="flex-end" position="relative">
+        {isAuthenticated ? (
+          <>
+            <Button
+              onClick={() => setIsOpen(true)}
+              bg="#1FEF34"
+              color="primary"
+              display="flex"
+              gap="10px"
+              alignItems="center"
+              _hover={{ opacity: 0.8 }}
+              fontSize="14px"
+              fontWeight={300}
+              borderRadius="0"
+              marginRight="15px"
+            >
+              <FaWallet />
+              <span>{walletAddress}</span>
+            </Button>
+            <VStack
+              ref={vStackRef}
+              zIndex="100"
+              position="absolute"
+              gap="20px"
+              display={isOpen ? "block" : "none"}
+              alignItems="flex-start"
+              fontSize="12px"
+              right="10"
+              border="0.5px solid grey"
+              transform="translateY(70px)"
+              bg="#1a1a1c"
+              color="white"
+              padding="1rem"
+            >
+              <HStack
+                onClick={() => {
+                  setIsOpen(false);
+                  router.push(`/profile/${profile.profile?.username}`);
                 }}
-              />
-            </WalletModalProvider>
-          )}
-        </HStack>
-      </Stack>
-    </Container>
+                cursor="pointer"
+                justifyContent="flex-start"
+              >
+                <Text color="text.100">
+                  {`${profile.profile.public_key.slice(
+                    0,
+                    6,
+                  )}...${profile.profile.public_key.slice(0, 3)}`}
+                </Text>
+                <MdArrowOutward color="#737373" />
+              </HStack>
+
+              <HStack
+                cursor="pointer"
+                gap="50px"
+                marginTop="10px"
+                onClick={() => {
+                  setIsOpen(false);
+                  handleDisconnect();
+                }}
+              >
+                <Text>DISCONNECT</Text>
+                <CiLogout color="white" />
+              </HStack>
+            </VStack>
+            {/* <ProfileModalComponent
+              userDetails={profile.profile ?? profile}
+              isOpen={isOpen && isAuthenticated}
+              onClose={() => setIsOpen(false)}
+              disconnect={handleDisconnect}
+              isDisconnecting={isDisconnecting}
+            />{" "} */}
+          </>
+        ) : (
+          <WalletModalProvider>
+            <WalletMultiButton style={{ backgroundColor: "transparent" }}>
+              <Box
+                bg="#1FEF34"
+                width="120px"
+                borderRadius="0"
+                height="40px"
+                color="white"
+                padding="15px"
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                _hover={{
+                  boxShadow: "0px 2px 3px 0px #21972D1A",
+                }}
+                _focus={{
+                  boxShadow: "0px 6px 6px 0px #21972D17",
+                }}
+                _active={{
+                  boxShadow: "0px 14px 9px 0px #21972D0D",
+                }}
+                _disabled={{
+                  boxShadow: "0px 25px 10px 0px #21972D03",
+                }}
+                gap="10px"
+              >
+                <FaWallet />
+                <span>Connect</span>
+              </Box>
+            </WalletMultiButton>
+          </WalletModalProvider>
+        )}
+      </HStack>
+    </HStack>
   );
 }
 

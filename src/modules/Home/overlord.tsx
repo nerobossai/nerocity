@@ -1,7 +1,8 @@
-import { Stack, Text } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 import React from "react";
 
 import Card from "@/components/Card";
+import MainCard from "@/components/Card/MainCard";
 
 import type { AgentResponse } from "./services/homeApiClient";
 
@@ -26,15 +27,13 @@ function OverlordModule(props: { overlord: AgentResponse }) {
   // }, []);
 
   return (
-    <Stack justifyContent="center" alignItems="center" marginBottom="20px">
-      <Text
-        color="red.600"
-        fontWeight="bold"
-        fontSize="1.5rem"
-        className="p-1 md:p-4"
-      >
-        AI Overlord
-      </Text>
+    <Stack
+      justifyContent="center"
+      alignItems="center"
+      marginBottom="20px"
+      maxWidth={{ base: "auto", lg: "80%" }}
+    >
+      <MainCard {...props.overlord} />
       <Card {...props.overlord} />
     </Stack>
   );

@@ -1,4 +1,4 @@
-This is a Martian Fun Web App
+This is a Marvin Web App
 
 ## To run the project
 

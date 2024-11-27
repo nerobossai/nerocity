@@ -1,10 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import 'fonts/fonts.scss';
-@import 'modules/breakpoints.scss';
-@import 'modules/swiper.scss';
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
 :root {
   --swiper-pagination-bullet-inactive-color: #e3e3e3;
@@ -13,6 +10,24 @@
 
 *::-webkit-scrollbar {
   display: none;
+}
+
+@font-face {
+  font-family: 'CustomFont';
+  src: url('/KNF.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  color: var(--foreground);
+  font-family: 'JetBrains Mono', monospace;
+  background-color: #141415;
+}
+
+.knf {
+  font-family: 'CustomFont', sans-serif;
+  font-weight: 400;
 }
 
 * {
@@ -91,3 +106,29 @@ body {
     margin-top: 12px;
   }
 }
+
+/* styles.css */
+.gradient-background {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+      100deg,
+      #571f0d -0.99%,
+      #5e220f 64.54%,
+      #642410 112.46%
+    ),
+    #4a13a5;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  padding: 2rem;
+  overflow: hidden;
+}
+
