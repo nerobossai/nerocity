@@ -11,12 +11,23 @@ function Banner() {
     ws.onopen = () => console.log("Connected to WebSocket server");
     ws.onclose = (event) => console.log("WebSocket closed:", event);
     // ws.onerror = (error) => console.error("WebSocket error:", error);
-    // ws.onmessage = (event) => console.log("Message received:", event.data);
-
+    ws.onmessage = (event) => console.log("Message received:", event.data);
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        setMessages(data.slice(0, 4)); // Keep the latest 4 messages
+        if (Array.isArray(data)){
+          setMessages(data.slice(0, 4));
+        }else{
+          let updatedMessages = messages;
+          updatedMessages.push(data);
+          if (updatedMessages.length > 4) {
+            updatedMessages = updatedMessages.slice(updatedMessages.length - 4);
+          }
+          if (data.ticker) {
+            setMessages(updatedMessages);
+          }
+        }
+        
       } catch (err) {
         console.error("Error parsing WebSocket message:", err);
       }
@@ -47,12 +58,12 @@ function Banner() {
       gap="20px"
     >
       {messages.map((message, index) => (
-        <Box key={index} color={message.is_buy ? "green.100" : "#FF3838"}>
-          {`${message.is_buy ? "+" : "-"}${(
-            message.token_amount /
+        <Box key={index} color={message.isBuy ? "green.100" : "#FF3838"}>
+          {`${message.isBuy ? "+" : "-"}${(
+            message.amount /
             10 ** 9
-          ).toFixed(2)} ${message.symbol?.toUpperCase()} ${
-            message?.is_buy ? "BOUGHT" : "SOLD"
+          ).toFixed(2)} ${message.ticker?.toUpperCase()} ${
+            message?.isBuy ? "BOUGHT" : "SOLD"
           }`}
         </Box>
       ))}

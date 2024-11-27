@@ -442,6 +442,7 @@ function TradeModule(props: TradeModuleProps) {
         <TradeSuccess
           tokenDetails={props.tokenDetails}
           successDetails={successDetails}
+          setScreen={setScreenNumber}
         />
       ) : (
         <TradeFailure setScreenNumber={setScreenNumber} />

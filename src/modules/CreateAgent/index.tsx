@@ -713,10 +713,10 @@ function CreateAgentModule() {
           </VStack>
           <VStack alignItems="start" justifyContent="start">
             <Text color="#4A4A55" fontSize="14px">
-              % of coins for dev
+              Enter the amount of SOL to spend to buy AI agent tokens
             </Text>
             <HStack width="100%">
-              {[0, 10, 20, 30].map((trait) => (
+              {[0.1, 0.5, 1, 2].map((trait) => (
                 <Button
                   key={trait}
                   variant="solid"
@@ -732,28 +732,28 @@ function CreateAgentModule() {
                   bg={coinPercentage === trait ? "white" : "#1B1B1D"}
                   onClick={() => setCoinPercentage(trait)}
                 >
-                  {trait}%
+                  {trait}
                 </Button>
               ))}
             </HStack>
             <Box position="relative" width="100%" mb="10px">
-              <Progress
+              {/* <Progress
                 backgroundColor="#323232"
                 color="white"
                 height="36px"
                 value={coinPercentage}
                 width="100%"
+              /> */}
+              <Input 
+                value={coinPercentage}
+                type="number"
+                backgroundColor="#323232"
+                color="white"
+                width="100%"
+                border="none"
+                textAlign="center"
+                onChange={(e) => setCoinPercentage(Number(e.target.value))}
               />
-              <Text
-                position="absolute"
-                top="50%"
-                left="50%"
-                color="#959595"
-                transform="translate(-50%, -50%)"
-                fontWeight="bold"
-              >
-                {coinPercentage}%
-              </Text>
             </Box>
           </VStack>
           <Center>

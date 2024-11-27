@@ -31,7 +31,7 @@ export type CardProps = {
   social?: {
     twitter: string;
     telegram: string;
-    website: string;
+    website?: string;
   };
 };
 

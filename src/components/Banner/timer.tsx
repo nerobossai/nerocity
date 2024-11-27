@@ -104,7 +104,7 @@ function TimerScreen() {
                 </HStack>
                 <Text textAlign="center">
                     Early access & 20% lifetime discount <br />
-                    for NFT NAME holders.
+                    for NFT holders.
                 </Text>
                 <Button onClick={handleVerifyNFT}>
                     Verify NFT
