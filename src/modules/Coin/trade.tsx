@@ -90,7 +90,9 @@ function TradeModule(props: TradeModuleProps) {
         }
         setDollarInput(parseFloat(amount) * parseFloat(props.currentPrice));
       }
+      setScreenNumber(1);
     } catch (err) {
+      setScreenNumber(2);
       console.log(err);
     }
   };

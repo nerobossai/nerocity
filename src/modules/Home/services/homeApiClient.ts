@@ -115,7 +115,7 @@ class ApiClient extends BaseApiClient {
       if (filter === "") {
         endpoint = ApiEndpoints.public.feed;
       } else {
-        endpoint = `/api/v1/${filter}`;
+        endpoint = `leaderboard/api/v1/${filter}`;
       }
 
       const resp = await this.apiCall({
