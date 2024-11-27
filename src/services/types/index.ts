@@ -8,6 +8,7 @@ export type CreateTokenMetadata = {
   twitter?: string;
   telegram?: string;
   website?: string;
+  prompt: string;
 };
 
 export type TokenMetadata = {
