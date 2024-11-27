@@ -19,7 +19,8 @@ import { trackComment, trackReply } from "./services/analytics";
 import type { ChatsResponse } from "./services/coinApiClient";
 import { coinApiClient } from "./services/coinApiClient";
 
-const AddComment = ({ comment, setComment, isAuthenticated }: any) => {
+const AddComment = ({ comment, setComment, isAuthenticated, onSubmit, onFocus, onBlur, posting }: any) => {
+  const [value, setValue] = useState("");
   return (
     <Box
       width="100%"
@@ -30,8 +31,8 @@ const AddComment = ({ comment, setComment, isAuthenticated }: any) => {
       border="0.5px solid #959595"
     >
       <Input
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
+        value={value}
+        onChange={(e) => { setValue(e.target.value); setComment(e.target.value)}}
         flexGrow="1"
         placeholder={
           isAuthenticated
@@ -40,6 +41,8 @@ const AddComment = ({ comment, setComment, isAuthenticated }: any) => {
         }
         outline="none"
         border="none"
+        onFocus={() => onFocus && onFocus()}
+        onBlur={() => onBlur && onBlur()}
         disabled={!isAuthenticated}
         _focus={{
           border: "none",
@@ -47,14 +50,23 @@ const AddComment = ({ comment, setComment, isAuthenticated }: any) => {
         }}
       />
       <Button
-        padding="10px 20px"
+        // padding="10px 20px"
         bg="white"
         fontSize="12px"
         color="black"
         borderRadius="0"
-        disabled={!isAuthenticated}
+        disabled={!isAuthenticated || posting}
+        onClick={() => { onSubmit();
+          setValue("")
+        }}
+        opacity={posting ? 0.7 : 1}
+        // display="flex"
+        // gap="10px"
+        // alignItems="center"
       >
-        {isAuthenticated ? "POST" : "CONNECT WALLET"}
+        {/* <Spinner size="sm" mr="10px"/> */}
+        {/* {true ? <Spinner /> : <></>} */}
+        {isAuthenticated ? posting ? "POSTING..." : "POST" : "CONNECT WALLET"}
       </Button>
     </Box>
   );
@@ -139,6 +151,9 @@ function ChatModule(props: { agentId: string }) {
         comment={comment}
         setComment={setComment}
         isAuthenticated={isAuthenticated}
+        onSubmit={handleSubmit}
+        posting={posting}
+        onFocus={() => setSelectedMessageId(undefined)}
       />
       {(chats?.chats || []).map((data, r) => {
         return (
@@ -159,6 +174,11 @@ function ChatModule(props: { agentId: string }) {
                   comment={comment}
                   setComment={setComment}
                   isAuthenticated={isAuthenticated}
+                  onSubmit={() => handleSubmit()}
+                  posting={posting}
+                  onBlur={() => {
+                    // setSelectedMessageId(undefined);
+                  }}
                 />
               </Stack>
             )}
