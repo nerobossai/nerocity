@@ -27,6 +27,14 @@ interface ISuccessScreenProps {
 
 function SuccessScreen(props: ISuccessScreenProps) {
   const router = useRouter();
+  const tweetText =
+    encodeURIComponent(`"🎭 YOOO! Just dropped $${props.ticker} on @Nerocity! 🔥
+      🤪 What this bad boy can do:
+      ${props.description}
+      Find this absolute unit: https://nerocity.ai/`);
+
+  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
+
   return (
     <Stack
       borderRadius="1rem"
@@ -133,18 +141,23 @@ function SuccessScreen(props: ISuccessScreenProps) {
           alignItems="center"
         >
           <Text flexGrow="1">Share on X for maximum engagement</Text>
-          <Button
-            fontSize="12px"
-            borderRadius="0"
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            color="black"
-            bg="white"
-            gap="10px"
+          <a
+            href={twitterShareUrl}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            TWEET NOW <RiTwitterXFill />
-          </Button>
+            <Button
+              fontSize="12px"
+              borderRadius="0"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              color="black"
+              bg="white"
+              gap="10px"
+            >
+              TWEET NOW <RiTwitterXFill />
+            </Button></a>
         </Box>
         <Box
           padding="20px"
