@@ -341,7 +341,7 @@ function CreateAgentModule() {
         file: file!,
         // twitter: twitterHandle,
         telegram: telegramHandle,
-        // website?: string;
+        website: website,
         prompt: promptDescription,
       };
 

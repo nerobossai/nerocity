@@ -288,7 +288,7 @@ function TradeModule(props: TradeModuleProps) {
             <Text color="text.100" fontSize="10px">
               YOU PAY
             </Text>
-            <HStack width="100%" gap="5px">
+            {active === "buy" && <HStack width="100%" gap="5px">
               {buttons.map((button, index) => (
                 <Button
                   key={index}
@@ -309,7 +309,7 @@ function TradeModule(props: TradeModuleProps) {
                   {button} SOL
                 </Button>
               ))}
-            </HStack>
+            </HStack>}
           </VStack>
 
           <InputGroup
@@ -401,10 +401,11 @@ function TradeModule(props: TradeModuleProps) {
               fontWeight="bold"
               opacity={props.pumpfunData?.complete ? "0.6" : "1"}
             >
-              1 {active === "sell" ? "SOL" : `${props.tokenDetails.ticker}`} =
+              1 {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`} =
               &nbsp;
-              {active === "sell" ? (
-                `$${solPrice?.solana.usd}` || "$164.84"
+              {active === "buy" ? (
+                //@ts-ignore
+                `${solPrice?.solana.usd/(props.currentPrice === 0 ? 1 : props.currentPrice)} ${props.tokenDetails.ticker}` || "$164.84"
               ) : (
                 <SubscriptText value={props.currentPrice} />
               )}
