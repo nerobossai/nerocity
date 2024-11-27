@@ -680,7 +680,7 @@ function CreateAgentModule() {
               focusBorderColor="input"
               onChange={(e) => setTelegramHandle(e.target.value)}
               value={telegramHandle}
-              placeholder="Enter your Telegram Handle"
+              placeholder="Enter your Telegram Invite Link"
               fontSize="16px"
               height="60px"
             />

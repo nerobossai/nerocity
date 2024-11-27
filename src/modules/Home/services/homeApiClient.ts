@@ -128,6 +128,19 @@ class ApiClient extends BaseApiClient {
     }
   }
 
+  async verifyNft(body: any): Promise<any> {
+    try {
+      const resp = await this.apiCall({
+        type: "POST",
+        url:  ApiEndpoints.public.checkNft,
+        body
+      });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
   async searchFeed(searchText: string): Promise<FeedSuccessResponse> {
     try {
       const endpoint = `/leaderboard/api/v1/search?query=${searchText}`;

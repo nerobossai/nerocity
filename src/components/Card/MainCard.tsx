@@ -57,7 +57,7 @@ function MainCard(props: CardProps) {
           src={props.image}
           alt="ai agent image"
         />
-        <VStack textAlign="left" alignItems="start">
+        <VStack textAlign="left" alignItems="start" maxWidth={{lg:"250px", base:"auto"}}>
           <Heading as="h4" size="md" fontSize="16px">
             {props.ticker}
           </Heading>
