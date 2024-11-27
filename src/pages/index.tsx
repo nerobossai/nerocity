@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 
 import Seo from "@/components/Seo";
-import { Meta } from "@/layouts/Meta";
-import HomeModule from "@/modules/Home";
-import Main from "@/templates/Main";
-import { AppConfig } from "@/utils/AppConfig";
+import MainScreen from "@/modules/Home/mainScreen";
+
 
 const Index = () => {
   useEffect(() => {
@@ -14,14 +12,7 @@ const Index = () => {
   return (
     <>
       <Seo />
-      <Main
-        // @ts-ignore
-        meta={
-          <Meta title={AppConfig.title} description={AppConfig.description} />
-        }
-      >
-        <HomeModule />
-      </Main>
+        <MainScreen />
     </>
   );
 };

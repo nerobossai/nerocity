@@ -441,7 +441,7 @@ function CreateAgentModule() {
           className="knf"
         >
           <Text fontSize="18px" cursor="pointer">
-            <span style={{ color: "#959595" }} onClick={() => router.push("/")}>
+            <span style={{ color: "#959595" }} onClick={() => router.push("/app")}>
               HOME /{" "}
             </span>{" "}
             CREATE AGENT

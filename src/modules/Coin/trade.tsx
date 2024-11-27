@@ -176,7 +176,7 @@ function TradeModule(props: TradeModuleProps) {
             amount: parseFloat(input),
           });
           setSuccesDetails({
-            bought: true,
+            bought: false,
             tickerAmount: parseFloat(output ?? "0"),
             solAmount: parseFloat(input),
           });

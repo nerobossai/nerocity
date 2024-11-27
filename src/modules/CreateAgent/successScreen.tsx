@@ -178,7 +178,7 @@ function SuccessScreen(props: ISuccessScreenProps) {
             color="black"
             bg="white"
             gap="10px"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/app")}
           >
             VIEW FEED
           </Button>
