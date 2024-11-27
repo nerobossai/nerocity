@@ -202,7 +202,7 @@ function CreateAgentModule() {
         0,
       );
       const txnResp = await sendTransaction(createResults, connection);
-      // await connection.confirmTransaction(txnResp, "confirmed");
+      await connection.confirmTransaction(txnResp, "confirmed");
       // send txn to wallet for signing
       await agentApiClient.launch({
         name,
@@ -538,10 +538,10 @@ function CreateAgentModule() {
               {tokenM
                 ? tokenM.metadata.name
                 : file && (
-                    <Text ml={3} p={2} borderRadius="md" fontSize="sm">
-                      {file.name}
-                    </Text>
-                  )}
+                  <Text ml={3} p={2} borderRadius="md" fontSize="sm">
+                    {file.name}
+                  </Text>
+                )}
             </Box>
           </VStack>
           <VStack alignItems="start" justifyContent="start">
