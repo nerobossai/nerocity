@@ -134,7 +134,13 @@ function TradeModule(props: TradeModuleProps) {
       }
 
       const txnResp = await sendTransaction(txn, connection);
-      await connection.confirmTransaction(txnResp, "confirmed");
+      const latestBlockHash = await connection.getLatestBlockhash();
+
+      await connection.confirmTransaction({
+        blockhash: latestBlockHash.blockhash,
+        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+        signature: txnResp,
+      });
 
       // for analytics
       switch (active) {

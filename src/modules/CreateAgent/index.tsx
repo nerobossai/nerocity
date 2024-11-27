@@ -136,7 +136,6 @@ function CreateAgentModule() {
   const handleSubmit = async () => {
     const nameValidation = nameSchema.safeParse(name);
     const tickerValidation = tickerSchema.safeParse(ticker);
-    console.log("t", nameValidation.success, tickerValidation.success);
 
     if (!nameValidation.success || !tickerValidation.success) {
       setErrors({
@@ -202,7 +201,13 @@ function CreateAgentModule() {
         0,
       );
       const txnResp = await sendTransaction(createResults, connection);
-      await connection.confirmTransaction(txnResp, "confirmed");
+      const latestBlockHash = await connection.getLatestBlockhash();
+
+      await connection.confirmTransaction({
+        blockhash: latestBlockHash.blockhash,
+        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+        signature: txnResp,
+      });
       // send txn to wallet for signing
       await agentApiClient.launch({
         name,
