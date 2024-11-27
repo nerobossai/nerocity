@@ -151,7 +151,7 @@ function CreateAgentModule() {
     const telegramValidation = linkSchema.safeParse(telegramHandle);
     console.log("t", nameValidation.success, tickerValidation.success);
 
-    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || ! !telegramValidation.success || !websiteValidation.success) {
+    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success) {
       setErrors({
         name: nameValidation.success
           ? undefined
@@ -162,10 +162,10 @@ function CreateAgentModule() {
         description: descriptionValidation.success
           ? undefined
           : descriptionValidation?.error?.issues[0]?.message,
-        website: websiteValidation.success
+        website: website === "" ? undefined : websiteValidation.success
           ? undefined
           : websiteValidation?.error?.issues[0]?.message,
-        telegram: telegramValidation.success
+        telegram: telegramHandle === "" ? undefined : telegramValidation.success
           ? undefined
           : telegramValidation?.error?.issues[0]?.message,
       });
@@ -282,7 +282,7 @@ function CreateAgentModule() {
     const telegramValidation = linkSchema.safeParse(telegramHandle);
     console.log("t", nameValidation.success, tickerValidation.success);
 
-    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || ! !telegramValidation.success || !websiteValidation.success) {
+    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success) {
       setErrors({
         name: nameValidation.success
           ? undefined
@@ -293,10 +293,10 @@ function CreateAgentModule() {
         description: descriptionValidation.success
           ? undefined
           : descriptionValidation?.error?.issues[0]?.message,
-        website: websiteValidation.success
+        website: website === "" ? undefined : websiteValidation.success
           ? undefined
           : websiteValidation?.error?.issues[0]?.message,
-        telegram: telegramValidation.success
+        telegram: telegramHandle === "" ? undefined : telegramValidation.success
           ? undefined
           : telegramValidation?.error?.issues[0]?.message,
       });
