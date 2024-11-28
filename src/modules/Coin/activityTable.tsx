@@ -44,7 +44,7 @@ function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
               Activity
             </Th>
             {isLargeScreen && <Th color="text.100">
-              Value
+              Token
             </Th>}
             <Th color="text.100">
               SOL
