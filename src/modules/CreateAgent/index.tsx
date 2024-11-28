@@ -64,7 +64,7 @@ const nameSchema = z
   .string()
   .regex(
     /^[a-zA-Z0-9]+$/,
-    "Name can only contain letters and numbers with no spaces.",
+    "Name can only contain letters and numbers with no spaces."
   )
   .min(1, "Name is required.");
 
@@ -76,13 +76,10 @@ const tickerSchema = z
   .string()
   .regex(
     /^[A-Za-z]{1,6}$/,
-    "Ticker must be 1-6 alphabetic characters with no spaces or numbers.",
+    "Ticker must be 1-6 alphabetic characters with no spaces or numbers."
   );
 
-const linkSchema = z
-  .string()
-  .url("Please enter a valid URL.")
-  .optional();
+const linkSchema = z.string().url("Please enter a valid URL.").optional();
 
 const predefinedTraits = ["Snarky", "Morose", "Nerdy", "Romantic", "Horror"];
 
@@ -112,7 +109,13 @@ function CreateAgentModule() {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [imageError, setImageError] = useState("");
-  const [errors, setErrors] = useState<{ name?: string; ticker?: string; description?: string; website?: string; telegram?: string; }>({});
+  const [errors, setErrors] = useState<{
+    name?: string;
+    ticker?: string;
+    description?: string;
+    website?: string;
+    telegram?: string;
+  }>({});
   const [tokenM, setTokenM] = useState<{
     metadata: TokenMetadata;
     metadataUri: string;
@@ -129,7 +132,7 @@ function CreateAgentModule() {
     setSelectedTraits((prev) =>
       prev.includes(trait)
         ? prev.filter((item) => item !== trait)
-        : [...prev, trait],
+        : [...prev, trait]
     );
   };
 
@@ -151,12 +154,18 @@ function CreateAgentModule() {
     const descriptionValidation = descriptionSchema.safeParse(description);
     const websiteValidation = linkSchema.safeParse(website);
     const telegramValidation = linkSchema.safeParse(telegramHandle);
-  
+
     if (file) {
       setImageError("");
     }
 
-    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || (!telegramValidation.success && telegramHandle !== "") || (!websiteValidation.success && website !== "")) {
+    if (
+      !nameValidation.success ||
+      !tickerValidation.success ||
+      !descriptionValidation.success ||
+      (!telegramValidation.success && telegramHandle !== "") ||
+      (!websiteValidation.success && website !== "")
+    ) {
       setErrors({
         name: nameValidation.success
           ? undefined
@@ -167,12 +176,18 @@ function CreateAgentModule() {
         description: descriptionValidation.success
           ? undefined
           : descriptionValidation?.error?.issues[0]?.message,
-        website: website === "" ? undefined : websiteValidation.success
-          ? undefined
-          : websiteValidation?.error?.issues[0]?.message,
-        telegram: telegramHandle === "" ? undefined : telegramValidation.success
-          ? undefined
-          : telegramValidation?.error?.issues[0]?.message,
+        website:
+          website === ""
+            ? undefined
+            : websiteValidation.success
+              ? undefined
+              : websiteValidation?.error?.issues[0]?.message,
+        telegram:
+          telegramHandle === ""
+            ? undefined
+            : telegramValidation.success
+              ? undefined
+              : telegramValidation?.error?.issues[0]?.message,
       });
       return;
     }
@@ -196,7 +211,7 @@ function CreateAgentModule() {
         //   status: "error",
         //   position: "bottom-right",
         // });
-        setImageError("No image is selected!")
+        setImageError("No image is selected!");
         return;
       }
 
@@ -227,7 +242,7 @@ function CreateAgentModule() {
         publicKey,
         tokenMint,
         tMeta,
-        coinPercentage*LAMPORTS_PER_SOL,
+        coinPercentage * LAMPORTS_PER_SOL
       );
       const txnResp = await sendTransaction(createResults, connection);
       const latestBlockHash = await connection.getLatestBlockhash();
@@ -248,6 +263,7 @@ function CreateAgentModule() {
         twtToken,
         txnHash: txnResp,
       });
+
       setMintPubKey(tokenMint.publicKey.toString());
       trackAgentCreation({
         agent_address: tokenMint.publicKey.toString(),
@@ -293,9 +309,14 @@ function CreateAgentModule() {
     const descriptionValidation = descriptionSchema.safeParse(description);
     const websiteValidation = linkSchema.safeParse(website);
     const telegramValidation = linkSchema.safeParse(telegramHandle);
-    console.log("t", nameValidation.success, tickerValidation.success);
 
-    if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || (!telegramValidation.success && telegramHandle !== "") || (!websiteValidation.success && website !== "")) {
+    if (
+      !nameValidation.success ||
+      !tickerValidation.success ||
+      !descriptionValidation.success ||
+      (!telegramValidation.success && telegramHandle !== "") ||
+      (!websiteValidation.success && website !== "")
+    ) {
       setErrors({
         name: nameValidation.success
           ? undefined
@@ -306,12 +327,18 @@ function CreateAgentModule() {
         description: descriptionValidation.success
           ? undefined
           : descriptionValidation?.error?.issues[0]?.message,
-        website: website === "" ? undefined : websiteValidation.success
-          ? undefined
-          : websiteValidation?.error?.issues[0]?.message,
-        telegram: telegramHandle === "" ? undefined : telegramValidation.success
-          ? undefined
-          : telegramValidation?.error?.issues[0]?.message,
+        website:
+          website === ""
+            ? undefined
+            : websiteValidation.success
+              ? undefined
+              : websiteValidation?.error?.issues[0]?.message,
+        telegram:
+          telegramHandle === ""
+            ? undefined
+            : telegramValidation.success
+              ? undefined
+              : telegramValidation?.error?.issues[0]?.message,
       });
       return;
     }
@@ -391,7 +418,7 @@ function CreateAgentModule() {
       setTokenM(twtData.tokenMetadata);
       setTwtToken(twtData.twtToken);
       setScreen(2);
-      setPromptDescription(twtData.prompt ?? '');
+      setPromptDescription(twtData.prompt ?? "");
     } catch (err) {
       logger.error(err);
     } finally {
@@ -447,7 +474,10 @@ function CreateAgentModule() {
           className="knf"
         >
           <Text fontSize="18px" cursor="pointer">
-            <span style={{ color: "#959595" }} onClick={() => router.push("/app")}>
+            <span
+              style={{ color: "#959595" }}
+              onClick={() => router.push("/app")}
+            >
               HOME /{" "}
             </span>{" "}
             CREATE AGENT
@@ -462,7 +492,13 @@ function CreateAgentModule() {
           setDescription={setPromptDescription}
         />
       ) : screen === 2 ? (
-        <Stack borderRadius="1rem" gap="20px" maxWidth="1200px" margin="auto" minWidth={{ md: "500px", base: "100%" }}>
+        <Stack
+          borderRadius="1rem"
+          gap="20px"
+          maxWidth="1200px"
+          margin="auto"
+          minWidth={{ md: "500px", base: "100%" }}
+        >
           {/* <Box
             width="100%"
             gap="20px"
@@ -592,10 +628,10 @@ function CreateAgentModule() {
               {tokenM
                 ? tokenM.metadata.name
                 : file && (
-                  <Text ml={3} p={2} borderRadius="md" fontSize="sm">
-                    {file.name}
-                  </Text>
-                )}
+                    <Text ml={3} p={2} borderRadius="md" fontSize="sm">
+                      {file.name}
+                    </Text>
+                  )}
             </Box>
             {imageError && (
               <Text color="red.500" fontSize="12px">
@@ -638,7 +674,7 @@ function CreateAgentModule() {
                   padding="1.5rem"
                   backgroundColor="#7E5313"
                   onClick={handleTwitterConnect}
-                  opacity={twitterLinking ? 0.8 :  1}
+                  opacity={twitterLinking ? 0.8 : 1}
                   // isLoading={twitterLinking}
                   disabled={!!twtToken}
                   display="flex"
@@ -647,7 +683,13 @@ function CreateAgentModule() {
                 >
                   <RiTwitterXFill size="15px" />
 
-                  <span>{twtToken ? "Connected Twitter/X" : twitterLinking ? "Connecting..." : "Connect Twitter/X"}</span>
+                  <span>
+                    {twtToken
+                      ? "Connected Twitter/X"
+                      : twitterLinking
+                        ? "Connecting..."
+                        : "Connect Twitter/X"}
+                  </span>
                 </Button>
               </VStack>
             </GridItem>
@@ -756,7 +798,7 @@ function CreateAgentModule() {
                 value={coinPercentage}
                 width="100%"
               /> */}
-              <Input 
+              <Input
                 value={coinPercentage}
                 type="number"
                 backgroundColor="#323232"

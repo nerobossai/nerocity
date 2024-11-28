@@ -48,13 +48,9 @@ export class GlobalAccount {
       return 0;
     }
 
-    const n = this.initialVirtualSolReserves * this.initialVirtualTokenReserves;
-    const i = this.initialVirtualSolReserves + amount;
-    const r = n / i + 1;
-    const s = this.initialVirtualTokenReserves - r;
-    return s < this.initialRealTokenReserves
-      ? s
-      : this.initialRealTokenReserves;
+    return Math.floor(
+      (amount * this.initialVirtualTokenReserves) / this.initialVirtualSolReserves,
+    );
   }
 
   public static fromBuffer(buffer: Buffer): GlobalAccount {
