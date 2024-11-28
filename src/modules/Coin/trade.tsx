@@ -58,6 +58,7 @@ function TradeModule(props: TradeModuleProps) {
   const [selectedSol, setSelectedSol] = useState(0.1);
   const [screenNumber, setScreenNumber] = useState(0); // 0 for initial screen, 1 for success screen and 2 for failure screen
   const [walletBalance, setWalletBalance] = useState(0);
+  const [solBalance, setSolBalance] = useState(0);
   const [successDetails, setSuccesDetails] = useState({
     bought: true,
     tickerAmount: 0,
@@ -99,6 +100,17 @@ function TradeModule(props: TradeModuleProps) {
     fetchBalance();
   }, [])
 
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (publicKey) {
+        const solBalance = await connection.getBalance(new PublicKey(publicKey));
+        setSolBalance(solBalance/1000000000);
+      }
+
+    }
+    fetchBalance();
+  }, [])
+  
   const setToken = async (amount: string) => {
     try {
       if (!amount) return;
@@ -452,6 +464,8 @@ function TradeModule(props: TradeModuleProps) {
               )}
             </Text>
             {active === "sell" && Number(input ?? 0) > walletBalance  &&<Text fontSize="12px" color="red.500">*You currently have {walletBalance} {props.tokenDetails.ticker} in your wallet. Insufficient amount.</Text>}
+            {active === "buy" && Number(input ?? 0) > solBalance  &&<Text fontSize="12px" color="red.500">*You currently have {solBalance} SOL in your wallet. Insufficient amount.</Text>}
+
             {/* <HStack
               width="100%"
               justifyContent="space-between"
