@@ -10,10 +10,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { StarSticker } from "../Svgs/Star";
 import type { CardProps } from "./index";
+import { getTokenHolders } from "@/utils/getTokenHolders";
+import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
 
 function timeDifference(current: number, previous: number) {
   const msPerMinute = 60 * 1000;
@@ -78,6 +80,24 @@ function CreatedAtComponent({
 function MainCard(props: CardProps) {
   const navigator = useRouter();
   const isMediumScreen = useBreakpointValue({ base: false, md: true });
+  const [tokenHolders, setTokenHolders] = useState<string>("0");
+
+
+  useEffect(() => {
+    const fetchHolders = async () => {
+      try {
+        const resp = await coinApiClient.getAgent(props.id);
+        if (!resp?.id) {
+          return;
+        }
+        const data = await getTokenHolders(resp.mint_public_key);
+        setTokenHolders(data);
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    fetchHolders()
+  }, [])
 
   const handleClick = () => {
     if (props.onClick) {
@@ -116,7 +136,7 @@ function MainCard(props: CardProps) {
           src={props.image}
           alt="ai agent image"
         />
-        <VStack textAlign="left" alignItems="start" maxWidth={{lg:"250px", base:"auto"}}>
+        <VStack textAlign="left" alignItems="start" maxWidth={{ lg: "250px", base: "auto" }}>
           <Heading as="h4" size="md" fontSize="16px">
             ${props.ticker}
           </Heading>
@@ -160,7 +180,7 @@ function MainCard(props: CardProps) {
           <Text fontSize="12px" color="text.100">
             HOLDERS
           </Text>
-          <Text fontSize="14px">{props.fee_basis_points}</Text>
+          <Text fontSize="14px">{tokenHolders ?? "0"}</Text>
         </VStack>
         <VStack alignItems={{ base: "flex-start", md: "flex-end" }}>
           <Text fontSize="12px" color="text.100">
