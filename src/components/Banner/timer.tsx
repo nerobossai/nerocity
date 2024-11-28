@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, HStack, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, HStack, Spinner, Text, VStack } from '@chakra-ui/react';
 import { TimeLogo } from '../Svgs/TimeLogo';
 import { TimeLogoDown } from '../Svgs/TimeLogoDown';
 import useUserStore from '@/stores/useUserStore';
 import { homeApiClient } from '@/modules/Home/services/homeApiClient';
 
 function TimerScreen() {
+    const [verifying, setVerifying] = useState(false);
     const [timeLeft, setTimeLeft] = useState({
-        hours: 24,
+        hours: 0,
         minutes: 0,
     });
 
@@ -17,6 +18,7 @@ function TimerScreen() {
     });
 
     const { isAuthenticated, profile } = useUserStore();
+
     const handleVerifyNFT = async () => {
         if (!isAuthenticated) {
             setError({
@@ -25,18 +27,19 @@ function TimerScreen() {
             });
             return;
         }
+        setVerifying(true);
 
         try {
             const data = await homeApiClient.verifyNft({ userAddress: profile?.profile?.address });
             if (!data.success) {
                 setError({
                     error: true,
-                    message: "NFT is not verified"
+                    message: "NFT is not verified!"
                 });
             } else {
                 setError({
                     error: false,
-                    message: "NFT is verified!"
+                    message: "Congrats! Your NFT is verified!"
                 });
             }
 
@@ -47,21 +50,30 @@ function TimerScreen() {
             });
             console.error(e);
         }
-    }
+        setVerifying(false);
+    };
 
     useEffect(() => {
-        const countdownInterval = setInterval(() => {
-            setTimeLeft((prevTime) => {
-                const totalMinutes = prevTime.hours * 60 + prevTime.minutes - 1;
-                if (totalMinutes <= 0) {
-                    clearInterval(countdownInterval);
-                    return { hours: 0, minutes: 0 };
-                }
-                const updatedHours = Math.floor(totalMinutes / 60);
-                const updatedMinutes = totalMinutes % 60;
-                return { hours: updatedHours, minutes: updatedMinutes };
-            });
-        }, 60000);
+        const targetDate: any = new Date("2024-11-29T00:00:00"); // Target launch date and time
+        const calculateTimeLeft = () => {
+            const now: any = new Date();
+            const difference = targetDate - now;
+
+            if (difference <= 0) {
+                return { hours: 0, minutes: 0 };
+            }
+
+            const hours = Math.floor(difference / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            return { hours, minutes };
+        };
+
+        const updateTimer = () => {
+            setTimeLeft(calculateTimeLeft());
+        };
+
+        const countdownInterval = setInterval(updateTimer, 60000); // Update every minute
+        updateTimer(); // Initialize the timer immediately
 
         return () => clearInterval(countdownInterval);
     }, []);
@@ -106,8 +118,8 @@ function TimerScreen() {
                     Early access & 20% for a month <br />
                     for NFT holders.
                 </Text>
-                <Button onClick={handleVerifyNFT}>
-                    Verify NFT
+                <Button onClick={handleVerifyNFT} display="flex" alignItems="center" gap="10px" disabled={verifying} opacity={verifying ? 0.8 : 1}>
+                    {verifying && <Spinner size="sm"/>} <span>Verify NFT</span>
                 </Button>
                 {
                     error.message !== "" &&

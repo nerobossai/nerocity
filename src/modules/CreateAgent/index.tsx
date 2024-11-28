@@ -148,7 +148,7 @@ function CreateAgentModule() {
     const nameValidation = nameSchema.safeParse(name);
     const tickerValidation = tickerSchema.safeParse(ticker);
     const descriptionValidation = descriptionSchema.safeParse(description);
-    const websiteValidation = linkSchema.safeParse("");
+    const websiteValidation = linkSchema.safeParse(website);
     const telegramValidation = linkSchema.safeParse(telegramHandle);
 
     if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || (!telegramValidation.success && telegramHandle !== "") || (!websiteValidation.success && website !== "")) {
