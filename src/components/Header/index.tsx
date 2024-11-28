@@ -313,10 +313,7 @@ function Header() {
                 justifyContent="flex-start"
               >
                 <Text color="text.100">
-                  {`${profile.profile.public_key.slice(
-                    0,
-                    6,
-                  )}...${profile.profile.public_key.slice(0, 3)}`}
+                  {walletAddress}
                 </Text>
                 <MdArrowOutward color="#737373" />
               </HStack>
