@@ -381,7 +381,7 @@ function ProfileModule() {
                             borderBottom: "1px solid #343434",
                           }}
                         >
-                          <SubscriptText value={coin.price} />
+                          {coin.price ? <SubscriptText value={coin.price} /> :"--"}
                         </td>
                         <td
                           style={{
@@ -391,7 +391,7 @@ function ProfileModule() {
                             borderRight: "1px solid #343434",
                           }}
                         >
-                          {coin.market_cap}
+                          ${coin.market_cap}
                         </td>
                       </tr>
                     ))}
