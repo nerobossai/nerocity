@@ -448,7 +448,7 @@ function TradeModule(props: TradeModuleProps) {
                 //@ts-ignore
                 `${solPrice?.solana.usd/(props.currentPrice === 0 ? 1 : props.currentPrice)} ${props.tokenDetails.ticker}` || "$164.84"
               ) : (
-                <><span> {(parseFloat(props.currentPrice)*100/(solPrice?.solana.usd ?? 237)).toFixed(15)}&nbsp;SOL</span></>
+                <><span> {(parseFloat(props.currentPrice)*10/(solPrice?.solana.usd ?? 237)).toFixed(15)}&nbsp;SOL</span></>
               )}
             </Text>
             {active === "sell" && Number(input ?? 0) > walletBalance  &&<Text fontSize="12px" color="red.500">*You currently have {walletBalance} {props.tokenDetails.ticker} in your wallet. Insufficient amount.</Text>}
