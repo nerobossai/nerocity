@@ -110,7 +110,7 @@ function TradeModule(props: TradeModuleProps) {
     }
     fetchBalance();
   }, [])
-  
+
   const setToken = async (amount: string) => {
     try {
       if (!amount) return;
@@ -463,7 +463,7 @@ function TradeModule(props: TradeModuleProps) {
                 <><span> {(parseFloat(props.currentPrice)*10/(solPrice?.solana.usd ?? 237)).toFixed(15)}&nbsp;SOL</span></>
               )}
             </Text>
-            {active === "sell" && Number(input ?? 0) > walletBalance  &&<Text fontSize="12px" color="red.500">*You currently have {walletBalance} {props.tokenDetails.ticker} in your wallet. Insufficient amount.</Text>}
+            {active === "sell" && Number(input ?? 0) > walletBalance  &&<Text fontSize="12px" color="red.500">*You currently have {walletBalance} ${props.tokenDetails.ticker} in your wallet. Insufficient amount.</Text>}
             {active === "buy" && Number(input ?? 0) > solBalance  &&<Text fontSize="12px" color="red.500">*You currently have {solBalance} SOL in your wallet. Insufficient amount.</Text>}
 
             {/* <HStack

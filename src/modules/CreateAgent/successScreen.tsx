@@ -29,7 +29,7 @@ interface ISuccessScreenProps {
 function SuccessScreen(props: ISuccessScreenProps) {
   const router = useRouter();
   const tweetText =
-    encodeURIComponent(`"🎭 YOOO! Just dropped $${props.ticker} on @nerocityai! 🔥
+    encodeURIComponent(`🎭 YOOO! Just dropped $${props.ticker} on @nerocityai! 🔥
       🤪 What this bad boy can do:
       ${props.description}
       Find this absolute unit: https://nerocity.ai/${props.id}`);
@@ -108,12 +108,11 @@ function SuccessScreen(props: ISuccessScreenProps) {
             FEES
           </Text>
           <HStack justifyContent="space-between" width="100%">
-            <Text>0.12</Text>
-            <Text color="secondary">$245.12</Text>
+            <Text>0.12 SOL</Text>
+            {/* <Text color="secondary">$245.12</Text> */}
           </HStack>
           <HStack justifyContent="space-between" width="100%">
-            <Text>12.12 NEROBOSS</Text>
-            <Text color="secondary">0.004SOL . $ 245.12</Text>
+            <Text>Launch discount : no $NEROBOSS charged</Text>            
           </HStack>
         </VStack>
 

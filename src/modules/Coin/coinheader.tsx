@@ -71,7 +71,7 @@ function CoinHeaderModule(props: CardProps) {
         flexDirection={isLargeScreen ? "row" : "column"}
       >
         <VStack alignItems="flex-start" gap="0">
-          <Text fontSize="32px">{props.ticker}</Text>
+          <Text fontSize="32px">${props.ticker}</Text>
           <Text fontSize="16px" mb="4px">
             {props.name}
           </Text>
