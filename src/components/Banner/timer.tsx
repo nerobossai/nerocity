@@ -55,7 +55,7 @@ function TimerScreen() {
     };
 
     useEffect(() => {
-        const targetDate: any = new Date("2024-11-29T22:00:00");
+        const targetDate: any = new Date("2024-11-28T22:00:00");
         const calculateTimeLeft = () => {
             const now: any = new Date();
             const difference = targetDate - now;
