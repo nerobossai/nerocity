@@ -37,7 +37,7 @@ export class Mixpanel {
     const propertiesToTrack = { ...properties };
     mixpanel.track(event, {
       ...propertiesToTrack,
-      product: "marvin-gg-webapp",
+      product: "nerocity-webapp",
     });
   }
 }

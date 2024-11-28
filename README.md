@@ -1,4 +1,4 @@
-This is a Marvin Web App
+This is a Nerocity Web App
 
 ## To run the project
 

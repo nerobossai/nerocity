@@ -1,5 +1,5 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: "https://martian.fun",
+  siteUrl: "https://nerocity.ai",
   generateRobotsTxt: true,
 };
