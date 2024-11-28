@@ -58,6 +58,7 @@ function TradeModule(props: TradeModuleProps) {
     bought: true,
     tickerAmount: 0,
     solAmount: 0,
+    txn: ""
   });
 
   const buttons = [0.1, 0.5, 1, 5];
@@ -187,9 +188,10 @@ function TradeModule(props: TradeModuleProps) {
             amount: parseFloat(input),
           });
           setSuccesDetails({
-            bought: false,
+            bought: true,
             tickerAmount: parseFloat(output ?? "0"),
             solAmount: parseFloat(input),
+            txn: txnResp
           });
           break;
         }
@@ -210,9 +212,10 @@ function TradeModule(props: TradeModuleProps) {
             amount: parseFloat(input),
           });
           setSuccesDetails({
-            bought: true,
-            tickerAmount: parseFloat(output ?? "0"),
-            solAmount: 0.00002334,
+            bought: false,
+            tickerAmount: parseFloat(input),
+            solAmount: parseFloat(output ?? "0"),
+            txn: txnResp
           });
           break;
         }
@@ -418,7 +421,7 @@ function TradeModule(props: TradeModuleProps) {
                 //@ts-ignore
                 `${solPrice?.solana.usd/(props.currentPrice === 0 ? 1 : props.currentPrice)} ${props.tokenDetails.ticker}` || "$164.84"
               ) : (
-                <SubscriptText value={props.currentPrice} />
+                <><SubscriptText value={(parseFloat(props.currentPrice)/(solPrice?.solana.usd ?? 237)).toString()} dollar={false}/>&nbsp;SOL</>
               )}
             </Text>
             {/* <HStack

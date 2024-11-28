@@ -1,4 +1,4 @@
-const SubscriptText = ({ value }: { value: string }) => {
+const SubscriptText = ({ value, dollar = true }: { value: string; dollar?: boolean }) => {
   const isExponential = value?.toLowerCase().includes("e");
 
   let formattedValue = value;
@@ -25,7 +25,7 @@ const SubscriptText = ({ value }: { value: string }) => {
 
     return (
       <span>
-        ${whole}.{beforeSubscript}
+        {dollar ? "$" : ""}{whole}.{beforeSubscript}
         <span style={{ verticalAlign: "sub", fontSize: "0.8em" }}>
           {subscriptDigit}
         </span>
@@ -34,7 +34,7 @@ const SubscriptText = ({ value }: { value: string }) => {
     );
   }
 
-  return <span>${value}</span>;
+  return <span>{dollar ? "$"  : ""} {value}</span>;
 };
 
 export default SubscriptText;

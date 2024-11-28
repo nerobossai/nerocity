@@ -20,6 +20,7 @@ interface ISuccessDetails {
   bought: boolean;
   tickerAmount: number;
   solAmount: number;
+  txn: string;
 }
 
 function TradeSuccess({
@@ -32,10 +33,10 @@ function TradeSuccess({
   setScreen: (v: number) => void;
 }) {
   const tweetText = encodeURIComponent(`"🎰 WHALE ALERT! (jk it's just me)
-Dropped $${successDetails.solAmount} like my last braincell
+Dropped ${successDetails.solAmount} SOL like my last braincell
 Scored ${successDetails.tickerAmount} $${tokenDetails.ticker} tokens! 🤑
 My wallet: crying in empty
-My $${tokenDetails.ticker} stack: absolutely thicc
+My ${tokenDetails.ticker} stack: absolutely thicc
 Financial advice? Nah, I just like the agent 🤖
 
 Find this absolute unit: ${window.location.href}`);
@@ -109,17 +110,18 @@ Find this absolute unit: ${window.location.href}`);
         <HStack width="100%" justifyContent="space-between">
           <Text>Sol {successDetails.bought ? "paid" : "received"}</Text>
           <Text>
-            <SubscriptText value={successDetails.solAmount.toString()} />
+            <SubscriptText value={successDetails.solAmount.toString()} dollar={false} />
           </Text>
         </HStack>
-        <HStack width="100%" justifyContent="space-between">
+        {/* <HStack width="100%" justifyContent="space-between">
           <Text>SLIPPAGE</Text> <Text>1%</Text>
         </HStack>
         <HStack width="100%" justifyContent="space-between">
           <Text>PRICE IMPACT</Text> <Text>12%</Text>
-        </HStack>
+        </HStack> */}
         <HStack width="100%" justifyContent="space-between">
           <Text>Txn</Text>{" "}
+          <a href={"https://solscan.io/tx/" + successDetails.txn} target="_blank" rel="noopener noreferrer">
           <Text
             color="creator"
             cursor="pointer"
@@ -127,8 +129,8 @@ Find this absolute unit: ${window.location.href}`);
             alignItems="center"
             gap="4px"
           >
-            01213134 <GoArrowUpRight />
-          </Text>
+            {successDetails.txn.slice(0, 8)} <GoArrowUpRight />
+          </Text></a>
         </HStack>
       </VStack>
     </Stack>
