@@ -1,11 +1,13 @@
 import { Grid, Stack, Text, useToast, VStack } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import type { CardProps } from "@/components/Card";
 import CreatedAtComponent from "@/components/Created";
+import { getTokenHolders } from "@/utils/getTokenHolders";
 
-function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
+function AboutModule(props: CardProps & { sol_reserve: string | undefined; mint_public_key: string }) {
   const toast = useToast();
+  const [holders, setHolders] = useState("");
 
   const handleMissingLink = (platform: string) => {
     toast({
@@ -17,6 +19,13 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
     });
   };
 
+  useEffect(() => {
+    const fetchHolders = async () => {
+      const data = await getTokenHolders(props.mint_public_key);
+      setHolders(data);
+    }
+    fetchHolders();
+  }, [])
   return (
     <Stack
       fontSize="12px"
@@ -45,8 +54,8 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined }) {
           <Text fontSize="12px">${props.market_cap}</Text>
         </VStack>
         <VStack gap="5px" alignItems="flex-start">
-          <Text color="text.100">CREATOR</Text>
-          <Text fontSize="12px">{props.created_by}</Text>
+          <Text color="text.100">HOLDERS</Text>
+          <Text fontSize="12px">{holders ?? "--"}</Text>
         </VStack>
 
         <VStack gap="5px" alignItems="flex-start">

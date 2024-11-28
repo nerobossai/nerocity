@@ -42,7 +42,6 @@ function HomeModule() {
   const [feed, setFeed] = useState<any>([]);
   const { searchText } = useSearchStore();
   const [overlord, setOverlord] = useState<AgentResponse>();
-  const { screen, setScreen } = useScreenStore();
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   const [filter, setFilter] = useState("");
   const { isAuthenticated } = useUserStore();
@@ -139,9 +138,6 @@ function HomeModule() {
     fetchFeed(filter);
   }, [filter, debouncedQuery]);
 
-  if (screen === 0) {
-    return <MainScreen setScreen={setScreen} />;
-  }
   return (
     <Container>
       <Stack justifyContent="center" alignItems="center" px="20px">

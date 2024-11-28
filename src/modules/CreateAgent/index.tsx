@@ -111,6 +111,7 @@ function CreateAgentModule() {
   const [telegramHandle, setTelegramHandle] = useState("");
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [imageError, setImageError] = useState("");
   const [errors, setErrors] = useState<{ name?: string; ticker?: string; description?: string; website?: string; telegram?: string; }>({});
   const [tokenM, setTokenM] = useState<{
     metadata: TokenMetadata;
@@ -148,8 +149,12 @@ function CreateAgentModule() {
     const nameValidation = nameSchema.safeParse(name);
     const tickerValidation = tickerSchema.safeParse(ticker);
     const descriptionValidation = descriptionSchema.safeParse(description);
-    const websiteValidation = linkSchema.safeParse("");
+    const websiteValidation = linkSchema.safeParse(website);
     const telegramValidation = linkSchema.safeParse(telegramHandle);
+  
+    if (file) {
+      setImageError("");
+    }
 
     if (!nameValidation.success || !tickerValidation.success || !descriptionValidation.success || (!telegramValidation.success && telegramHandle !== "") || (!websiteValidation.success && website !== "")) {
       setErrors({
@@ -185,12 +190,13 @@ function CreateAgentModule() {
       }
 
       if (!file && !tokenM) {
-        toast({
-          title: "Error",
-          description: "Please select image",
-          status: "error",
-          position: "bottom-right",
-        });
+        // toast({
+        //   title: "Error",
+        //   description: "Please select image",
+        //   status: "error",
+        //   position: "bottom-right",
+        // });
+        setImageError("No image is selected!")
         return;
       }
 
@@ -341,7 +347,7 @@ function CreateAgentModule() {
         file: file!,
         // twitter: twitterHandle,
         telegram: telegramHandle,
-        // website?: string;
+        website: website,
         prompt: promptDescription,
       };
 
@@ -441,7 +447,7 @@ function CreateAgentModule() {
           className="knf"
         >
           <Text fontSize="18px" cursor="pointer">
-            <span style={{ color: "#959595" }} onClick={() => router.push("/")}>
+            <span style={{ color: "#959595" }} onClick={() => router.push("/app")}>
               HOME /{" "}
             </span>{" "}
             CREATE AGENT
@@ -591,6 +597,11 @@ function CreateAgentModule() {
                   </Text>
                 )}
             </Box>
+            {imageError && (
+              <Text color="red.500" fontSize="12px">
+                *{imageError}
+              </Text>
+            )}
           </VStack>
           {/* <VStack alignItems="start" justifyContent="start">
             <Text color="#4A4A55" fontSize="14px">
@@ -618,7 +629,7 @@ function CreateAgentModule() {
                   Twitter/ X (optional)
                 </Text>
                 <Button
-                  color="primary"
+                  color="white"
                   _hover={{
                     opacity: 0.8,
                   }}
@@ -627,7 +638,8 @@ function CreateAgentModule() {
                   padding="1.5rem"
                   backgroundColor="#7E5313"
                   onClick={handleTwitterConnect}
-                  isLoading={twitterLinking}
+                  opacity={twitterLinking ? 0.8 :  1}
+                  // isLoading={twitterLinking}
                   disabled={!!twtToken}
                   display="flex"
                   justifyContent="start"
@@ -635,7 +647,7 @@ function CreateAgentModule() {
                 >
                   <RiTwitterXFill size="15px" />
 
-                  <span>{twtToken ? "connected" : "Connect Twitter/X"}</span>
+                  <span>{twtToken ? "Connected Twitter/X" : twitterLinking ? "Connecting..." : "Connect Twitter/X"}</span>
                 </Button>
               </VStack>
             </GridItem>

@@ -7,6 +7,7 @@ import {
   Th,
   Thead,
   Tr,
+  useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
@@ -16,6 +17,8 @@ import { timeDifference } from "@/utils/timeDifference";
 import type { ActivityDetails } from "./services/coinApiClient";
 
 function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
+  const isMediumScreen = useBreakpointValue({ base: false, md: true });
+  const isLargeScreen = useBreakpointValue({base: false, lg: true});
   if (activities.length === 0) {
     return (
       <Box
@@ -32,22 +35,19 @@ function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
   return (
     <VStack bg="#1B1B1E" width="100%" px="2rem">
       <Table as="table" width="100%">
-        <Thead fontSize="12px" color="#9B9B9B" textTransform="uppercase">
-          <Tr>
+        <Thead fontSize="12px" color="#9B9B9B" textTransform="uppercase" border="0">
+          <Tr borderBottom="0">
             <Th color="text.100" textAlign="left">
               Account
             </Th>
             <Th color="text.100" textAlign="left">
               Activity
             </Th>
-            <Th color="text.100" textAlign="right">
+            {isLargeScreen && <Th color="text.100">
               Value
-            </Th>
-            <Th color="text.100" textAlign="right">
+            </Th>}
+            <Th color="text.100">
               SOL
-            </Th>
-            <Th color="text.100" textAlign="right">
-              TXN
             </Th>
           </Tr>
         </Thead>
@@ -55,24 +55,22 @@ function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
           {activities.map((activity: ActivityDetails, id: number) => (
             <Box as="tr" key={id} display="table-row" mb="20px" fontSize="12px">
               <Td textAlign="left" color="white" border="0">
-                <Text>{activity.username ?? "--"}</Text>
+                <Text>{activity?.user?.slice(0, 6) ?? "--"}</Text>
               </Td>
               <Td textAlign="left" color="white" border="0">
                 <Text>
+                  <span style={{color: activity.is_buy ?"#18CA2A" :"#D31341"}}>{activity.is_buy ? "BUY" : "SELL"}</span> &nbsp;
                   {timeDifference(
                     Date.now(),
-                    parseInt(activity.timestamp.toString(), 10),
+                    parseInt((activity.timestamp*1000).toString(), 10),
                   )}
                 </Text>
               </Td>
-              <Td textAlign="right" color="white" border="0">
-                <Text>{activity.token_amount}</Text>
-              </Td>
-              <Td textAlign="right" color="white" border="0">
-                <Text>{activity.sol_amount}</Text>
-              </Td>
-              <Td textAlign="right" color="creator" border="0">
-                <Text>{activity.tx_index}</Text>
+              {isLargeScreen && <Td color="white" border="0">
+                <Text>{activity.token_amount/1000000}</Text>
+              </Td>}
+              <Td color="white" border="0">
+                <Text>{activity.sol_amount/1000000000}</Text>
               </Td>
             </Box>
           ))}

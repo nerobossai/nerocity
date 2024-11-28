@@ -65,11 +65,11 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
           alignItems="center"
           gap="20px"
           cursor="pointer"
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/app")}
           className="knf"
         >
           <Text fontSize="18px" cursor="pointer">
-            <span style={{ color: "#959595" }} onClick={() => router.push("/")}>
+            <span style={{ color: "#959595" }} onClick={() => router.push("/app")}>
               HOME /
             </span>{" "}
             {/* {currentPage.toUpperCase()} */}

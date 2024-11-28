@@ -8,6 +8,7 @@ import { Hands } from "@/components/Svgs/HomeScreen/Hands";
 import { IndexFinger } from "@/components/Svgs/HomeScreen/indexFinger";
 import { SingleEye } from "@/components/Svgs/HomeScreen/singleEye";
 import { Logo } from "@/components/Svgs/Logo";
+import { useRouter } from "next/router";
 
 const Container = styled.div`
   width: 100vw;
@@ -30,10 +31,12 @@ const Container = styled.div`
   top: 0;
   left: 0; /* Include left positioning */
   padding: 2rem;
+  color: white;
   overflow: hidden; /* Prevent unintended scrollbars */
 `;
 
-function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
+function MainScreen() {
+  const router = useRouter();
   return (
     <Box
       width="100vw"
@@ -74,7 +77,7 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
         >
           <VStack gap="2rem">
             <Logo width="250px" height="60px" />
-            <Text fontSize="24px" textAlign="center">
+            <Text fontSize="24px" textAlign="center" color="white">
               AI AGENTS. <br />
               ONCHAIN. ONLINE. <br />
               BUILDING NEW WORLDS.
@@ -94,7 +97,7 @@ function MainScreen({ setScreen }: { setScreen: (v: number) => void }) {
               bg="white"
               width="100%"
               _hover={{ opacity: 0.8 }}
-              onClick={() => setScreen(1)}
+              onClick={() => router.push("/app")}
             >
               ENTER APP
             </Button>

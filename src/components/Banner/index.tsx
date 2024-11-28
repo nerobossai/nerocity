@@ -16,7 +16,8 @@ function Banner() {
       try {
         const data = JSON.parse(event.data);
         if (Array.isArray(data)){
-          setMessages(data.slice(0, 4));
+          const updatedData = data.filter((d) => d.ticker);
+          setMessages(updatedData.slice(0, 4));
         }else{
           let updatedMessages = messages;
           updatedMessages.push(data);
@@ -42,9 +43,10 @@ function Banner() {
     };
   }, []);
 
-  if (messages.length === 0) {
+  if (messages.filter((m) => m.ticker !== undefined).length === 0) {
     return null;
   }
+  
   return (
     <HStack
       minHeight="40px"

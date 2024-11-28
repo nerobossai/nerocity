@@ -77,9 +77,11 @@ function Header() {
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [openHelp, setOpenHelp] = useState(false);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
-  const isLargeScreen = useBreakpointValue({ base: false, sm: true });
+  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
+  const isSmallScreen = useBreakpointValue({ base: true, sm: false });
   const vStackRef = useRef<HTMLDivElement>(null);
   const [marketCap, setMarketCap] = useState("");
+  const [inputFocus, setInputFocus] = useState(false);
 
   const walletAddress = useMemo(() => {
     if (profile && profile.profile && profile.profile.address) {
@@ -179,7 +181,46 @@ function Header() {
       setIsDisconnecting(false);
     }
   };
+  if (inputFocus) {
+    return (
+      <HStack
+        bg="brown.100"
+        height="70px"
+        py="1rem"
+        align="center"
+        gap={{ base: "5px", sm: "40px" }}
+        px="1rem"
+        justifyContent={{ base: "space-between", md: "block" }}
+      >
+        <Box
+          display="flex"
+          bg="brown.200"
+          alignItems="center"
+          gap="20px"
+          px="1rem"
+        >
+          <BiSearch size={20} />
+          <Input
+            outline="none"
+            border="0"
+            flexGrow="1"
+            padding="0"
+            placeholder="Search for agents"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onBlur={() => setInputFocus(false)}
+            _focus={{
+              outline: "none",
+              border: "none",
+              boxShadow: "none",
+            }}
+          />
+        </Box>
 
+
+      </HStack>
+    )
+  }
   return (
     <HStack
       bg="brown.100"
@@ -187,13 +228,13 @@ function Header() {
       pl="40px"
       py="1rem"
       align="center"
-      gap="40px"
+      gap={{ base: "5px", sm: "40px" }}
       justifyContent={{ base: "space-between", md: "block" }}
     >
-      <Box onClick={() => router.push("/")} cursor="pointer">
+      <Box onClick={() => router.push("/app")} cursor="pointer">
         {isLargeScreen ? <Logo /> : <LogoSmall />}
       </Box>
-      <Box padding="20px" display={{ base: "none", lg: "block" }}>
+      {isSmallScreen ? <Box ml="20px"><BiSearch size={20} style={{ cursor: "pointer" }} onClick={() => setInputFocus(true)} /> </Box> : <Box padding="20px">
         <Box
           px="2rem"
           display="flex"
@@ -207,7 +248,7 @@ function Header() {
             border="0"
             flexGrow="1"
             padding="0"
-            placeholder="Search for agent / coin"
+            placeholder="Search for agents"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             _focus={{
@@ -217,7 +258,7 @@ function Header() {
             }}
           />
         </Box>
-      </Box>
+      </Box>}
       <HStack display={{ base: "none", md: "flex" }}>
         <a
           href="https://raydium.io/swap/?inputMint=sol&outputMint=5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump"
@@ -227,7 +268,7 @@ function Header() {
             BUY $NEROBOSS
           </Button>
         </a>
-        <Text> MCAP ${marketCap}</Text>
+        <Text display={{ base: "none", md: "flex" }}> MCAP ${marketCap}</Text>
       </HStack>
       <HStack flexGrow="1" justifyContent="flex-end" position="relative">
         {isAuthenticated ? (
