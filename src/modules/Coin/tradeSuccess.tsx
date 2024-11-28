@@ -110,7 +110,7 @@ Find this absolute unit: ${window.location.href}`);
         <HStack width="100%" justifyContent="space-between">
           <Text>Sol {successDetails.bought ? "paid" : "received"}</Text>
           <Text>
-            <SubscriptText value={successDetails.solAmount.toString()} dollar={false} />
+              {successDetails.solAmount.toFixed(9)}
           </Text>
         </HStack>
         {/* <HStack width="100%" justifyContent="space-between">

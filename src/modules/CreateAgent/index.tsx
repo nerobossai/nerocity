@@ -14,7 +14,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { Keypair } from "@solana/web3.js";
+import { Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -227,7 +227,7 @@ function CreateAgentModule() {
         publicKey,
         tokenMint,
         tMeta,
-        0,
+        coinPercentage*LAMPORTS_PER_SOL,
       );
       const txnResp = await sendTransaction(createResults, connection);
       const latestBlockHash = await connection.getLatestBlockhash();

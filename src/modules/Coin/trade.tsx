@@ -32,6 +32,8 @@ import {
 } from "./services/coinApiClient";
 import TradeFailure from "./tradeFailure";
 import TradeSuccess from "./tradeSuccess";
+import { getUserTokens } from "@/utils/getUserToken";
+import useUserStore from "@/stores/useUserStore";
 
 export type TradeModuleProps = {
   currentPrice: string;
@@ -44,6 +46,7 @@ function TradeModule(props: TradeModuleProps) {
   const toast = useToast();
   const router = useRouter();
   const { publicKey, sendTransaction } = useWallet();
+  const {profile} = useUserStore();
   const { connection } = useConnection();
   const [active, setActive] = useState("buy");
   const [solPrice, setSolPrice] = useState<SolanaPriceResponse>();
@@ -54,6 +57,7 @@ function TradeModule(props: TradeModuleProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [selectedSol, setSelectedSol] = useState(0.1);
   const [screenNumber, setScreenNumber] = useState(0); // 0 for initial screen, 1 for success screen and 2 for failure screen
+  const [walletBalance, setWalletBalance] = useState(0);
   const [successDetails, setSuccesDetails] = useState({
     bought: true,
     tickerAmount: 0,
@@ -82,6 +86,18 @@ function TradeModule(props: TradeModuleProps) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const coinsHeld = await getUserTokens(
+        profile.profile.public_key as string,
+      );
+      const balanceObj = coinsHeld.find((b) => b.mint === props.tokenDetails.mint_public_key);
+      setWalletBalance(balanceObj ? balanceObj.balance : 0);
+    }
+
+    fetchBalance();
+  }, [])
 
   const setToken = async (amount: string) => {
     try {
@@ -156,6 +172,17 @@ function TradeModule(props: TradeModuleProps) {
         );
       }
 
+      if (active === "sell" && Number(input ?? 0) > walletBalance) {
+        toast({
+          title: "Transaction failed",
+          description: "Insufficient Balance",
+          status: "error",
+          position: "bottom-right",
+        });
+        setScreenNumber(2);
+        return;
+      }
+
       const txnResp = await sendTransaction(txn, connection);
       const latestBlockHash = await connection.getLatestBlockhash();
 
@@ -165,7 +192,7 @@ function TradeModule(props: TradeModuleProps) {
         signature: txnResp,
       });
 
-      // for analytics
+
       switch (active) {
         case "buy": {
           const platformFeesInSol =
@@ -421,9 +448,10 @@ function TradeModule(props: TradeModuleProps) {
                 //@ts-ignore
                 `${solPrice?.solana.usd/(props.currentPrice === 0 ? 1 : props.currentPrice)} ${props.tokenDetails.ticker}` || "$164.84"
               ) : (
-                <><SubscriptText value={(parseFloat(props.currentPrice)/(solPrice?.solana.usd ?? 237)).toString()} dollar={false}/>&nbsp;SOL</>
+                <><span> {(parseFloat(props.currentPrice)*100/(solPrice?.solana.usd ?? 237)).toFixed(15)}&nbsp;SOL</span></>
               )}
             </Text>
+            {active === "sell" && Number(input ?? 0) > walletBalance  &&<Text fontSize="12px" color="red.500">*You currently have {walletBalance} {props.tokenDetails.ticker} in your wallet. Insufficient amount.</Text>}
             {/* <HStack
               width="100%"
               justifyContent="space-between"
