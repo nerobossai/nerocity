@@ -139,12 +139,13 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                   <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">Comments {getSortArrow("replies")}</Box>
                 </th>
 
-                <th
+                {/* <th
                   style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
                   onClick={() => handleSort("twenty_four_hr_changes")}
                 >
                   <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">24H {getSortArrow("twenty_four_hr_changes")}</Box>
-                </th></>
+                </th> */}
+                </>
             )}
           </tr>
         </thead>
@@ -271,7 +272,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                       {data.replies}
                     </td>
 
-                    <td
+                    {/* <td
                       style={{
                         textAlign: "right",
                         padding: "1rem",
@@ -286,7 +287,8 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                       }}
                     >
                       {data.twenty_four_hr_changes || "N/A"}
-                    </td></>
+                    </td> */}
+                    </>
                 )}
               </tr>
             ) : null
