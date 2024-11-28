@@ -118,7 +118,7 @@ function MainCard(props: CardProps) {
         />
         <VStack textAlign="left" alignItems="start" maxWidth={{lg:"250px", base:"auto"}}>
           <Heading as="h4" size="md" fontSize="16px">
-            {props.ticker}
+            ${props.ticker}
           </Heading>
           <Heading as="h5" size="sm" textAlign="left">
             {props.name}

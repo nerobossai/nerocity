@@ -185,7 +185,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     />
                     <VStack alignItems="flex-start" spacing="0">
                       <Heading as="h4" size="sm" fontSize="16px" color="white">
-                        {data.ticker}
+                        ${data.ticker}
                       </Heading>
                       <Text fontSize="12px" wordBreak="break-all">
                         {data.name}
