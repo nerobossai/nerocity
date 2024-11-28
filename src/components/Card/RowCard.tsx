@@ -1,4 +1,5 @@
 import {
+  Box,
   Heading,
   HStack,
   Image,
@@ -10,6 +11,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import CreatedAtComponent from "../Created";
+import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
 
 interface CardProps {
   id: string;
@@ -29,8 +31,38 @@ interface CardProps {
 function DataTable({ feed }: { feed: CardProps[] }) {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState("");
+  const [sortColumn, setSortColumn] = useState<string | null>("market_cap");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
+
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortColumn(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const sortedFeed = [...feed].sort((a, b) => {
+    if (!sortColumn) return 0; // No sorting applied
+    const valueA = a[sortColumn as keyof CardProps];
+    const valueB = b[sortColumn as keyof CardProps];
+
+    if (typeof valueA === "string" && typeof valueB === "string") {
+      return sortOrder === "asc"
+        ? valueA.localeCompare(valueB)
+        : valueB.localeCompare(valueA);
+    }
+    if (typeof valueA === "number" && typeof valueB === "number") {
+      return sortOrder === "asc" ? valueA - valueB : valueB - valueA;
+    }
+    return 0;
+  });
+
+  const getSortArrow = (column: string) =>
+    sortColumn === column ? (sortOrder === "asc" ? <IoIosArrowRoundUp cursor="pointer" size={20} /> : <IoIosArrowRoundDown cursor="pointer" size={20} />) : <IoIosArrowRoundUp cursor="pointer" size={20} />;
 
   return (
     <VStack bg="#1B1B1E" width="100%" overflowX="auto">
@@ -46,8 +78,9 @@ function DataTable({ feed }: { feed: CardProps[] }) {
           <tr>
             <th
               style={{ color: "#656565", textAlign: "left", padding: "1rem" }}
+              onClick={() => handleSort("ticker")}
             >
-              Ticker
+              <Box display="flex" alignItems="center" gap="10px">Ticker {getSortArrow("ticker")}</Box>
             </th>
             {isLargeScreen && (
               <>
@@ -56,25 +89,30 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     color: "#656565",
                     textAlign: "right",
                     padding: "1rem",
+                    cursor: "pointer",
                   }}
+                  onClick={() => handleSort("created_at")}
                 >
-                  Created
-                </th>
-                <th
-                  style={{
-                    color: "#656565",
-                    textAlign: "right",
-                    padding: "1rem",
-                  }}
-                >
-                  Creator
-                </th>
-              </>
+                  <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">Created {getSortArrow("created_at")}</Box>
+                </th></>
             )}
             <th
-              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
+              style={{
+                color: "#656565",
+                textAlign: "right",
+                padding: "1rem",
+                cursor: "pointer",
+              }}
+              onClick={() => handleSort("created_by")}
             >
-              MCAP
+              <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">Creator {getSortArrow("created_by")}</Box>
+            </th>
+
+            <th
+              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
+              onClick={() => handleSort("market_cap")}
+            >
+              <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">MCAP {getSortArrow("market_cap")}</Box>
             </th>
             {isLargeScreen && (
               <>
@@ -83,34 +121,38 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     color: "#656565",
                     textAlign: "right",
                     padding: "1rem",
+                    cursor: "pointer",
                   }}
+                  onClick={() => handleSort("holder")}
                 >
-                  Holders
+                  <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">Holders {getSortArrow("holder")}</Box>
                 </th>
                 <th
                   style={{
                     color: "#656565",
                     textAlign: "right",
                     padding: "1rem",
+                    cursor: "pointer",
                   }}
+                  onClick={() => handleSort("replies")}
                 >
-                  Comments
+                  <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">Comments {getSortArrow("replies")}</Box>
                 </th>
-              </>
+
+                <th
+                  style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
+                  onClick={() => handleSort("twenty_four_hr_changes")}
+                >
+                  <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">24H {getSortArrow("twenty_four_hr_changes")}</Box>
+                </th></>
             )}
-            <th
-              style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
-            >
-              24H
-            </th>
           </tr>
         </thead>
         <tbody>
-          {feed.map((data: CardProps) =>
+          {sortedFeed.map((data: CardProps) =>
             parseFloat(data.market_cap) >= 0 ? (
               <tr
                 key={data.id}
-                // @ts-ignore
                 style={{
                   backgroundColor:
                     isHovered === data.id ? "#2D2D2D" : "transparent",
@@ -178,20 +220,20 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                         timeStamp={parseInt(data.created_at.toString())}
                         noHeader
                       />
-                    </td>
-                    <td
-                      style={{
-                        textAlign: "right",
-                        color: "#00C2FF",
-                        padding: "1rem",
-                        borderTop: "1px solid #343434",
-                        borderBottom: "1px solid #343434",
-                      }}
-                    >
-                      {data.created_by}
-                    </td>
-                  </>
+                    </td></>
                 )}
+                <td
+                  style={{
+                    textAlign: "right",
+                    color: "#00C2FF",
+                    padding: "1rem",
+                    borderTop: "1px solid #343434",
+                    borderBottom: "1px solid #343434",
+                  }}
+                >
+                  {data.created_by}
+                </td>
+
                 <td
                   style={{
                     textAlign: "right",
@@ -228,30 +270,26 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     >
                       {data.replies}
                     </td>
-                  </>
+
+                    <td
+                      style={{
+                        textAlign: "right",
+                        padding: "1rem",
+                        color: !data.twenty_four_hr_changes
+                          ? "white"
+                          : data.twenty_four_hr_changes < 0
+                            ? "red"
+                            : "#00FF29",
+                        borderTop: "1px solid #343434",
+                        borderBottom: "1px solid #343434",
+                        borderRight: "1px solid #343434",
+                      }}
+                    >
+                      {data.twenty_four_hr_changes || "N/A"}
+                    </td></>
                 )}
-                <td
-                  style={{
-                    textAlign: "right",
-                    padding: "1rem",
-                    color: !data.twenty_four_hr_changes
-                      ? "white"
-                      : data.twenty_four_hr_changes < 0
-                        ? "red"
-                        : "#00FF29",
-                    borderTop: "1px solid #343434",
-                    borderBottom: "1px solid #343434",
-                    borderRight: "1px solid #343434",
-                  }}
-                >
-                  {!data.twenty_four_hr_changes
-                    ? "--"
-                    : data.twenty_four_hr_changes < 0
-                      ? `-${data.twenty_four_hr_changes}%`
-                      : `+${data.twenty_four_hr_changes}%`}
-                </td>
               </tr>
-            ) : null,
+            ) : null
           )}
         </tbody>
       </table>
