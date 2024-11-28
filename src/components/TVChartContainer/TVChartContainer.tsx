@@ -33,7 +33,7 @@ export const TVChartContainer = (props: TVChartContainerProps) => {
       symbol: props.symbol || "BTCUSD",
       datafeed: new CustomDataFeed(props.mintKey, props.symbol) as any,
       container: chartContainerRef.current,
-      interval: "1h" as ResolutionString,
+      interval: "30s" as ResolutionString,
       library_path: props.library_path,
       locale: (props.locale as LanguageCode) || "en",
       disabled_features: [

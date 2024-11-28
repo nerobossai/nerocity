@@ -95,12 +95,12 @@ function SuccessScreen(props: ISuccessScreenProps) {
               </Text>
               <p>{props.description}</p>
             </Stack>
-            <Stack mt="20px">
+            {/* <Stack mt="20px">
               <Text fontSize="12px" color="secondary">
                 Amount of SOL to spend to buy AI agent tokens
               </Text>
               <p>{props.coins_percentage_for_dev}</p>
-            </Stack>
+            </Stack> */}
           </VStack>
         </Box>
         <VStack my="20px" width="100%" alignItems="flex-start">
