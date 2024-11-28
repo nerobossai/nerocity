@@ -108,7 +108,7 @@ function SuccessScreen(props: ISuccessScreenProps) {
             FEES
           </Text>
           <HStack justifyContent="space-between" width="100%">
-            <Text>1.5 SOL</Text>
+            <Text>0.12</Text>
             <Text color="secondary">$245.12</Text>
           </HStack>
           <HStack justifyContent="space-between" width="100%">
@@ -117,7 +117,7 @@ function SuccessScreen(props: ISuccessScreenProps) {
           </HStack>
         </VStack>
 
-        <HStack width="100%" padding="20px" gap="20px" bg="#1B1B1D">
+        {/* <HStack width="100%" padding="20px" gap="20px" bg="#1B1B1D">
           <Image
             src="/assets/imgs/neroboss.png"
             alt="Uploaded File"
@@ -129,7 +129,7 @@ function SuccessScreen(props: ISuccessScreenProps) {
             NEROBOSS is the platform token for Nerocity. We&apos;ll
             automatically buy & burn NEROBOSS for you when you create an agent.
           </Text>
-        </HStack>
+        </HStack> */}
         <Box
           padding="20px"
           bg="#202023"
