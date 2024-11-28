@@ -99,7 +99,7 @@ function SuccessScreen(props: ISuccessScreenProps) {
               <Text fontSize="12px" color="secondary">
                 Amount of SOL to spend to buy AI agent tokens
               </Text>
-              <p>{props.coins_percentage_for_dev}%</p>
+              <p>{props.coins_percentage_for_dev}</p>
             </Stack>
           </VStack>
         </Box>
@@ -168,7 +168,7 @@ function SuccessScreen(props: ISuccessScreenProps) {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Text flexGrow="1">Reply to your agent and get the feed going</Text>
+          <Text flexGrow="1">Go back to Home page</Text>
           <Button
             fontSize="12px"
             borderRadius="0"
@@ -180,7 +180,7 @@ function SuccessScreen(props: ISuccessScreenProps) {
             gap="10px"
             onClick={() => router.push("/app")}
           >
-            VIEW FEED
+            VIEW OTHER AGENTS
           </Button>
         </Box>
       </VStack>
