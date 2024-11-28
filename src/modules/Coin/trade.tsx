@@ -90,6 +90,10 @@ function TradeModule(props: TradeModuleProps) {
         new PublicKey(props.tokenDetails.mint_public_key)
       );
 
+      const pumpdata = await coinApiClient.fetchPumpfunData(
+        props.tokenDetails.mint_public_key
+      );
+
       if (active === "buy") {
         const buy = tmp!.getBuyPrice(parseFloat(amount) * LAMPORTS_PER_SOL);
         setOutput((buy / 10 ** 6).toFixed(8));
@@ -98,7 +102,14 @@ function TradeModule(props: TradeModuleProps) {
             parseFloat(solPrice?.solana.usd.toString() || "1")
         );
       } else {
-        const sell = tmp!.getSellPrice(parseInt(amount, 10), 100) / 100;
+        const feeBasisPoints = 100;
+        const amt = parseInt(amount, 10);
+        const n =
+          (amt * pumpdata.virtual_sol_reserves) /
+          (pumpdata.virtual_token_reserves + amt);
+
+        const a = (n * feeBasisPoints) / 10000;
+        const sell = (n - a) / 100;
         if (
           parseFloat(sell.toFixed(8)) < parseFloat(Number(0.000001).toFixed(6))
         ) {

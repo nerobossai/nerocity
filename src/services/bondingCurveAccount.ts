@@ -47,11 +47,6 @@ export class BondingCurveAccount {
       return 0;
     }
 
-    console.log(
-      this.virtualTokenReserves.toString(),
-      this.virtualSolReserves.toString(),
-    );
-
     return Math.floor(
       (amount * this.virtualTokenReserves) / this.virtualSolReserves,
     );
