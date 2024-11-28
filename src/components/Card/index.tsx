@@ -83,7 +83,7 @@ function Card(props: CardProps) {
           <Text fontSize="12px" fontWeight="bold" color="green.50">
             {props.complete === true
               ? "Raydium Pool Seeded"
-              : `Market Cap ${props.market_cap}`}
+              : `Market Cap $${props.market_cap}`}
           </Text>
           <Text fontSize="12px">Replies {props.replies}</Text>
           <Text fontWeight="bold" fontSize="20px">

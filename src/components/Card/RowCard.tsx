@@ -244,7 +244,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     fontSize: isLargeScreen ? "16px" : "12px",
                   }}
                 >
-                  {data.market_cap}
+                  ${data.market_cap}
                 </td>
                 {isLargeScreen && (
                   <>
