@@ -69,7 +69,10 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
           className="knf"
         >
           <Text fontSize="18px" cursor="pointer">
-            <span style={{ color: "#959595" }} onClick={() => router.push("/app")}>
+            <span
+              style={{ color: "#959595" }}
+              onClick={() => router.push("/app")}
+            >
               HOME /
             </span>{" "}
             {/* {currentPage.toUpperCase()} */}
@@ -100,13 +103,13 @@ function CoinModule() {
   const fetchPumpfunData = async () => {
     try {
       const resp = await coinApiClient.fetchPumpfunData(
-        router.query.coin as string,
+        router.query.coin as string
       );
       setMarketCap(resp.usd_market_cap.toFixed(3));
 
       const raydiumData = await coinApiClient.fetchPoolPrice(resp.raydium_pool);
       const price = parseFloat(
-        raydiumData?.attributes?.base_token_price_usd || "0",
+        raydiumData?.attributes?.base_token_price_usd || "0"
       ).toExponential();
       setPrice(price);
       setCompletionPercent(100);
@@ -120,7 +123,7 @@ function CoinModule() {
 
   const startPolling = (
     timeout: number,
-    agent?: AgentResponse,
+    agent?: AgentResponse
   ): NodeJS.Timeout | null => {
     if (!router?.query?.coin) return null;
 
@@ -140,7 +143,7 @@ function CoinModule() {
   };
 
   const executePollingLogic = async (
-    agent?: AgentResponse,
+    agent?: AgentResponse
   ): Promise<
     AgentResponse | typeof RAYDIUM_MIGRATION_COMPLETED | undefined
   > => {
@@ -163,7 +166,7 @@ function CoinModule() {
     }
 
     const tmp = await pumpFunSdk.getBondingCurveAccount(
-      new PublicKey(ag.mint_public_key),
+      new PublicKey(ag.mint_public_key)
     );
 
     if (!tmp) {
@@ -178,25 +181,25 @@ function CoinModule() {
     const price =
       (((await tmp.getSellPrice(1, 0)) || 0) / 100) * solPrice.solana.usd;
 
-    const marketcap = (
-      ((tmp.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) *
-      solPrice.solana.usd
-    )
-      .toFixed(3)
-      .toString();
+    // const marketcap = (
+    //   ((tmp.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) *
+    //   solPrice.solana.usd
+    // )
+    //   .toFixed(3)
+    //   .toString();
 
-    setMarketCap(marketcap);
+    setMarketCap(ag.market_cap);
     setPrice(price.toExponential(1).toString());
     setCompletionPercent(
       ((tmp.initialTokenReserve - tmp.realTokenReserves) /
         tmp.initialTokenReserve) *
-        100,
+        100
     );
     setRealTokenReserve(
-      parseInt(((tmp.realTokenReserves || 0) / 10 ** 6).toString(10), 10),
+      parseInt(((tmp.realTokenReserves || 0) / 10 ** 6).toString(10), 10)
     );
     setRealSolReserve(
-      ((tmp.realSolReserves || 0) / LAMPORTS_PER_SOL).toFixed(2),
+      ((tmp.realSolReserves || 0) / LAMPORTS_PER_SOL).toFixed(2)
     );
 
     const prices = await homeApiClient.candlestickData(ag.mint_public_key);

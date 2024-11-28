@@ -53,7 +53,7 @@ function HomeModule() {
     await Promise.all(
       resp.agents.map(async (data: any, idx: number) => {
         const tmp = await pumpFunSdk.getBondingCurveAccount(
-          new PublicKey(data.mint_public_key),
+          new PublicKey(data.mint_public_key)
         );
         const solPrice = await homeApiClient.solPrice();
         if (resp.agents[idx]) {
@@ -66,7 +66,7 @@ function HomeModule() {
 
           resp.agents[idx].complete = tmp?.complete;
         }
-      }),
+      })
     );
   };
   const fetchFeed = async (filter: string) => {
@@ -90,27 +90,9 @@ function HomeModule() {
       } else {
         resp = await homeApiClient.feed(filter);
       }
-
-      await Promise.all(
-        resp.agents.map(async (data, idx) => {
-          const tmp = await pumpFunSdk.getBondingCurveAccount(
-            new PublicKey(data.mint_public_key),
-          );
-          const solPrice = await homeApiClient.solPrice();
-          if (resp.agents[idx]) {
-            resp.agents[idx].market_cap = (
-              ((tmp?.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) *
-              solPrice.solana.usd
-            )
-              .toFixed(3)
-              .toString();
-
-            resp.agents[idx].complete = tmp?.complete;
-          }
-        }),
-      );
+      
       const sortedAgents = [...resp.agents].sort(
-        (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap),
+        (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap)
       );
       if (first) {
         setOverlord(sortedAgents[0]);
@@ -121,7 +103,7 @@ function HomeModule() {
         agents.map(async (agent) => {
           const holder = await getTokenHolders(agent.mint_public_key);
           return { ...agent, holder };
-        }),
+        })
       );
 
       setFeed(agentsWithHolders);
