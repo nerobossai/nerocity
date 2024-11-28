@@ -117,6 +117,15 @@ function ChatModule(props: { agentId: string }) {
   };
 
   const handleSubmit = async () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Wallet not connect!",
+        description: "Please connect wallet to comment!<",
+        status: "error",
+        position: "bottom-right",
+      });
+      return;
+    }
     try {
       setPosting(true);
       const resp = await coinApiClient.sendMessage({

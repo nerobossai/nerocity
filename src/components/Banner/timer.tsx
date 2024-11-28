@@ -18,6 +18,7 @@ function TimerScreen() {
     });
 
     const { isAuthenticated, profile } = useUserStore();
+    const [launched, setLaunched] = useState(false);
 
     const handleVerifyNFT = async () => {
         if (!isAuthenticated) {
@@ -60,6 +61,7 @@ function TimerScreen() {
             const difference = targetDate - now;
 
             if (difference <= 0) {
+                setLaunched(true);
                 return { hours: 0, minutes: 0 };
             }
 
@@ -78,6 +80,9 @@ function TimerScreen() {
         return () => clearInterval(countdownInterval);
     }, []);
 
+    if (launched) {
+        return null;
+    }
     return (
         <Box
             width="100%"
@@ -97,7 +102,7 @@ function TimerScreen() {
             </Box>
             <VStack width="100%" height="100%" alignItems="center" p="2rem">
                 <Text fontSize="15px" className="knf">
-                    Launching In
+                    Alpha mode access ends in
                 </Text>
                 <HStack flexGrow="1" gap="20px">
                     <Box border="1px solid black" display="flex" p="1rem">
