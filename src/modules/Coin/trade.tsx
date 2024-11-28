@@ -90,11 +90,13 @@ function TradeModule(props: TradeModuleProps) {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const coinsHeld = await getUserTokens(
-        profile.profile.public_key as string,
-      );
-      const balanceObj = coinsHeld.find((b) => b.mint === props.tokenDetails.mint_public_key);
-      setWalletBalance(balanceObj ? balanceObj.balance : 0);
+      if (profile?.profile?.public_key) {
+        const coinsHeld = await getUserTokens(
+          profile?.profile?.public_key as string,
+        );
+        const balanceObj = coinsHeld.find((b) => b.mint === props.tokenDetails.mint_public_key);
+        setWalletBalance(balanceObj ? balanceObj.balance : 0);
+      }
     }
 
     fetchBalance();
@@ -390,6 +392,9 @@ function TradeModule(props: TradeModuleProps) {
               {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`}
             </InputRightAddon>
           </InputGroup>
+          <HStack justifyContent="flex-end">
+                <Text fontSize="12px">Bal: {active == "buy" ? solBalance +" SOL" : `${walletBalance} $${props.tokenDetails.ticker}`}</Text>
+            </HStack>
 
           <VStack alignItems="flex-start" gap="4px">
             <Text color="text.100" fontSize="10px">
@@ -416,6 +421,9 @@ function TradeModule(props: TradeModuleProps) {
               </InputRightAddon>
             </InputGroup>
           </VStack>
+          <HStack justifyContent="flex-end">
+                <Text fontSize="12px">Bal: {active == "sell" ? solBalance +"SOL" : `${walletBalance} $${props.tokenDetails.ticker}`}</Text>
+            </HStack>
 
           <Button
             mt="4px"
