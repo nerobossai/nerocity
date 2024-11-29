@@ -40,14 +40,13 @@ function MainScreen() {
   return (
     <Box
       width="100vw"
-      height="100vh"
+      minHeight="100vh"
       display="flex"
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
       bgGradient="linear(100deg, #571F0D -0.99%, #5E220F 64.54%, #642410 112.46%), #4A13A5"
       zIndex="1"
-      position="fixed"
       top="0"
       padding="2rem"
     >

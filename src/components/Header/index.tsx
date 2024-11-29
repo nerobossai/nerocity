@@ -5,6 +5,7 @@ import {
   Button,
   HStack,
   Input,
+  Link,
   Text,
   useBreakpointValue,
   VStack,
@@ -231,9 +232,11 @@ function Header() {
       gap={{ base: "5px", sm: "40px" }}
       justifyContent={{ base: "space-between", md: "block" }}
     >
-      <Box onClick={() => router.push("/app")} cursor="pointer">
-        {isLargeScreen ? <Logo /> : <LogoSmall />}
-      </Box>
+      <Link href="/app">
+        <Box cursor="pointer">
+          {isLargeScreen ? <Logo /> : <LogoSmall />}
+        </Box>
+      </Link>
       {isSmallScreen ? <Box ml="20px"><BiSearch size={20} style={{ cursor: "pointer" }} onClick={() => setInputFocus(true)} /> </Box> : <Box padding="20px">
         <Box
           px="2rem"
