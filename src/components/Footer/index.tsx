@@ -18,8 +18,8 @@ function Footer() {
         Copyright &#169; All rights by Kegen Labs, Inc.
       </Text>
       <Text color="primary.600" fontSize="12px">
-        This site is protected by reCAPTCHA and the Google <Link href="/privacy-policy">Privacy Policy</Link> and
-        Terms of Service apply
+        This site is protected by reCAPTCHA and the Google <Link href="/privacy-policy">Privacy Policy</Link> and&nbsp;
+        <Link href="/terms-of-service">Terms of Service</Link> apply
       </Text>
     </Container>
   );

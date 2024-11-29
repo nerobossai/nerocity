@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer";
 import PrivacyPage from "@/components/PrivacyPage";
 import Seo from "@/components/Seo";
+import TermsOfUsePage from "@/components/TermsofService.tsx";
 import { Meta } from "@/layouts/Meta";
 import { Breadcrumb } from "@/modules/Coin";
 import CreateAgentModule from "@/modules/CreateAgent";
@@ -32,9 +33,9 @@ const Index = () => {
         nofooter
       >
             <Container>
-      <Breadcrumb loading={false} ticker="PRIVACY AND POLICY" />
+      <Breadcrumb loading={false} ticker="TERMS OF SERVICE" />
 
-          <PrivacyPage />
+          <TermsOfUsePage />
       </Container>
         <Footer />
       </Main>

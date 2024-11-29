@@ -88,30 +88,36 @@ function TradeModule(props: TradeModuleProps) {
     }
   };
 
-  useEffect(() => {
-    const fetchBalance = async () => {
-      if (profile?.profile?.public_key) {
-        const coinsHeld = await getUserTokens(
-          profile?.profile?.public_key as string,
-        );
-        const balanceObj = coinsHeld.find((b) => b.mint === props.tokenDetails.mint_public_key);
-        setWalletBalance(balanceObj ? balanceObj.balance : 0);
-      }
+  const fetchBalance = async () => {
+    if (profile?.profile?.public_key) {
+      const coinsHeld = await getUserTokens(
+        profile?.profile?.public_key as string,
+      );
+      const balanceObj = coinsHeld.find((b) => b.mint === props.tokenDetails.mint_public_key);
+      setWalletBalance(balanceObj ? balanceObj.balance : 0);
+    }
+  }
+
+  const fetchSolBalance = async () => {
+    if (publicKey) {
+      const solBalance = await connection.getBalance(new PublicKey(publicKey));
+      setSolBalance(solBalance/1000000000);
     }
 
-    fetchBalance();
-  }, [])
+  }
 
   useEffect(() => {
-    const fetchBalance = async () => {
-      if (publicKey) {
-        const solBalance = await connection.getBalance(new PublicKey(publicKey));
-        setSolBalance(solBalance/1000000000);
-      }
-
-    }
     fetchBalance();
-  }, [])
+    fetchSolBalance();
+
+    const intervalId = setInterval(() => {
+      fetchBalance();
+      fetchSolBalance();
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
 
   const setToken = async (amount: string) => {
     try {
