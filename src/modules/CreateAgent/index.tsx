@@ -247,11 +247,6 @@ function CreateAgentModule() {
       const txnResp = await sendTransaction(createResults, connection);
       const latestBlockHash = await connection.getLatestBlockhash();
 
-      await connection.confirmTransaction({
-        blockhash: latestBlockHash.blockhash,
-        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-        signature: txnResp,
-      });
       // send txn to wallet for signing
       await agentApiClient.launch({
         name,
@@ -262,6 +257,12 @@ function CreateAgentModule() {
         tokenMetadata,
         twtToken,
         txnHash: txnResp,
+      });
+
+      await connection.confirmTransaction({
+        blockhash: latestBlockHash.blockhash,
+        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+        signature: txnResp,
       });
 
       setMintPubKey(tokenMint.publicKey.toString());
