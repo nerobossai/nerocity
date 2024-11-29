@@ -31,6 +31,8 @@ import PromptScreen from "./promptScreen";
 import { agentApiClient } from "./services/agentApiClient";
 import { trackAgentCreation } from "./services/analytics";
 import SuccessScreen from "./successScreen";
+import { Turnstile } from "@marsidev/react-turnstile";
+import { cloudflareSitekey } from "@/constants/storageKeys";
 
 const Container = styled.div`
   width: 100%;
@@ -257,6 +259,7 @@ function CreateAgentModule() {
         image: tokenMetadata.image,
         mintPublicKey: tokenMint.publicKey.toString(),
         tokenMetadata,
+        cloudflareToken: localStorage.getItem("cloudflare-token")!,
         twtToken,
         txnHash: txnResp,
       });
@@ -813,6 +816,14 @@ function CreateAgentModule() {
               />
             </Box>
           </VStack>
+          <Center>
+            <Turnstile
+              onSuccess={(token) => {
+                localStorage.setItem("cloudflare-token", token);
+              }}
+              siteKey={cloudflareSitekey}
+            />
+          </Center>
           <Center>
             <Button
               width="100%"

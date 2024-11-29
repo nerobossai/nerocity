@@ -12,6 +12,8 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import React from "react";
+import { Turnstile } from "@marsidev/react-turnstile";
+import { cloudflareCommentsSitekey } from "@/constants/storageKeys";
 
 export type ChatModelProps = {
   isOpen: boolean;
@@ -24,6 +26,12 @@ export type ChatModelProps = {
 function ChatModelComponent(props: ChatModelProps) {
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
+      <Turnstile
+        onSuccess={(token) => {
+          localStorage.setItem("cloudflare-comments-token", token);
+        }}
+        siteKey={cloudflareCommentsSitekey}
+      />
       <ModalOverlay />
       <ModalContent
         backgroundColor="grey.50"

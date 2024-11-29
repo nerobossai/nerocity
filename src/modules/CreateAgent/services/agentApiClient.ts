@@ -10,6 +10,7 @@ export type LaunchAgentBody = {
   image: string;
   mintPublicKey: string;
   tokenMetadata: TokenMetadata;
+  cloudflareToken?: string;
   telegram?: string;
   twtToken?: string;
   txnHash: string;
@@ -81,7 +82,7 @@ class ApiClient extends BaseApiClient {
   }
 
   async getTwitterOauthLink(
-    body: TwitterOauthBody,
+    body: TwitterOauthBody
   ): Promise<TwitterOauthResponse> {
     try {
       const resp = await this.secureApiCall({
@@ -96,7 +97,7 @@ class ApiClient extends BaseApiClient {
   }
 
   async validateOauth(
-    body: TwitterValidateOauthBody,
+    body: TwitterValidateOauthBody
   ): Promise<TwitterValidateOauthResponse> {
     try {
       const resp = await this.secureApiCall({
