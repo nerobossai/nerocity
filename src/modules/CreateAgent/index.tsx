@@ -244,7 +244,9 @@ function CreateAgentModule() {
         tMeta,
         coinPercentage * LAMPORTS_PER_SOL
       );
-      const txnResp = await sendTransaction(createResults, connection);
+      const txnResp = await sendTransaction(createResults, connection, {
+        preflightCommitment: "finalized",
+      });
       const latestBlockHash = await connection.getLatestBlockhash();
 
       // send txn to wallet for signing
