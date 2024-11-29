@@ -90,7 +90,7 @@ function HomeModule() {
       } else {
         resp = await homeApiClient.feed(filter);
       }
-      
+
       const sortedAgents = [...resp.agents].sort(
         (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap)
       );
