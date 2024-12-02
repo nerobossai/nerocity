@@ -1,27 +1,49 @@
-import { Link, Text } from "@chakra-ui/react";
 import React from "react";
 import styled from "styled-components";
 
-const Container = styled.footer`
+const FooterContainer = styled.footer`
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   padding: 1rem;
-  bottom: 0;
+  text-align: center;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    text-align: left;
+    align-items: center;
+  }
+`;
+
+const CopyrightText = styled.div`
+  font-size: 0.875rem;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+  }
+`;
+
+const PolicyText = styled.div`
+  font-size: 0.875rem;
+  color: #4a5568;
+
+  @media (min-width: 768px) {
+    text-align: right;
+  }
 `;
 
 function Footer() {
   return (
-    <Container>
-      <Text color="primary.600" fontSize="12px">
-        Copyright &#169; All rights by Kegen Labs, Inc.
-      </Text>
-      <Text color="primary.600" fontSize="12px">
-        This site is protected by reCAPTCHA and the Google <Link href="/privacy-policy">Privacy Policy</Link> and&nbsp;
-        <Link href="/terms-of-service">Terms of Service</Link> apply
-      </Text>
-    </Container>
+    <FooterContainer>
+      <CopyrightText>Copyright © All rights by Kegen Labs, Inc.</CopyrightText>
+      <PolicyText>
+        This site is protected by reCAPTCHA and the Google Privacy Policy and
+        Terms of Service apply
+      </PolicyText>
+    </FooterContainer>
   );
 }
 
