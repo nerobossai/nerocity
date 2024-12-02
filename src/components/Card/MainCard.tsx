@@ -12,10 +12,11 @@ import {
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
+import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
+import { getTokenHolders } from "@/utils/getTokenHolders";
+
 import { StarSticker } from "../Svgs/Star";
 import type { CardProps } from "./index";
-import { getTokenHolders } from "@/utils/getTokenHolders";
-import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
 
 function timeDifference(current: number, previous: number) {
   const msPerMinute = 60 * 1000;
@@ -64,7 +65,9 @@ function CreatedAtComponent({
           CREATED
         </Text>
       )}
-      <Text fontSize={fontSize} textAlign={isSmallScreen ? "right" : "left"}>{timeDifference(Date.now(), timeStamp)}</Text>
+      <Text fontSize={fontSize} textAlign={isSmallScreen ? "right" : "left"}>
+        {timeDifference(Date.now(), timeStamp)}
+      </Text>
       <Text fontSize="12px" color="text.100">
         {formattedTime}
       </Text>
@@ -75,13 +78,10 @@ function CreatedAtComponent({
   );
 }
 
-
-
 function MainCard(props: CardProps) {
   const navigator = useRouter();
   const isMediumScreen = useBreakpointValue({ base: false, md: true });
   const [tokenHolders, setTokenHolders] = useState<string>("0");
-
 
   useEffect(() => {
     const fetchHolders = async () => {
@@ -93,11 +93,11 @@ function MainCard(props: CardProps) {
         const data = await getTokenHolders(resp.mint_public_key);
         setTokenHolders(data);
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
-    }
-    fetchHolders()
-  }, [])
+    };
+    fetchHolders();
+  }, []);
 
   const handleClick = () => {
     if (props.onClick) {
@@ -136,7 +136,11 @@ function MainCard(props: CardProps) {
           src={props.image}
           alt="ai agent image"
         />
-        <VStack textAlign="left" alignItems="start" maxWidth={{ lg: "250px", base: "auto" }}>
+        <VStack
+          textAlign="left"
+          alignItems="start"
+          maxWidth={{ lg: "250px", base: "auto" }}
+        >
           <Heading as="h4" size="md" fontSize="16px">
             ${props.ticker}
           </Heading>

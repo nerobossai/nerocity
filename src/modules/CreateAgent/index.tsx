@@ -6,7 +6,6 @@ import {
   GridItem,
   HStack,
   Input,
-  Progress,
   Stack,
   Text,
   Textarea,
@@ -64,7 +63,7 @@ const nameSchema = z
   .string()
   .regex(
     /^[a-zA-Z0-9]+$/,
-    "Name can only contain letters and numbers with no spaces."
+    "Name can only contain letters and numbers with no spaces.",
   )
   .min(1, "Name is required.");
 
@@ -76,7 +75,7 @@ const tickerSchema = z
   .string()
   .regex(
     /^[A-Za-z]{1,6}$/,
-    "Ticker must be 1-6 alphabetic characters with no spaces or numbers."
+    "Ticker must be 1-6 alphabetic characters with no spaces or numbers.",
   );
 
 const linkSchema = z.string().url("Please enter a valid URL.").optional();
@@ -132,7 +131,7 @@ function CreateAgentModule() {
     setSelectedTraits((prev) =>
       prev.includes(trait)
         ? prev.filter((item) => item !== trait)
-        : [...prev, trait]
+        : [...prev, trait],
     );
   };
 
@@ -236,7 +235,7 @@ function CreateAgentModule() {
         publicKey,
         tokenMint,
         tMeta,
-        amount * LAMPORTS_PER_SOL
+        amount * LAMPORTS_PER_SOL,
       );
       const txnResp = await sendTransaction(createResults, connection);
       const latestBlockHash = await connection.getLatestBlockhash();
@@ -369,7 +368,7 @@ function CreateAgentModule() {
         file: file!,
         // twitter: twitterHandle,
         telegram: telegramHandle,
-        website: website,
+        website,
         prompt: promptDescription,
       };
 

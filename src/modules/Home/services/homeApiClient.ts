@@ -132,8 +132,8 @@ class ApiClient extends BaseApiClient {
     try {
       const resp = await this.apiCall({
         type: "POST",
-        url:  ApiEndpoints.public.checkNft,
-        body
+        url: ApiEndpoints.public.checkNft,
+        body,
       });
       return resp.data;
     } catch (err: any) {

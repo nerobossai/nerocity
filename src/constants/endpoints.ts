@@ -3,7 +3,7 @@ export const ApiEndpoints = Object.freeze({
     feed: "/public/feed",
     overlord: "/public/overlord",
     candlestick: "/public/candlestick/:mint",
-    checkNft: "/leaderboard/api/v1/checkNft"
+    checkNft: "/leaderboard/api/v1/checkNft",
   },
   auth: {
     login: "/auth/login",

@@ -1,5 +1,6 @@
 import { Box, Button, HStack, Link, Text, VStack } from "@chakra-ui/react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
 
@@ -8,7 +9,6 @@ import { Hands } from "@/components/Svgs/HomeScreen/Hands";
 import { IndexFinger } from "@/components/Svgs/HomeScreen/indexFinger";
 import { SingleEye } from "@/components/Svgs/HomeScreen/singleEye";
 import { Logo } from "@/components/Svgs/Logo";
-import { useRouter } from "next/router";
 
 const Container = styled.div`
   width: 100vw;

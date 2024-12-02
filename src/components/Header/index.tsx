@@ -23,6 +23,7 @@ import { FaWallet } from "react-icons/fa";
 import { MdArrowOutward } from "react-icons/md";
 import styled from "styled-components";
 
+import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
 import { trackWalletConnect } from "@/modules/Home/services/analytics";
 import { authApiClient } from "@/modules/Home/services/authApiClient";
 import { useSearchStore } from "@/stores/useSearchStore";
@@ -31,11 +32,10 @@ import * as AuthUtils from "@/utils/AuthUtils";
 
 import { Logo } from "../Svgs/Logo";
 import { LogoSmall } from "../Svgs/LogoSmall";
-import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
 
 function formatToShortLink(number: any) {
   if (number >= 1_000_000) {
-    return (number / 1_000_000).toFixed(1) + "M";
+    return `${(number / 1_000_000).toFixed(1)}M`;
   }
   return number.toString();
 }
@@ -163,11 +163,13 @@ function Header() {
 
   useEffect(() => {
     const fetchMarketCap = async () => {
-      const data = await coinApiClient.fetchPumpfunData("5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump");
-      setMarketCap(formatToShortLink(data.usd_market_cap))
-    }
+      const data = await coinApiClient.fetchPumpfunData(
+        "5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump",
+      );
+      setMarketCap(formatToShortLink(data.usd_market_cap));
+    };
     fetchMarketCap();
-  }, [])
+  }, []);
 
   const handleDisconnect = async () => {
     try {
@@ -217,10 +219,8 @@ function Header() {
             }}
           />
         </Box>
-
-
       </HStack>
-    )
+    );
   }
   return (
     <HStack
@@ -233,35 +233,43 @@ function Header() {
       justifyContent={{ base: "space-between", md: "block" }}
     >
       <Link href="/app">
-        <Box cursor="pointer">
-          {isLargeScreen ? <Logo /> : <LogoSmall />}
-        </Box>
+        <Box cursor="pointer">{isLargeScreen ? <Logo /> : <LogoSmall />}</Box>
       </Link>
-      {isSmallScreen ? <Box ml="20px"><BiSearch size={20} style={{ cursor: "pointer" }} onClick={() => setInputFocus(true)} /> </Box> : <Box padding="20px">
-        <Box
-          px="2rem"
-          display="flex"
-          bg="brown.200"
-          alignItems="center"
-          gap="20px"
-        >
-          <BiSearch size={20} />
-          <Input
-            outline="none"
-            border="0"
-            flexGrow="1"
-            padding="0"
-            placeholder="Search for agents"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            _focus={{
-              outline: "none",
-              border: "none",
-              boxShadow: "none",
-            }}
-          />
+      {isSmallScreen ? (
+        <Box ml="20px">
+          <BiSearch
+            size={20}
+            style={{ cursor: "pointer" }}
+            onClick={() => setInputFocus(true)}
+          />{" "}
         </Box>
-      </Box>}
+      ) : (
+        <Box padding="20px">
+          <Box
+            px="2rem"
+            display="flex"
+            bg="brown.200"
+            alignItems="center"
+            gap="20px"
+          >
+            <BiSearch size={20} />
+            <Input
+              outline="none"
+              border="0"
+              flexGrow="1"
+              padding="0"
+              placeholder="Search for agents"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              _focus={{
+                outline: "none",
+                border: "none",
+                boxShadow: "none",
+              }}
+            />
+          </Box>
+        </Box>
+      )}
       <HStack display={{ base: "none", md: "flex" }}>
         <a
           href="https://raydium.io/swap/?inputMint=sol&outputMint=5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump"
@@ -315,9 +323,7 @@ function Header() {
                 cursor="pointer"
                 justifyContent="flex-start"
               >
-                <Text color="text.100">
-                  {walletAddress}
-                </Text>
+                <Text color="text.100">{walletAddress}</Text>
                 <MdArrowOutward color="#737373" />
               </HStack>
 

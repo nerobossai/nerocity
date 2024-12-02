@@ -13,21 +13,19 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import TimerScreen from "@/components/Banner/timer";
 import MainCard from "@/components/Card/MainCard";
 import CoinsTable from "@/components/CoinsTable";
 import { HomeSticker } from "@/components/Svgs/homeSticker";
 import { Paths } from "@/constants/paths";
 import { pumpFunSdk } from "@/services/pumpfun";
-import { useScreenStore } from "@/stores/useScreenStore";
 import { useSearchStore } from "@/stores/useSearchStore";
 import useUserStore from "@/stores/useUserStore";
 import { getTokenHolders } from "@/utils/getTokenHolders";
 import useDebounce from "@/utils/useDebounce";
 
-import MainScreen from "./mainScreen";
 import type { AgentResponse } from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
-import TimerScreen from "@/components/Banner/timer";
 
 const Container = styled.div`
   width: 100%;
@@ -53,7 +51,7 @@ function HomeModule() {
     await Promise.all(
       resp.agents.map(async (data: any, idx: number) => {
         const tmp = await pumpFunSdk.getBondingCurveAccount(
-          new PublicKey(data.mint_public_key)
+          new PublicKey(data.mint_public_key),
         );
         const solPrice = await homeApiClient.solPrice();
         if (resp.agents[idx]) {
@@ -66,7 +64,7 @@ function HomeModule() {
 
           resp.agents[idx].complete = tmp?.complete;
         }
-      })
+      }),
     );
   };
   const fetchFeed = async (filter: string) => {
@@ -90,9 +88,9 @@ function HomeModule() {
       } else {
         resp = await homeApiClient.feed(filter);
       }
-      
+
       const sortedAgents = [...resp.agents].sort(
-        (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap)
+        (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap),
       );
       if (first) {
         setOverlord(sortedAgents[0]);
@@ -103,7 +101,7 @@ function HomeModule() {
         agents.map(async (agent) => {
           const holder = await getTokenHolders(agent.mint_public_key);
           return { ...agent, holder };
-        })
+        }),
       );
 
       setFeed(agentsWithHolders);

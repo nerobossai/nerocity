@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 import { Breadcrumb } from "@/components/BreadCrumb";
 import Footer from "@/components/Footer";
 import Seo from "@/components/Seo";
@@ -5,7 +7,6 @@ import TermsOfUsePage from "@/components/TermsofService.tsx";
 import { Meta } from "@/layouts/Meta";
 import Main from "@/templates/Main";
 import { AppConfig } from "@/utils/AppConfig";
-import styled from "styled-components";
 
 const Container = styled.div`
   padding: 2rem;

@@ -9,9 +9,9 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
 
 import CreatedAtComponent from "../Created";
-import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
 
 interface CardProps {
   id: string;
@@ -62,7 +62,15 @@ function DataTable({ feed }: { feed: CardProps[] }) {
   });
 
   const getSortArrow = (column: string) =>
-    sortColumn === column ? (sortOrder === "asc" ? <IoIosArrowRoundUp cursor="pointer" size={20} /> : <IoIosArrowRoundDown cursor="pointer" size={20} />) : <IoIosArrowRoundUp cursor="pointer" size={20} />;
+    sortColumn === column ? (
+      sortOrder === "asc" ? (
+        <IoIosArrowRoundUp cursor="pointer" size={20} />
+      ) : (
+        <IoIosArrowRoundDown cursor="pointer" size={20} />
+      )
+    ) : (
+      <IoIosArrowRoundUp cursor="pointer" size={20} />
+    );
 
   return (
     <VStack bg="#1B1B1E" width="100%" overflowX="auto">
@@ -80,21 +88,29 @@ function DataTable({ feed }: { feed: CardProps[] }) {
               style={{ color: "#656565", textAlign: "left", padding: "1rem" }}
               onClick={() => handleSort("ticker")}
             >
-              <Box display="flex" alignItems="center" gap="10px">Ticker {getSortArrow("ticker")}</Box>
+              <Box display="flex" alignItems="center" gap="10px">
+                Ticker {getSortArrow("ticker")}
+              </Box>
             </th>
             {isLargeScreen && (
-              <>
-                <th
-                  style={{
-                    color: "#656565",
-                    textAlign: "right",
-                    padding: "1rem",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleSort("created_at")}
+              <th
+                style={{
+                  color: "#656565",
+                  textAlign: "right",
+                  padding: "1rem",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleSort("created_at")}
+              >
+                <Box
+                  display="flex"
+                  justifyContent="flex-end"
+                  alignItems="center"
+                  gap="10px"
                 >
-                  <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">Created {getSortArrow("created_at")}</Box>
-                </th></>
+                  Created {getSortArrow("created_at")}
+                </Box>
+              </th>
             )}
             <th
               style={{
@@ -105,14 +121,28 @@ function DataTable({ feed }: { feed: CardProps[] }) {
               }}
               onClick={() => handleSort("created_by")}
             >
-              <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">Creator {getSortArrow("created_by")}</Box>
+              <Box
+                display="flex"
+                justifyContent="flex-end"
+                alignItems="center"
+                gap="10px"
+              >
+                Creator {getSortArrow("created_by")}
+              </Box>
             </th>
 
             <th
               style={{ color: "#656565", textAlign: "right", padding: "1rem" }}
               onClick={() => handleSort("market_cap")}
             >
-              <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">MCAP {getSortArrow("market_cap")}</Box>
+              <Box
+                display="flex"
+                justifyContent="flex-end"
+                alignItems="center"
+                gap="10px"
+              >
+                MCAP {getSortArrow("market_cap")}
+              </Box>
             </th>
             {isLargeScreen && (
               <>
@@ -125,7 +155,14 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                   }}
                   onClick={() => handleSort("holder")}
                 >
-                  <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">Holders {getSortArrow("holder")}</Box>
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    alignItems="center"
+                    gap="10px"
+                  >
+                    Holders {getSortArrow("holder")}
+                  </Box>
                 </th>
                 <th
                   style={{
@@ -136,7 +173,14 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                   }}
                   onClick={() => handleSort("replies")}
                 >
-                  <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">Comments {getSortArrow("replies")}</Box>
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    alignItems="center"
+                    gap="10px"
+                  >
+                    Comments {getSortArrow("replies")}
+                  </Box>
                 </th>
 
                 {/* <th
@@ -145,7 +189,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                 >
                   <Box display="flex" justifyContent="flex-end" alignItems="center" gap="10px">24H {getSortArrow("twenty_four_hr_changes")}</Box>
                 </th> */}
-                </>
+              </>
             )}
           </tr>
         </thead>
@@ -207,21 +251,20 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                 </td>
                 {/* Remaining Columns */}
                 {isLargeScreen && (
-                  <>
-                    <td
-                      style={{
-                        textAlign: "right",
-                        color: "white",
-                        padding: "1rem",
-                        borderTop: "1px solid #343434",
-                        borderBottom: "1px solid #343434",
-                      }}
-                    >
-                      <CreatedAtComponent
-                        timeStamp={parseInt(data.created_at.toString())}
-                        noHeader
-                      />
-                    </td></>
+                  <td
+                    style={{
+                      textAlign: "right",
+                      color: "white",
+                      padding: "1rem",
+                      borderTop: "1px solid #343434",
+                      borderBottom: "1px solid #343434",
+                    }}
+                  >
+                    <CreatedAtComponent
+                      timeStamp={parseInt(data.created_at.toString())}
+                      noHeader
+                    />
+                  </td>
                 )}
                 <td
                   style={{
@@ -288,10 +331,10 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     >
                       {data.twenty_four_hr_changes || "N/A"}
                     </td> */}
-                    </>
+                  </>
                 )}
               </tr>
-            ) : null
+            ) : null,
           )}
         </tbody>
       </table>

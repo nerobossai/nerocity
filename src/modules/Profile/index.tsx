@@ -171,7 +171,10 @@ function ProfileModule() {
           className="knf"
         >
           <Text fontSize="18px" cursor="pointer">
-            <span style={{ color: "#959595" }} onClick={() => router.push("/app")}>
+            <span
+              style={{ color: "#959595" }}
+              onClick={() => router.push("/app")}
+            >
               HOME /{" "}
             </span>{" "}
             PROFILE
@@ -304,97 +307,101 @@ function ProfileModule() {
                 <tbody>
                   {selectedTab === 0
                     ? coinsHeldData.map((coin, id) => (
-                      <tr
-                        key={id}
-                        // @ts-ignore
-                        style={{
-                          backgroundColor:
-                            isHovered === id ? "#2D2D2D" : "transparent",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => router.push(`/${id}`)}
-                        onMouseEnter={() => setIsHovered(id)}
-                        onMouseLeave={() => setIsHovered("")}
-                      >
-                        <td
+                        <tr
+                          key={id}
+                          // @ts-ignore
                           style={{
-                            height: "80px",
-                            padding: "1rem",
-                            borderLeft: "1px solid #343434",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
+                            backgroundColor:
+                              isHovered === id ? "#2D2D2D" : "transparent",
+                            cursor: "pointer",
                           }}
+                          onClick={() => router.push(`/${id}`)}
+                          onMouseEnter={() => setIsHovered(id)}
+                          onMouseLeave={() => setIsHovered("")}
                         >
-                          {coin.name}
-                        </td>
-                        <td
-                          style={{
-                            padding: "1rem",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
-                          }}
-                        >
-                          {coin.ticker}
-                        </td>
-                        <td
-                          style={{
-                            padding: "1rem",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
-                            borderRight: "1px solid #343434",
-                          }}
-                        >
-                          {coin.balance}
-                        </td>
-                      </tr>
-                    ))
+                          <td
+                            style={{
+                              height: "80px",
+                              padding: "1rem",
+                              borderLeft: "1px solid #343434",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.name}
+                          </td>
+                          <td
+                            style={{
+                              padding: "1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.ticker}
+                          </td>
+                          <td
+                            style={{
+                              padding: "1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                              borderRight: "1px solid #343434",
+                            }}
+                          >
+                            {coin.balance}
+                          </td>
+                        </tr>
+                      ))
                     : coinsData.map((coin, id) => (
-                      <tr
-                        key={coin.ticker}
-                        // @ts-ignore
-                        style={{
-                          backgroundColor:
-                            isHovered === coin.ticker
-                              ? "#2D2D2D"
-                              : "transparent",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => router.push(`/${coin.ticker}`)}
-                        onMouseEnter={() => setIsHovered(coin.ticker)}
-                        onMouseLeave={() => setIsHovered("")}
-                      >
-                        <td
+                        <tr
+                          key={coin.ticker}
+                          // @ts-ignore
                           style={{
-                            height: "80px",
-                            padding: "0.5rem 1rem",
-                            borderLeft: "1px solid #343434",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
+                            backgroundColor:
+                              isHovered === coin.ticker
+                                ? "#2D2D2D"
+                                : "transparent",
+                            cursor: "pointer",
                           }}
+                          onClick={() => router.push(`/${coin.ticker}`)}
+                          onMouseEnter={() => setIsHovered(coin.ticker)}
+                          onMouseLeave={() => setIsHovered("")}
                         >
-                          {coin.name}
-                        </td>
-                        <td
-                          style={{
-                            padding: "0.5rem 1rem",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
-                          }}
-                        >
-                          {coin.price ? <SubscriptText value={coin.price} /> :"--"}
-                        </td>
-                        <td
-                          style={{
-                            padding: "0.5rem 1rem",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
-                            borderRight: "1px solid #343434",
-                          }}
-                        >
-                          ${coin.market_cap}
-                        </td>
-                      </tr>
-                    ))}
+                          <td
+                            style={{
+                              height: "80px",
+                              padding: "0.5rem 1rem",
+                              borderLeft: "1px solid #343434",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.name}
+                          </td>
+                          <td
+                            style={{
+                              padding: "0.5rem 1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.price ? (
+                              <SubscriptText value={coin.price} />
+                            ) : (
+                              "--"
+                            )}
+                          </td>
+                          <td
+                            style={{
+                              padding: "0.5rem 1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                              borderRight: "1px solid #343434",
+                            }}
+                          >
+                            ${coin.market_cap}
+                          </td>
+                        </tr>
+                      ))}
                 </tbody>
               </table>
             </VStack>

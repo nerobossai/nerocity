@@ -112,7 +112,7 @@ function SuccessScreen(props: ISuccessScreenProps) {
             {/* <Text color="secondary">$245.12</Text> */}
           </HStack>
           <HStack justifyContent="space-between" width="100%">
-            <Text>Launch discount : no $NEROBOSS charged</Text>            
+            <Text>Launch discount : no $NEROBOSS charged</Text>
           </HStack>
         </VStack>
 

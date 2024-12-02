@@ -15,10 +15,10 @@ function Banner() {
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (Array.isArray(data)){
+        if (Array.isArray(data)) {
           const updatedData = data.filter((d) => d.ticker);
           setMessages(updatedData.slice(0, 4));
-        }else{
+        } else {
           let updatedMessages = messages;
           updatedMessages.push(data);
           if (updatedMessages.length > 4) {
@@ -28,7 +28,6 @@ function Banner() {
             setMessages(updatedMessages);
           }
         }
-        
       } catch (err) {
         console.error("Error parsing WebSocket message:", err);
       }
@@ -46,7 +45,7 @@ function Banner() {
   if (messages.filter((m) => m.ticker !== undefined).length === 0) {
     return null;
   }
-  
+
   return (
     <HStack
       minHeight="40px"
@@ -61,10 +60,9 @@ function Banner() {
     >
       {messages.map((message, index) => (
         <Box key={index} color={message.isBuy ? "green.100" : "#FF3838"}>
-          {`${message.isBuy ? "+" : "-"}${(
-            message.amount /
-            10 ** 9
-          ).toFixed(2)} ${message.ticker?.toUpperCase()} ${
+          {`${message.isBuy ? "+" : "-"}${(message.amount / 10 ** 9).toFixed(
+            2,
+          )} ${message.ticker?.toUpperCase()} ${
             message?.isBuy ? "BOUGHT" : "SOLD"
           }`}
         </Box>

@@ -15,9 +15,10 @@ import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-import SubscriptText from "@/components/SubscriptText";
 import { FEES, pumpFunSdk } from "@/services/pumpfun";
+import useUserStore from "@/stores/useUserStore";
 import { getGeckoterminalLink } from "@/utils";
+import { getUserTokens } from "@/utils/getUserToken";
 import { logger } from "@/utils/Logger";
 
 import type {
@@ -32,8 +33,6 @@ import {
 } from "./services/coinApiClient";
 import TradeFailure from "./tradeFailure";
 import TradeSuccess from "./tradeSuccess";
-import { getUserTokens } from "@/utils/getUserToken";
-import useUserStore from "@/stores/useUserStore";
 
 export type TradeModuleProps = {
   currentPrice: string;
@@ -46,7 +45,7 @@ function TradeModule(props: TradeModuleProps) {
   const toast = useToast();
   const router = useRouter();
   const { publicKey, sendTransaction } = useWallet();
-  const {profile} = useUserStore();
+  const { profile } = useUserStore();
   const { connection } = useConnection();
   const [active, setActive] = useState("buy");
   const [solPrice, setSolPrice] = useState<SolanaPriceResponse>();
@@ -63,7 +62,7 @@ function TradeModule(props: TradeModuleProps) {
     bought: true,
     tickerAmount: 0,
     solAmount: 0,
-    txn: ""
+    txn: "",
   });
 
   const buttons = [0.1, 0.5, 1, 5];
@@ -93,18 +92,19 @@ function TradeModule(props: TradeModuleProps) {
       const coinsHeld = await getUserTokens(
         profile?.profile?.public_key as string,
       );
-      const balanceObj = coinsHeld.find((b) => b.mint === props.tokenDetails.mint_public_key);
+      const balanceObj = coinsHeld.find(
+        (b) => b.mint === props.tokenDetails.mint_public_key,
+      );
       setWalletBalance(balanceObj ? balanceObj.balance : 0);
     }
-  }
+  };
 
   const fetchSolBalance = async () => {
     if (publicKey) {
       const solBalance = await connection.getBalance(new PublicKey(publicKey));
-      setSolBalance(solBalance/1000000000);
+      setSolBalance(solBalance / 1000000000);
     }
-
-  }
+  };
 
   useEffect(() => {
     fetchBalance();
@@ -118,17 +118,16 @@ function TradeModule(props: TradeModuleProps) {
     return () => clearInterval(intervalId);
   }, []);
 
-
   const setToken = async (amount: string) => {
     try {
       if (!amount) return;
 
       const tmp = await pumpFunSdk.getBondingCurveAccount(
-        new PublicKey(props.tokenDetails.mint_public_key)
+        new PublicKey(props.tokenDetails.mint_public_key),
       );
 
       const pumpdata = await coinApiClient.fetchPumpfunData(
-        props.tokenDetails.mint_public_key
+        props.tokenDetails.mint_public_key,
       );
 
       if (active === "buy") {
@@ -136,7 +135,7 @@ function TradeModule(props: TradeModuleProps) {
         setOutput((buy / 10 ** 6).toFixed(8));
         setDollarInput(
           parseFloat(amount) *
-            parseFloat(solPrice?.solana.usd.toString() || "1")
+            parseFloat(solPrice?.solana.usd.toString() || "1"),
         );
       } else {
         const feeBasisPoints = 100;
@@ -181,14 +180,14 @@ function TradeModule(props: TradeModuleProps) {
           new PublicKey(publicKey),
           new PublicKey(props.tokenDetails.mint_public_key),
           parseFloat(input) * LAMPORTS_PER_SOL,
-          100
+          100,
         );
       } else {
         txn = await pumpFunSdk.sell(
           new PublicKey(publicKey),
           new PublicKey(props.tokenDetails.mint_public_key),
           parseFloat(input) * 10 ** 6,
-          100
+          100,
         );
       }
 
@@ -211,7 +210,6 @@ function TradeModule(props: TradeModuleProps) {
         lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
         signature: txnResp,
       });
-
 
       switch (active) {
         case "buy": {
@@ -238,7 +236,7 @@ function TradeModule(props: TradeModuleProps) {
             bought: true,
             tickerAmount: parseFloat(output ?? "0"),
             solAmount: parseFloat(input),
-            txn: txnResp
+            txn: txnResp,
           });
           break;
         }
@@ -248,7 +246,7 @@ function TradeModule(props: TradeModuleProps) {
             timestamp: Date.now(),
             wallet_address: publicKey.toString(),
             amount_of_coins_sold_dollar: parseFloat(
-              dollarInput?.toString() || "0"
+              dollarInput?.toString() || "0",
             ),
             amount_of_coins_sold_token: parseFloat(input),
           });
@@ -262,7 +260,7 @@ function TradeModule(props: TradeModuleProps) {
             bought: false,
             tickerAmount: parseFloat(input),
             solAmount: parseFloat(output ?? "0"),
-            txn: txnResp
+            txn: txnResp,
           });
           break;
         }
@@ -349,28 +347,30 @@ function TradeModule(props: TradeModuleProps) {
             <Text color="text.100" fontSize="10px">
               YOU PAY
             </Text>
-            {active === "buy" && <HStack width="100%" gap="5px">
-              {buttons.map((button, index) => (
-                <Button
-                  key={index}
-                  borderRadius="0"
-                  onClick={() => {
-                    setInput(button as any);
-                    setToken(button as any);
-                    setSelectedSol(button);
-                  }}
-                  bg={selectedSol === button ? "white" : "#222227"}
-                  color={selectedSol === button ? "black" : "#818181"}
-                  _hover={{
-                    bg: selectedSol === button ? "white" : "#333",
-                  }}
-                  padding="10px 20px"
-                  fontSize="12px"
-                >
-                  {button} SOL
-                </Button>
-              ))}
-            </HStack>}
+            {active === "buy" && (
+              <HStack width="100%" gap="5px">
+                {buttons.map((button, index) => (
+                  <Button
+                    key={index}
+                    borderRadius="0"
+                    onClick={() => {
+                      setInput(button as any);
+                      setToken(button as any);
+                      setSelectedSol(button);
+                    }}
+                    bg={selectedSol === button ? "white" : "#222227"}
+                    color={selectedSol === button ? "black" : "#818181"}
+                    _hover={{
+                      bg: selectedSol === button ? "white" : "#333",
+                    }}
+                    padding="10px 20px"
+                    fontSize="12px"
+                  >
+                    {button} SOL
+                  </Button>
+                ))}
+              </HStack>
+            )}
           </VStack>
 
           <InputGroup
@@ -399,8 +399,13 @@ function TradeModule(props: TradeModuleProps) {
             </InputRightAddon>
           </InputGroup>
           <HStack justifyContent="flex-end">
-                <Text fontSize="12px">Bal: {active == "buy" ? solBalance +" SOL" : `${walletBalance} $${props.tokenDetails.ticker}`}</Text>
-            </HStack>
+            <Text fontSize="12px">
+              Bal:{" "}
+              {active == "buy"
+                ? `${solBalance} SOL`
+                : `${walletBalance} $${props.tokenDetails.ticker}`}
+            </Text>
+          </HStack>
 
           <VStack alignItems="flex-start" gap="4px">
             <Text color="text.100" fontSize="10px">
@@ -428,8 +433,13 @@ function TradeModule(props: TradeModuleProps) {
             </InputGroup>
           </VStack>
           <HStack justifyContent="flex-end">
-                <Text fontSize="12px">Bal: {active == "sell" ? solBalance +"SOL" : `${walletBalance} $${props.tokenDetails.ticker}`}</Text>
-            </HStack>
+            <Text fontSize="12px">
+              Bal:{" "}
+              {active == "sell"
+                ? `${solBalance}SOL`
+                : `${walletBalance} $${props.tokenDetails.ticker}`}
+            </Text>
+          </HStack>
 
           <Button
             mt="4px"
@@ -471,14 +481,32 @@ function TradeModule(props: TradeModuleProps) {
               1 {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`} =
               &nbsp;
               {active === "buy" ? (
-                //@ts-ignore
-                `${solPrice?.solana.usd/(props.currentPrice === 0 ? 1 : props.currentPrice)} ${props.tokenDetails.ticker}` || "$164.84"
+                // @ts-ignore
+                `${solPrice?.solana.usd / (props.currentPrice === 0 ? 1 : props.currentPrice)} ${props.tokenDetails.ticker}` ||
+                "$164.84"
               ) : (
-                <><span> {(parseFloat(props.currentPrice)*10/(solPrice?.solana.usd ?? 237)).toFixed(15)}&nbsp;SOL</span></>
+                <span>
+                  {" "}
+                  {(
+                    (parseFloat(props.currentPrice) * 10) /
+                    (solPrice?.solana.usd ?? 237)
+                  ).toFixed(15)}
+                  &nbsp;SOL
+                </span>
               )}
             </Text>
-            {active === "sell" && Number(input ?? 0) > walletBalance  &&<Text fontSize="12px" color="red.500">*You currently have {walletBalance} ${props.tokenDetails.ticker} in your wallet. Insufficient amount.</Text>}
-            {active === "buy" && Number(input ?? 0) > solBalance  &&<Text fontSize="12px" color="red.500">*You currently have {solBalance} SOL in your wallet. Insufficient amount.</Text>}
+            {active === "sell" && Number(input ?? 0) > walletBalance && (
+              <Text fontSize="12px" color="red.500">
+                *You currently have {walletBalance} ${props.tokenDetails.ticker}{" "}
+                in your wallet. Insufficient amount.
+              </Text>
+            )}
+            {active === "buy" && Number(input ?? 0) > solBalance && (
+              <Text fontSize="12px" color="red.500">
+                *You currently have {solBalance} SOL in your wallet.
+                Insufficient amount.
+              </Text>
+            )}
 
             {/* <HStack
               width="100%"

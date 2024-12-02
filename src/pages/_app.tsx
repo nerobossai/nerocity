@@ -7,17 +7,16 @@ import {
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { clusterApiUrl } from "@solana/web3.js";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useMemo, useState } from "react";
 
+import { RPC_NODE_URL } from "@/constants/platform";
 import useUserStore from "@/stores/useUserStore";
 import { tailwindConfig } from "@/styles/global";
 import { tabsTheme } from "@/styles/tabsTheme";
 import type { ProfileObject } from "@/utils/AuthUtils";
 import { getProfileFromStorage } from "@/utils/AuthUtils";
-import { RPC_NODE_URL } from "@/constants/platform";
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
 
@@ -90,11 +89,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   // You can also provide a custom RPC endpoint.
   const endpoint = useMemo(() => RPC_NODE_URL, [network]);
 
-  const wallets = useMemo(
-    () =>
-      [new PhantomWalletAdapter()],
-    [network],
-  );
+  const wallets = useMemo(() => [new PhantomWalletAdapter()], [network]);
 
   if (!isMounted) {
     return null;

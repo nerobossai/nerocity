@@ -5,7 +5,12 @@ import type { CardProps } from "@/components/Card";
 import CreatedAtComponent from "@/components/Created";
 import { getTokenHolders } from "@/utils/getTokenHolders";
 
-function AboutModule(props: CardProps & { sol_reserve: string | undefined; mint_public_key: string }) {
+function AboutModule(
+  props: CardProps & {
+    sol_reserve: string | undefined;
+    mint_public_key: string;
+  },
+) {
   const toast = useToast();
   const [holders, setHolders] = useState("");
 
@@ -23,9 +28,9 @@ function AboutModule(props: CardProps & { sol_reserve: string | undefined; mint_
     const fetchHolders = async () => {
       const data = await getTokenHolders(props.mint_public_key);
       setHolders(data);
-    }
+    };
     fetchHolders();
-  }, [])
+  }, []);
   return (
     <Stack
       fontSize="12px"
