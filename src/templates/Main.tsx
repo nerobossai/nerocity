@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Banner from "@/components/Banner";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import MarqueeBanner from "@/components/Banner/TestVersion";
+// import MarqueeBanner from "@/components/Banner/TestVersion";
 
 const Container = styled.div<{ $noHeaderOnMobile?: boolean }>`
   width: 100%;
@@ -33,7 +33,7 @@ const Main = (props: IPropType) => {
     <Container $noHeaderOnMobile={noHeaderOnMobile}>
       <GoogleAnalytics gaId="G-7KQEXTEH06" />
       <Header />
-      <MarqueeBanner />
+      {/* <MarqueeBanner /> */}
       {children}
       {nofooter ? null : <Footer />}
     </Container>
