@@ -65,7 +65,7 @@ export const DEFAULT_DECIMALS = 6;
 export const FEES = Object.freeze({
   platform: {
     type: "flat",
-    amount: 0.12,
+    amount: 0.0,
   },
   trade_fees: {
     type: "percent",
