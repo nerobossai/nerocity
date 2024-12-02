@@ -1,8 +1,8 @@
+import { Breadcrumb } from "@/components/BreadCrumb";
 import Footer from "@/components/Footer";
 import PrivacyPage from "@/components/PrivacyPage";
 import Seo from "@/components/Seo";
 import { Meta } from "@/layouts/Meta";
-import { Breadcrumb } from "@/modules/Coin";
 import CreateAgentModule from "@/modules/CreateAgent";
 import Main from "@/templates/Main";
 import { AppConfig } from "@/utils/AppConfig";

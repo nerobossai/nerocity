@@ -125,7 +125,7 @@ function CreateAgentModule() {
   const router = useRouter();
 
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
-  const [coinPercentage, setCoinPercentage] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(0);
   const [promptDescription, setPromptDescription] = useState("");
 
   const toggleTrait = (trait: string) => {
@@ -205,12 +205,6 @@ function CreateAgentModule() {
       }
 
       if (!file && !tokenM) {
-        // toast({
-        //   title: "Error",
-        //   description: "Please select image",
-        //   status: "error",
-        //   position: "bottom-right",
-        // });
         setImageError("No image is selected!");
         return;
       }
@@ -242,7 +236,7 @@ function CreateAgentModule() {
         publicKey,
         tokenMint,
         tMeta,
-        coinPercentage * LAMPORTS_PER_SOL
+        amount * LAMPORTS_PER_SOL
       );
       const txnResp = await sendTransaction(createResults, connection);
       const latestBlockHash = await connection.getLatestBlockhash();
@@ -277,7 +271,7 @@ function CreateAgentModule() {
           tokenMetadata,
         },
       });
-      // navigator.replace(Paths.home);
+
       toast({
         title: "Success",
         description: "Ai Agent Coin launched",
@@ -779,35 +773,28 @@ function CreateAgentModule() {
                   flexGrow="1"
                   flexWrap="wrap"
                   border={
-                    coinPercentage === trait
+                    amount === trait
                       ? "0.5px solid white"
                       : "0.5px solid #959595"
                   }
-                  color={coinPercentage === trait ? "black" : "#959595"}
-                  bg={coinPercentage === trait ? "white" : "#1B1B1D"}
-                  onClick={() => setCoinPercentage(trait)}
+                  color={amount === trait ? "black" : "#959595"}
+                  bg={amount === trait ? "white" : "#1B1B1D"}
+                  onClick={() => setAmount(trait)}
                 >
                   {trait}
                 </Button>
               ))}
             </HStack>
             <Box position="relative" width="100%" mb="10px">
-              {/* <Progress
-                backgroundColor="#323232"
-                color="white"
-                height="36px"
-                value={coinPercentage}
-                width="100%"
-              /> */}
               <Input
-                value={coinPercentage}
+                value={amount}
                 type="number"
                 backgroundColor="#323232"
                 color="white"
                 width="100%"
                 border="none"
                 textAlign="center"
-                onChange={(e) => setCoinPercentage(Number(e.target.value))}
+                onChange={(e) => setAmount(Number(e.target.value))}
               />
             </Box>
           </VStack>
@@ -838,7 +825,7 @@ function CreateAgentModule() {
           file={file}
           id={mintPubKey}
           ticker={ticker}
-          coins_percentage_for_dev={coinPercentage}
+          coins_percentage_for_dev={amount}
           website={website}
         />
       )}
