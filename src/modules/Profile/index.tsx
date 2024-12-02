@@ -1,6 +1,7 @@
 import {
   Box,
   HStack,
+  Icon,
   Image,
   Spinner,
   Stack,
@@ -23,6 +24,10 @@ import { getUserTokens } from "@/utils/getUserToken";
 
 import { homeApiClient } from "../Home/services/homeApiClient";
 import { profileApiClient } from "./services/profileApiClient";
+import { AiOutlineGlobal } from "react-icons/ai";
+import { LiaTelegram } from "react-icons/lia";
+import { RiTwitterXFill } from "react-icons/ri";
+import SocialModalComponent from "@/components/SocialModal";
 
 const Container = styled.div`
   width: 100%;
@@ -51,6 +56,9 @@ function ProfileModule() {
   const [error, setError] = useState("");
   const [isHovered, setIsHovered] = useState<number | string>("");
   const [coinsHeldData, setCoinsHeldData] = useState<CoinsHeldData[]>([]);
+  const [showSocialModal, setShowSocialModal] = useState(false);
+  const [selectedSocial, setSelectedSocial] = useState<any>();
+  const [selectedSocialName, setSelectedSocialName] = useState<string>("");
 
   useEffect(() => {
     if (!username) {
@@ -60,13 +68,13 @@ function ProfileModule() {
       try {
         setLoading(true);
         const profileData = await profileApiClient.fetchProfileByUserName(
-          username as string,
+          username as string
         );
         const fetchedProfile = profileData.user;
         setProfile(fetchedProfile);
 
         const tokensData: any[] = await getUserTokens(
-          profileData.user.public_key as string,
+          profileData.user.public_key as string
         );
 
         const dataWithNameTicker = [];
@@ -90,7 +98,7 @@ function ProfileModule() {
         setCoinsHeldData(dataWithNameTicker);
 
         const coinDataResponse = await profileApiClient.fetchCoinsByPublicKey(
-          fetchedProfile.public_key as string,
+          fetchedProfile.public_key as string
         );
         const coinData = coinDataResponse.agents;
         // const coinData = samepleData;
@@ -99,7 +107,7 @@ function ProfileModule() {
         const updatedCoinData = await Promise.all(
           coinData.map(async (coin: any) => {
             const tmp = await pumpFunSdk.getBondingCurveAccount(
-              new PublicKey(coin.mint_public_key),
+              new PublicKey(coin.mint_public_key)
             );
 
             if (!tmp) return coin;
@@ -124,7 +132,7 @@ function ProfileModule() {
               price: priceExponential,
               marketcap,
             };
-          }),
+          })
         );
         setCoinsData(updatedCoinData);
         setLoading(false);
@@ -171,7 +179,10 @@ function ProfileModule() {
           className="knf"
         >
           <Text fontSize="18px" cursor="pointer">
-            <span style={{ color: "#959595" }} onClick={() => router.push("/app")}>
+            <span
+              style={{ color: "#959595" }}
+              onClick={() => router.push("/app")}
+            >
               HOME /{" "}
             </span>{" "}
             PROFILE
@@ -297,6 +308,17 @@ function ProfileModule() {
                         >
                           Market Cap
                         </th>
+                        {selectedTab === 1 && (
+                          <th
+                            style={{
+                              color: "#656565",
+                              padding: "1rem",
+                              textAlign: "left",
+                            }}
+                          >
+                            Social
+                          </th>
+                        )}
                       </>
                     )}
                   </tr>
@@ -304,103 +326,167 @@ function ProfileModule() {
                 <tbody>
                   {selectedTab === 0
                     ? coinsHeldData.map((coin, id) => (
-                      <tr
-                        key={id}
-                        // @ts-ignore
-                        style={{
-                          backgroundColor:
-                            isHovered === id ? "#2D2D2D" : "transparent",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => router.push(`/${id}`)}
-                        onMouseEnter={() => setIsHovered(id)}
-                        onMouseLeave={() => setIsHovered("")}
-                      >
-                        <td
+                        <tr
+                          key={id}
+                          // @ts-ignore
                           style={{
-                            height: "80px",
-                            padding: "1rem",
-                            borderLeft: "1px solid #343434",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
+                            backgroundColor:
+                              isHovered === id ? "#2D2D2D" : "transparent",
+                            cursor: "pointer",
                           }}
+                          onClick={() => router.push(`/${id}`)}
+                          onMouseEnter={() => setIsHovered(id)}
+                          onMouseLeave={() => setIsHovered("")}
                         >
-                          {coin.name}
-                        </td>
-                        <td
-                          style={{
-                            padding: "1rem",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
-                          }}
-                        >
-                          {coin.ticker}
-                        </td>
-                        <td
-                          style={{
-                            padding: "1rem",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
-                            borderRight: "1px solid #343434",
-                          }}
-                        >
-                          {coin.balance}
-                        </td>
-                      </tr>
-                    ))
+                          <td
+                            style={{
+                              height: "80px",
+                              padding: "1rem",
+                              borderLeft: "1px solid #343434",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.name}
+                          </td>
+                          <td
+                            style={{
+                              padding: "1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.ticker}
+                          </td>
+                          <td
+                            style={{
+                              padding: "1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                              borderRight: "1px solid #343434",
+                            }}
+                          >
+                            {coin.balance}
+                          </td>
+                        </tr>
+                      ))
                     : coinsData.map((coin, id) => (
-                      <tr
-                        key={coin.ticker}
-                        // @ts-ignore
-                        style={{
-                          backgroundColor:
-                            isHovered === coin.ticker
-                              ? "#2D2D2D"
-                              : "transparent",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => router.push(`/${coin.ticker}`)}
-                        onMouseEnter={() => setIsHovered(coin.ticker)}
-                        onMouseLeave={() => setIsHovered("")}
-                      >
-                        <td
+                        <tr
+                          key={coin.ticker}
+                          // @ts-ignore
                           style={{
-                            height: "80px",
-                            padding: "0.5rem 1rem",
-                            borderLeft: "1px solid #343434",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
+                            backgroundColor:
+                              isHovered === coin.ticker
+                                ? "#2D2D2D"
+                                : "transparent",
+                            cursor: "pointer",
                           }}
+                          onMouseEnter={() => setIsHovered(coin.ticker)}
+                          onMouseLeave={() => setIsHovered("")}
                         >
-                          {coin.name}
-                        </td>
-                        <td
-                          style={{
-                            padding: "0.5rem 1rem",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
-                          }}
-                        >
-                          {coin.price ? <SubscriptText value={coin.price} /> :"--"}
-                        </td>
-                        <td
-                          style={{
-                            padding: "0.5rem 1rem",
-                            borderTop: "1px solid #343434",
-                            borderBottom: "1px solid #343434",
-                            borderRight: "1px solid #343434",
-                          }}
-                        >
-                          ${coin.market_cap}
-                        </td>
-                      </tr>
-                    ))}
+                          <td
+                            onClick={() =>
+                              router.push(`/${coin.mint_public_key}`)
+                            }
+                            style={{
+                              height: "80px",
+                              padding: "0.5rem 1rem",
+                              borderLeft: "1px solid #343434",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.name}
+                          </td>
+                          <td
+                            onClick={() =>
+                              router.push(`/${coin.mint_public_key}`)
+                            }
+                            style={{
+                              padding: "0.5rem 1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                            }}
+                          >
+                            {coin.price ? (
+                              <SubscriptText value={coin.price} />
+                            ) : (
+                              "--"
+                            )}
+                          </td>
+                          <td
+                            onClick={() =>
+                              router.push(`/${coin.mint_public_key}`)
+                            }
+                            style={{
+                              padding: "0.5rem 1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                              borderRight: "1px solid #343434",
+                            }}
+                          >
+                            ${coin.market_cap}
+                          </td>
+                          <td
+                            style={{
+                              padding: "0.5rem 1rem",
+                              borderTop: "1px solid #343434",
+                              borderBottom: "1px solid #343434",
+                              borderRight: "1px solid #343434",
+                            }}
+                          >
+                            <HStack>
+                              <Icon
+                                as={RiTwitterXFill}
+                                size={"1.2rem"}
+                                _hover={{ opacity: "0.8" }}
+                                onClick={() => {
+                                  setSelectedSocial(coin);
+                                  setShowSocialModal(true);
+                                  setSelectedSocialName("twitter");
+                                }}
+                              />
+                              <Icon
+                                as={LiaTelegram}
+                                size={"1.5rem"}
+                                _hover={{ opacity: "0.8" }}
+                                onClick={() => {
+                                  setSelectedSocial(coin);
+                                  setShowSocialModal(true);
+                                  setSelectedSocialName("telegram");
+                                }}
+                              />
+                              <Icon
+                                as={AiOutlineGlobal}
+                                size={"1.5rem"}
+                                _hover={{ opacity: "0.8" }}
+                                onClick={() => {
+                                  setSelectedSocial(coin);
+                                  setShowSocialModal(true);
+                                  setSelectedSocialName("website");
+                                }}
+                              />
+                            </HStack>
+                          </td>
+                        </tr>
+                      ))}
                 </tbody>
               </table>
             </VStack>
           )}
         </VStack>
       </Stack>
+      <SocialModalComponent
+        isOpen={showSocialModal}
+        onClose={() => {
+          setSelectedSocial(undefined);
+          setShowSocialModal(false);
+          setSelectedSocialName("");
+        }}
+        setSelectedSocial={setSelectedSocial}
+        data={selectedSocial}
+        name={selectedSocialName}
+      />
     </Container>
   );
 }

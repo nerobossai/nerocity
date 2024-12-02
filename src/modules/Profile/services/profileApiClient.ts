@@ -107,7 +107,7 @@ class ApiClient extends BaseApiClient {
         type: "GET",
         url: ApiEndpoints.profile.fetchByUserName.replace(
           ":username",
-          username,
+          username
         ),
       });
       return resp.data;
@@ -122,7 +122,7 @@ class ApiClient extends BaseApiClient {
         type: "GET",
         url: ApiEndpoints.profile.fetchByPublicKey.replace(
           ":public_key",
-          publicKey,
+          publicKey
         ),
       });
       return resp.data;
@@ -137,7 +137,7 @@ class ApiClient extends BaseApiClient {
         type: "GET",
         url: ApiEndpoints.profile.fetchCoinsByPublicKey.replace(
           ":public_key",
-          publicKey,
+          publicKey
         ),
       });
       return resp.data;
@@ -147,15 +147,30 @@ class ApiClient extends BaseApiClient {
   }
 
   async fetchCoinsCreatedByAgent(
-    agentId: string,
+    agentId: string
   ): Promise<AgentCoinResponseData> {
     try {
       const resp = await this.secureApiCall({
         type: "GET",
         url: ApiEndpoints.agents.fetchCoinsHeldByAgentId.replace(
           ":agent_id",
-          agentId,
+          agentId
         ),
+      });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async getLinkTwitterUrl(agentId: string): Promise<any> {
+    try {
+      const resp = await this.secureApiCall({
+        type: "POST",
+        url: ApiEndpoints.agents.reconnectTwitter,
+        body: {
+          mintPublicKey: agentId,
+        },
       });
       return resp.data;
     } catch (err: any) {

@@ -3,7 +3,7 @@ export const ApiEndpoints = Object.freeze({
     feed: "/public/feed",
     overlord: "/public/overlord",
     candlestick: "/public/candlestick/:mint",
-    checkNft: "/leaderboard/api/v1/checkNft"
+    checkNft: "/leaderboard/api/v1/checkNft",
   },
   auth: {
     login: "/auth/login",
@@ -16,6 +16,7 @@ export const ApiEndpoints = Object.freeze({
     agent: "/agents/:agent_id",
     pumpfun: "/agents/pumpfun/:agent_id",
     twitteroauth1: "/agents/twitter-oauth1",
+    reconnectTwitter: "/agents/reconnect/twitter",
     validateoauth1: "/agents/twitter/validate-oauth1",
     fetchCoinsHeldByAgentId: "/agents/:agent_id",
   },
