@@ -96,12 +96,17 @@ function Header() {
   }, [profile]);
 
   const handleSignin = async () => {
+    console.log("Debug 0");
     try {
+      console.log("Debug 0.2", signIn);
       if (!signIn) return;
+      console.log("Debug 0.5");
+      console.log("Debug 1");
       const hexPubKey = publicKey?.toBuffer().toString("hex");
       if (profile?.profile?.public_key === hexPubKey) {
         return;
       }
+      console.log("Debug 2");
       const data = await signIn();
       const resp = await authApiClient.login({
         public_key: Buffer.from(data.account.publicKey).toString("hex"),
@@ -113,6 +118,7 @@ function Header() {
         isAuthenticated: true,
         token: resp.token,
       };
+      console.log("Debug 3");
       setUserProfile(profileObject);
       setToken(profileObject.token);
       setAuthenticated(true);
@@ -125,10 +131,13 @@ function Header() {
           publicKey?.toString() || data.account.publicKey.toString(),
       });
 
+      console.log("Debug 4");
       if (!status) {
         throw new Error("Something went wrong!");
       }
     } catch (err) {
+      console.log("Debug 5", err);
+      handleDisconnect();
       console.log(err);
     }
   };
@@ -163,6 +172,7 @@ function Header() {
 
   useEffect(() => {
     const fetchMarketCap = async () => {
+      // Market Cap for Neroboss
       const data = await coinApiClient.fetchPumpfunData("5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump");
       setMarketCap(formatToShortLink(data.usd_market_cap))
     }
