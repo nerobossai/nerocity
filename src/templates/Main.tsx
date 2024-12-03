@@ -11,7 +11,13 @@ import Header from "@/components/Header";
 const Container = styled.div<{ $noHeaderOnMobile?: boolean }>`
   width: 100%;
   color: white;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+`;
+const ContentWrapper = styled.div<{ nopadding?: boolean }>`
+  flex: 1; /* Allows this section to grow and push the footer down */
+  padding: ${(props) => (props.nopadding ? "0" : "1rem")};
 `;
 
 interface IPropType {
@@ -34,7 +40,7 @@ const Main = (props: IPropType) => {
       <GoogleAnalytics gaId="G-7KQEXTEH06" />
       <Header />
       {/* <MarqueeBanner /> */}
-      {children}
+      <ContentWrapper nopadding={nopadding}>{children}</ContentWrapper>
       {nofooter ? null : <Footer />}
     </Container>
   );

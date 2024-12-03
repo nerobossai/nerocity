@@ -1,13 +1,10 @@
+import { Breadcrumb } from "@/components/BreadCrumb";
 import Footer from "@/components/Footer";
-import PrivacyPage from "@/components/PrivacyPage";
 import Seo from "@/components/Seo";
 import TermsOfUsePage from "@/components/TermsofService.tsx";
 import { Meta } from "@/layouts/Meta";
-import { Breadcrumb } from "@/modules/Coin";
-import CreateAgentModule from "@/modules/CreateAgent";
 import Main from "@/templates/Main";
 import { AppConfig } from "@/utils/AppConfig";
-import { HStack } from "@chakra-ui/react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -32,11 +29,10 @@ const Index = () => {
         }
         nofooter
       >
-            <Container>
-      <Breadcrumb loading={false} ticker="TERMS OF SERVICE" />
-
+        <Container>
+          <Breadcrumb loading={false} ticker="TERMS OF SERVICE" />
           <TermsOfUsePage />
-      </Container>
+        </Container>
         <Footer />
       </Main>
     </>

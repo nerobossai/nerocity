@@ -8,6 +8,7 @@ import {
   Link,
   Text,
   useBreakpointValue,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -37,7 +38,7 @@ function formatToShortLink(number: any) {
   if (number >= 1_000_000) {
     return (number / 1_000_000).toFixed(1) + "M";
   }
-  return number.toString();
+  return number?.toString();
 }
 
 const Container = styled.header`
@@ -47,6 +48,7 @@ const Container = styled.header`
 
 function Header() {
   const router = useRouter();
+  const toast = useToast();
   const { searchText, setSearchText } = useSearchStore();
   const {
     isAuthenticated,
@@ -68,6 +70,7 @@ function Header() {
     connect,
     disconnect,
     signIn,
+    signMessage
   } = useWallet();
 
   const [previousKey, setPreviousKey] = useState<string | undefined>(
@@ -97,41 +100,57 @@ function Header() {
 
   const handleSignin = async () => {
     try {
-      if (!signIn) return;
-      const hexPubKey = publicKey?.toBuffer().toString("hex");
+      if (!signMessage || !publicKey) {
+        console.error("Wallet not connected or does not support message signing");
+        return;
+      }
+
+      const message = "Sign this message to authenticate";
+      const encodedMessage = new TextEncoder().encode(message);
+      const signedMessage = await signMessage(encodedMessage);
+
+      const hexPubKey = publicKey.toBuffer().toString("hex");
       if (profile?.profile?.public_key === hexPubKey) {
         return;
       }
-      const data = await signIn();
+
       const resp = await authApiClient.login({
-        public_key: Buffer.from(data.account.publicKey).toString("hex"),
-        signature: Buffer.from(data.signature).toString("hex"),
-        message: Buffer.from(data.signedMessage).toString("hex"),
+        public_key: hexPubKey,
+        signature: Buffer.from(signedMessage).toString("hex"),
+        message: Buffer.from(encodedMessage).toString("hex"),
       });
+
       const profileObject: AuthUtils.ProfileObject = {
         profile: resp.user,
         isAuthenticated: true,
         token: resp.token,
       };
+
       setUserProfile(profileObject);
       setToken(profileObject.token);
       setAuthenticated(true);
       setIsOpen(false);
 
-      // set state
       const status = AuthUtils.setProfileInStorage(profileObject);
       trackWalletConnect({
-        wallet_address:
-          publicKey?.toString() || data.account.publicKey.toString(),
+        wallet_address: publicKey.toString(),
       });
 
       if (!status) {
         throw new Error("Something went wrong!");
       }
     } catch (err) {
-      console.log(err);
+      handleDisconnect();
+      toast({
+        title: "Error",
+        description: "Unable to connect!",
+        status: "error",
+        position: "bottom-right",
+      });
+      console.error(err);
     }
   };
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -163,6 +182,7 @@ function Header() {
 
   useEffect(() => {
     const fetchMarketCap = async () => {
+      // Market Cap for Neroboss
       const data = await coinApiClient.fetchPumpfunData("5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump");
       setMarketCap(formatToShortLink(data.usd_market_cap))
     }

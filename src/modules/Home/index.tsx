@@ -117,20 +117,30 @@ function HomeModule() {
   };
 
   useEffect(() => {
+    let intervalId = setInterval(() => {
+      console.log("poll completed");
+      fetchFeed(filter);
+    }, 50000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
     fetchFeed(filter);
   }, [filter, debouncedQuery]);
 
   return (
     <Container>
-      <Stack justifyContent="center" alignItems="center" px="20px">
+      <Stack justifyContent="center" alignItems="center">
         <Stack
           justifyContent="center"
           alignItems="center"
           marginBottom="20px"
           gap="40px"
+          paddingTop="20px"
         >
-          <TimerScreen />
-          {overlord && <MainCard {...overlord} />}
+          {/* <TimerScreen /> */}
+          {overlord && <><MainCard {...overlord} />
           <HStack
             width="100%"
             alignItems={{ base: "flex-start", lg: "center" }}
@@ -167,14 +177,12 @@ function HomeModule() {
               opacity={isAuthenticated ? 1 : 0.8}
               disabled={!isAuthenticated}
               borderRadius="0"
-              onClick={() =>
-                isAuthenticated && navigator.push(Paths.createAgent)
-              }
+              onClick={() => navigator.push(Paths.createAgent)}
               margin="20px"
             >
               CREATE AGENT
             </Button>
-          </HStack>
+          </HStack></>}
 
           {feedLoading ? (
             <Box
