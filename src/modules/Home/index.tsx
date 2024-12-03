@@ -131,7 +131,7 @@ function HomeModule() {
 
   return (
     <Container>
-      <Stack justifyContent="center" alignItems="center" px="20px">
+      <Stack justifyContent="center" alignItems="center">
         <Stack
           justifyContent="center"
           alignItems="center"

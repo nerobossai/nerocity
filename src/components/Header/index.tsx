@@ -38,7 +38,7 @@ function formatToShortLink(number: any) {
   if (number >= 1_000_000) {
     return (number / 1_000_000).toFixed(1) + "M";
   }
-  return number.toString();
+  return number?.toString();
 }
 
 const Container = styled.header`

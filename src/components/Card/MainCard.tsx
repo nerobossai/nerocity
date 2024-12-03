@@ -110,7 +110,6 @@ function MainCard(props: CardProps) {
     <Stack
       padding="20px"
       width="100%"
-      marginTop="20px"
       border="1px solid #6F5034"
       bg="brown.300"
       display="flex"
