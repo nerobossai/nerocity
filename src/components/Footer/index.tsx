@@ -17,7 +17,7 @@ const FooterContainer = styled.footer`
 `;
 
 const CopyrightText = styled.div`
-  font-size: 0.875rem;
+  font-size: 0.675rem;
   color: #4a5568;
   margin-bottom: 0.5rem;
 
@@ -27,7 +27,7 @@ const CopyrightText = styled.div`
 `;
 
 const PolicyText = styled.div`
-  font-size: 0.875rem;
+  font-size: 0.675rem;
   color: #4a5568;
 
   @media (min-width: 768px) {
