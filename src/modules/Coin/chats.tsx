@@ -185,7 +185,9 @@ function ChatModule(props: { agentId: string }) {
   useEffect(() => {
     fetchChats();
 
-    const intervalId = setInterval(fetchChatsAfterInterval, 2000);
+    const intervalId = setInterval(() => {
+      fetchChatsAfterInterval();
+    }, 2000);
 
     return () => {
       clearInterval(intervalId);
