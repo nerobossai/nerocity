@@ -45,7 +45,7 @@ function CoinHeaderModule(props: CardProps) {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(window.location.href.split('/').pop() as string);
+    navigator.clipboard.writeText(props.id);
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
@@ -133,16 +133,15 @@ function CoinHeaderModule(props: CardProps) {
                 gap="8px"
                 color="secondary"
                 wordBreak="break-all"
-                // lineHeight="1"
                 transform="translateY(2px)"
               >
                 <HStack cursor="pointer" onClick={handleCopy}>
-                  <Text>CA:{extractFirstAndLastFour(window.location.href)}{" "}</Text>
+                  <Text>CA:{extractFirstAndLastFour(props.id)}{" "}</Text>
                   {copied ? <FaCheckCircle /> : <FaCopy
                     className="cursor-pointer"
                   />}
                 </HStack>
-                <a href={"https://solscan.io/account/" + window.location.href.split('/').pop()} target="_blank" rel="noopener noreferrer">
+                <a href={"https://solscan.io/account/" + props.id} target="_blank" rel="noopener noreferrer">
                   <IoIosLink size={15} style={{ marginLeft: "6px" }} />
                 </a>
               </Box>
@@ -157,10 +156,10 @@ function CoinHeaderModule(props: CardProps) {
               // lineHeight="1"
               transform="translateY(2px)"
             >
-              CA:{extractFirstAndLastFour(window.location.href)}{" "}
+              CA:{extractFirstAndLastFour(props.id)}{" "}
               <FaCopy
                 onClick={() =>
-                  navigator.clipboard.writeText(window.location.href.split('/').pop() as string)
+                  navigator.clipboard.writeText(props.id)
                 }
                 className="cursor-pointer"
               />
