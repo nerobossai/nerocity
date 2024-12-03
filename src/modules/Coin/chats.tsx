@@ -116,6 +116,20 @@ function ChatModule(props: { agentId: string }) {
     }
   };
 
+  const fetchChatsAfterInterval = async () => {
+    try {
+      console.log("called");
+      const chats = await coinApiClient.fetchChats(props.agentId);
+      setSelectedMessageId(
+        chats.chats.length <= 0
+          ? undefined
+          : chats.chats[chats.chats.length - 1]?.message_id
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!isAuthenticated) {
       toast({
@@ -169,13 +183,16 @@ function ChatModule(props: { agentId: string }) {
   };
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      console.log("polling chats ser");
-      fetchChats();
-    }, 5000);
+    fetchChats();
 
-    return () => clearInterval(intervalId);
-  }, []);
+    const intervalId = setInterval(() => {
+      fetchChatsAfterInterval();
+    }, 2000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [props.agentId]);
 
   return (
     <Stack paddingTop="1rem" flexGrow="1" marginBottom="4rem">
