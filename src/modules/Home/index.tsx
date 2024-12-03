@@ -117,6 +117,15 @@ function HomeModule() {
   };
 
   useEffect(() => {
+    let intervalId = setInterval(() => {
+      console.log("poll completed");
+      fetchFeed(filter);
+    }, 50000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
     fetchFeed(filter);
   }, [filter, debouncedQuery]);
 

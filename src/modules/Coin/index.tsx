@@ -88,7 +88,7 @@ function CoinModule() {
   ): NodeJS.Timeout | null => {
     if (!router?.query?.coin) return null;
 
-    return setTimeout(async () => {
+    const pollingTimeout = setTimeout(async () => {
       try {
         const ag = await executePollingLogic(agent);
         if (!ag) return;
@@ -96,11 +96,13 @@ function CoinModule() {
           fetchPumpfunData();
           return;
         }
-        startPolling(timeout, ag); // Continue polling with updated agent if necessary
+        startPolling(timeout, ag);
       } catch (err) {
         console.error(err);
       }
     }, timeout);
+
+    return pollingTimeout;
   };
 
   const executePollingLogic = async (
@@ -169,7 +171,6 @@ function CoinModule() {
   };
 
   useEffect(() => {
-    // @ts-ignore will fix this once this method is finished
     const poll = startPolling(1000);
     return () => {
       if (poll) {
