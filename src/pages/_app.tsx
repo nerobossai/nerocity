@@ -23,6 +23,7 @@ import type { ProfileObject } from "@/utils/AuthUtils";
 import { getProfileFromStorage } from "@/utils/AuthUtils";
 import { RPC_NODE_URL } from "@/constants/platform";
 import { BackpackWalletAdapter } from "@solana/wallet-adapter-backpack";
+import { GlowWalletAdapter } from "@solana/wallet-adapter-glow";
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
 
@@ -99,8 +100,15 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       new SolflareWalletAdapter({ network }),
       new TorusWalletAdapter(),
       new BackpackWalletAdapter(),
+      new GlowWalletAdapter(),
     ];
-
+  
+    if (typeof window !== "undefined" && window.solana) {
+      if (window.solana.isPhantom) availableWallets.push(new PhantomWalletAdapter());
+      if (window.solana.isGlow) availableWallets.push(new GlowWalletAdapter());
+      if (window.solana.isBackpack) availableWallets.push(new BackpackWalletAdapter());
+    }
+  
     return availableWallets;
   }, [network]);
 

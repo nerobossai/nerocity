@@ -8,6 +8,7 @@ import {
   Link,
   Text,
   useBreakpointValue,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -47,6 +48,7 @@ const Container = styled.header`
 
 function Header() {
   const router = useRouter();
+  const toast = useToast();
   const { searchText, setSearchText } = useSearchStore();
   const {
     isAuthenticated,
@@ -68,6 +70,7 @@ function Header() {
     connect,
     disconnect,
     signIn,
+    signMessage
   } = useWallet();
 
   const [previousKey, setPreviousKey] = useState<string | undefined>(
@@ -96,51 +99,58 @@ function Header() {
   }, [profile]);
 
   const handleSignin = async () => {
-    console.log("Debug 0");
     try {
-      console.log("Debug 0.2", signIn);
-      if (!signIn) return;
-      console.log("Debug 0.5");
-      console.log("Debug 1");
-      const hexPubKey = publicKey?.toBuffer().toString("hex");
+      if (!signMessage || !publicKey) {
+        console.error("Wallet not connected or does not support message signing");
+        return;
+      }
+
+      const message = "Sign this message to authenticate";
+      const encodedMessage = new TextEncoder().encode(message);
+      const signedMessage = await signMessage(encodedMessage);
+
+      const hexPubKey = publicKey.toBuffer().toString("hex");
       if (profile?.profile?.public_key === hexPubKey) {
         return;
       }
-      console.log("Debug 2");
-      const data = await signIn();
+
       const resp = await authApiClient.login({
-        public_key: Buffer.from(data.account.publicKey).toString("hex"),
-        signature: Buffer.from(data.signature).toString("hex"),
-        message: Buffer.from(data.signedMessage).toString("hex"),
+        public_key: hexPubKey,
+        signature: Buffer.from(signedMessage).toString("hex"),
+        message: Buffer.from(encodedMessage).toString("hex"),
       });
+
       const profileObject: AuthUtils.ProfileObject = {
         profile: resp.user,
         isAuthenticated: true,
         token: resp.token,
       };
-      console.log("Debug 3");
+
       setUserProfile(profileObject);
       setToken(profileObject.token);
       setAuthenticated(true);
       setIsOpen(false);
 
-      // set state
       const status = AuthUtils.setProfileInStorage(profileObject);
       trackWalletConnect({
-        wallet_address:
-          publicKey?.toString() || data.account.publicKey.toString(),
+        wallet_address: publicKey.toString(),
       });
 
-      console.log("Debug 4");
       if (!status) {
         throw new Error("Something went wrong!");
       }
     } catch (err) {
-      console.log("Debug 5", err);
       handleDisconnect();
-      console.log(err);
+      toast({
+        title: "Error",
+        description: "Unable to connect!",
+        status: "error",
+        position: "bottom-right",
+      });
+      console.error(err);
     }
   };
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
