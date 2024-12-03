@@ -105,7 +105,7 @@ function ChatModule(props: { agentId: string }) {
       setSelectedMessageId(
         chats.chats.length <= 0
           ? undefined
-          : chats.chats[chats.chats.length - 1]?.message_id,
+          : chats.chats[chats.chats.length - 1]?.message_id
       );
       console.log(chats);
       setChats(chats);
@@ -169,7 +169,12 @@ function ChatModule(props: { agentId: string }) {
   };
 
   useEffect(() => {
-    fetchChats();
+    const intervalId = setInterval(() => {
+      console.log("polling chats ser");
+      fetchChats();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
@@ -192,7 +197,7 @@ function ChatModule(props: { agentId: string }) {
                 {data.replies
                   .sort(
                     (a, b) =>
-                      parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10),
+                      parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10)
                   )
                   .map((rData, v: number) => {
                     return <ChatRowComponent {...rData} key={v} />;
@@ -247,7 +252,7 @@ function ChatModule(props: { agentId: string }) {
                   setSelectedMessageId(
                     data.message_id === selectedMessageId
                       ? undefined
-                      : data.message_id,
+                      : data.message_id
                   );
                 }}
                 display="flex"
@@ -255,9 +260,12 @@ function ChatModule(props: { agentId: string }) {
                 alignItems="center"
                 cursor="pointer"
               >
-                <FaRegComment /> <Text color="text.100">{data.message_id === selectedMessageId ? "Hide" : "Show"} {data.replies.length} replies</Text> 
+                <FaRegComment />{" "}
+                <Text color="text.100">
+                  {data.message_id === selectedMessageId ? "Hide" : "Show"}{" "}
+                  {data.replies.length} replies
+                </Text>
               </Box>
-              
             </Box>
           </Stack>
         );
