@@ -50,7 +50,7 @@ function ProfileModule() {
   const { username } = router.query;
 
   const [selectedTab, setSelectedTab] = useState(0);
-  const [coinsData, setCoinsData] = useState<any[]>([]);
+  const [agentsCreated, setAgentsCreated] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -61,80 +61,63 @@ function ProfileModule() {
   const [selectedSocialName, setSelectedSocialName] = useState<string>("");
 
   useEffect(() => {
-    if (!username) {
-      return;
-    }
+    if (!username) return;
+
     const fetchData = async () => {
+      let isCoinsHeldFetched = false;
+      let isAgentsCreatedFetched = false;
+
       try {
         setLoading(true);
-        const profileData = await profileApiClient.fetchProfileByUserName(
-          username as string
-        );
+
+        // Fetch profile
+        const profileData = await profileApiClient.fetchProfileByUserName(username as string);
         const fetchedProfile = profileData.user;
         setProfile(fetchedProfile);
 
-        const tokensData: any[] = await getUserTokens(
-          profileData.user.public_key as string
-        );
+        // Fetch Agents Created Data
+        const coinDataResponse = await profileApiClient.fetchCoinsByPublicKey(fetchedProfile.public_key as string);
+        const solPrice = (await homeApiClient.solPrice()).solana.usd;
 
-        const dataWithNameTicker = [];
-        for (let i = 0; i < tokensData.length; i++) {
-          const data = tokensData[i];
-          try {
-            const coinsHeldResponse =
-              await profileApiClient.fetchCoinsCreatedByAgent(data.mint);
-            if (coinsHeldResponse) {
-              dataWithNameTicker.push({
-                ...data,
-                name: coinsHeldResponse.name,
-                ticker: coinsHeldResponse.ticker,
-              });
-            }
-          } catch {
-            continue;
-          }
+        const agentsPromises = coinDataResponse.agents.map(async (agent: any) => {
+          const tmp = await pumpFunSdk.getBondingCurveAccount(new PublicKey(agent.mint_public_key));
+          if (!tmp || tmp.complete) return null;
+
+          const price = (((await tmp.getSellPrice(1, 0)) || 0) / 100) * solPrice;
+          const marketcap = ((tmp.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) * solPrice;
+
+          return { ...agent, price: price.toExponential(1), marketcap: marketcap.toFixed(3) };
+        });
+
+        const agentsCreated = (await Promise.all(agentsPromises)).filter(Boolean);
+        setAgentsCreated(agentsCreated);
+
+        if (!isCoinsHeldFetched) {
+          setSelectedTab(1);
+          setLoading(false);
+          isAgentsCreatedFetched = true;
         }
 
-        setCoinsHeldData(dataWithNameTicker);
 
-        const coinDataResponse = await profileApiClient.fetchCoinsByPublicKey(
-          fetchedProfile.public_key as string
-        );
-        const coinData = coinDataResponse.agents;
-        // const coinData = samepleData;
-        const solPrice = await homeApiClient.solPrice();
+        // Fetch Coins Held Data
+        const tokensData = await getUserTokens(fetchedProfile.public_key as string);
+        const coinsHeldPromises = tokensData.map(async (data) => {
+          try {
+            const coinInfo = await profileApiClient.fetchCoinsCreatedByAgent(data.mint);
+            return coinInfo ? { ...data, ...coinInfo } : null;
+          } catch {
+            return null;
+          }
+        });
+        const coinsHeld = (await Promise.all(coinsHeldPromises)).filter(Boolean) as CoinsHeldData[];
+        setCoinsHeldData(coinsHeld);
 
-        const updatedCoinData = await Promise.all(
-          coinData.map(async (coin: any) => {
-            const tmp = await pumpFunSdk.getBondingCurveAccount(
-              new PublicKey(coin.mint_public_key)
-            );
+        if (!isAgentsCreatedFetched) {
+          setSelectedTab(0);
+          setLoading(false);
+          isCoinsHeldFetched = true;
+        }
 
-            if (!tmp) return coin;
-            if (tmp.complete) {
-              return RAYDIUM_MIGRATION_COMPLETED;
-            }
-
-            const price =
-              (((await tmp.getSellPrice(1, 0)) || 0) / 100) *
-              solPrice.solana.usd;
-
-            const priceExponential = price.toExponential(1).toString();
-            const marketcap = (
-              ((tmp.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) *
-              solPrice.solana.usd
-            )
-              .toFixed(3)
-              .toString();
-
-            return {
-              ...coin,
-              price: priceExponential,
-              marketcap,
-            };
-          })
-        );
-        setCoinsData(updatedCoinData);
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -142,6 +125,7 @@ function ProfileModule() {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [username]);
 
@@ -246,69 +230,63 @@ function ProfileModule() {
           </Tabs>
           {loading ? (
             <Spinner marginTop={20} />
-          ) : (
-            <VStack bg="#1B1B1E" width="100%" overflowX="auto">
-              <table
-                style={{
-                  width: "100%",
-                  borderCollapse: "separate",
-                  borderSpacing: "0 20px",
-                  padding: "0 20px",
-                }}
-              >
-                <thead>
-                  <tr>
-                    <th
-                      style={{
-                        color: "#656565",
-                        textAlign: "left",
-                        padding: "1rem",
-                      }}
-                    >
-                      Name
-                    </th>
-                    {selectedTab === 0 ? (
-                      <>
-                        <th
-                          style={{
-                            color: "#656565",
-                            textAlign: "left",
-                            padding: "1rem",
-                          }}
-                        >
-                          Coins
-                        </th>
-                        <th
-                          style={{
-                            color: "#656565",
-                            textAlign: "left",
-                            padding: "1rem",
-                          }}
-                        >
-                          Value
-                        </th>
-                      </>
-                    ) : (
-                      <>
-                        <th
-                          style={{
-                            color: "#656565",
-                            textAlign: "left",
-                            padding: "1rem",
-                          }}
-                        >
-                          Price
-                        </th>
-                        <th
-                          style={{
-                            color: "#656565",
-                            padding: "1rem",
-                            textAlign: "left",
-                          }}
-                        >
-                          Market Cap
-                        </th>
-                        {selectedTab === 1 && (
+          ) : ((selectedTab === 0 && coinsHeldData.length === 0) || (selectedTab === 1 && agentsCreated.length === 0)) ?
+            <VStack alignItems="center" pt="50px" justifyContent="center">
+              <Text>{selectedTab === 0 ? "No Coins Held!" : "No Agents Created!"}</Text>
+            </VStack>
+            : (
+              <VStack bg="#1B1B1E" width="100%" overflowX="auto">
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "separate",
+                    borderSpacing: "0 20px",
+                    padding: "0 20px",
+                  }}
+                >
+                  <thead>
+                    <tr>
+                      <th
+                        style={{
+                          color: "#656565",
+                          textAlign: "left",
+                          padding: "1rem",
+                        }}
+                      >
+                        Name
+                      </th>
+                      {selectedTab === 0 ? (
+                        <>
+                          <th
+                            style={{
+                              color: "#656565",
+                              textAlign: "left",
+                              padding: "1rem",
+                            }}
+                          >
+                            Coins
+                          </th>
+                          <th
+                            style={{
+                              color: "#656565",
+                              textAlign: "left",
+                              padding: "1rem",
+                            }}
+                          >
+                            Value
+                          </th>
+                        </>
+                      ) : (
+                        <>
+                          <th
+                            style={{
+                              color: "#656565",
+                              textAlign: "left",
+                              padding: "1rem",
+                            }}
+                          >
+                            Price
+                          </th>
                           <th
                             style={{
                               color: "#656565",
@@ -316,16 +294,26 @@ function ProfileModule() {
                               textAlign: "left",
                             }}
                           >
-                            Social
+                            Market Cap
                           </th>
-                        )}
-                      </>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {selectedTab === 0
-                    ? coinsHeldData.map((coin, id) => (
+                          {selectedTab === 1 && (
+                            <th
+                              style={{
+                                color: "#656565",
+                                padding: "1rem",
+                                textAlign: "left",
+                              }}
+                            >
+                              Social
+                            </th>
+                          )}
+                        </>
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedTab === 0
+                      ? coinsHeldData.map((coin, id) => (
                         <tr
                           key={id}
                           // @ts-ignore
@@ -370,7 +358,7 @@ function ProfileModule() {
                           </td>
                         </tr>
                       ))
-                    : coinsData.map((coin, id) => (
+                      : agentsCreated.map((coin, id) => (
                         <tr
                           key={coin.ticker}
                           // @ts-ignore
@@ -470,10 +458,10 @@ function ProfileModule() {
                           </td>
                         </tr>
                       ))}
-                </tbody>
-              </table>
-            </VStack>
-          )}
+                  </tbody>
+                </table>
+              </VStack>
+            )}
         </VStack>
       </Stack>
       <SocialModalComponent
