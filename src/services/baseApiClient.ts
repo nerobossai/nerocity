@@ -44,7 +44,7 @@ export class BaseApiClient {
 
   async apiCall(params: ApiCallParams) {
     const { url, type, body } = params;
-    const isPumpfun = url.startsWith("/agents");
+    const isPumpfun = url.startsWith("/agents/pumpfun");
     switch (type) {
       case "GET": {
         let query = "";
