@@ -101,7 +101,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
       <TableContainer width="100%">
         <Table {...getTableProps()}>
           <Thead>
-            <Tr>
+            <Tr padding="20px">
               <Th
                 color="#656565"
                 textAlign="left"
@@ -113,23 +113,22 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                 </Box>
               </Th>
 
-              {isMediumScreen && (
-                <Th
-                  color="#656565"
-                  textAlign="right"
-                  onClick={() => handleSort("created_by")}
-                  cursor="pointer"
+              <Th
+                color="#656565"
+                textAlign="right"
+                onClick={() => handleSort("created_by")}
+                cursor="pointer"
+                paddingRight={isSmallScreen ? "0.5rem" : "1rem"}
+              >
+                <Box
+                  display="flex"
+                  justifyContent="flex-end"
+                  alignItems="center"
+                  gap="10px"
                 >
-                  <Box
-                    display="flex"
-                    justifyContent="flex-end"
-                    alignItems="center"
-                    gap="10px"
-                  >
-                    Creator {getSortArrow("created_by")}
-                  </Box>
-                </Th>
-              )}
+                  Creator {getSortArrow("created_by")}
+                </Box>
+              </Th>
 
               {isLargeScreen && (
                 <>
@@ -138,6 +137,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     textAlign="right"
                     onClick={() => handleSort("created_at")}
                     cursor="pointer"
+                    paddingRight={isSmallScreen ? "0.5rem" : "1rem"}
                   >
                     <Box
                       display="flex"
@@ -153,6 +153,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     textAlign="right"
                     onClick={() => handleSort("market_cap")}
                     cursor="pointer"
+                    paddingRight={isSmallScreen ? "0.5rem" : "1rem"}
                   >
                     <Box
                       display="flex"
@@ -168,6 +169,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     textAlign="right"
                     onClick={() => handleSort("holder")}
                     cursor="pointer"
+                    paddingRight={isSmallScreen ? "0.5rem" : "1rem"}
                   >
                     <Box
                       display="flex"
@@ -183,6 +185,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     textAlign="right"
                     onClick={() => handleSort("replies")}
                     cursor="pointer"
+                    paddingRight={isSmallScreen ? "0.5rem" : "1rem"}
                   >
                     <Box
                       display="flex"
@@ -195,6 +198,23 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                   </Th>
                 </>
               )}
+
+              {!isLargeScreen && <Th
+                color="#656565"
+                textAlign="right"
+                onClick={() => handleSort("market_cap")}
+                cursor="pointer"
+                paddingRight={isSmallScreen ? "0.5rem" : "1rem"}
+              >
+                <Box
+                  display="flex"
+                  justifyContent="flex-end"
+                  alignItems="center"
+                  gap="10px"
+                >
+                  MCAP {getSortArrow("market_cap")}
+                </Box>
+              </Th>}
             </Tr>
           </Thead>
           <Tbody>
@@ -212,7 +232,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     borderLeft="1px solid #343434"
                     borderTop="1px solid #343434"
                     borderBottom="1px solid #343434"
-                    p={isSmallScreen ? "0.5rem" : "1rem"}
+                    p={isSmallScreen ? "0.8rem" : "1.5rem"}
                   >
                     <HStack
                       spacing={isSmallScreen ? "0.5rem" : "1rem"}
@@ -254,16 +274,15 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     </HStack>
                   </Td>
 
-                  {isMediumScreen && (
-                    <Td
-                      textAlign="right"
-                      color="#00C2FF"
-                      borderTop="1px solid #343434"
-                      borderBottom="1px solid #343434"
-                    >
-                      {data.created_by}
-                    </Td>
-                  )}
+                  <Td
+                    textAlign="right"
+                    color="#00C2FF"
+                    borderTop="1px solid #343434"
+                    borderBottom="1px solid #343434"
+                    fontSize={isLargeScreen ? "14px" : "12px"}
+                  >
+                    {data.created_by}
+                  </Td>
 
                   {isLargeScreen && (
                     <>
@@ -300,11 +319,25 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                         color="white"
                         borderTop="1px solid #343434"
                         borderBottom="1px solid #343434"
+                        borderRight="1px solid #343434"
                       >
                         {data.replies}
                       </Td>
                     </>
                   )}
+
+                  {!isLargeScreen &&
+                    <Td
+                      textAlign="right"
+                      color="white"
+                      borderTop="1px solid #343434"
+                      borderBottom="1px solid #343434"
+                      fontSize="12px"
+                      borderRight="1px solid #343434"
+                    >
+                      ${data.market_cap}
+                    </Td>
+                  }
                 </Tr>
               ) : null
             )}

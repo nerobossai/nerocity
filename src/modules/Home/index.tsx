@@ -128,9 +128,10 @@ function HomeModule() {
           alignItems="center"
           marginBottom="20px"
           gap="40px"
+          paddingTop="20px"
         >
-          <TimerScreen />
-          {overlord && <MainCard {...overlord} />}
+          {/* <TimerScreen /> */}
+          {overlord && <><MainCard {...overlord} />
           <HStack
             width="100%"
             alignItems={{ base: "flex-start", lg: "center" }}
@@ -174,7 +175,7 @@ function HomeModule() {
             >
               CREATE AGENT
             </Button>
-          </HStack>
+          </HStack></>}
 
           {feedLoading ? (
             <Box
