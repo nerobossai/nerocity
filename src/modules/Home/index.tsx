@@ -167,9 +167,7 @@ function HomeModule() {
               opacity={isAuthenticated ? 1 : 0.8}
               disabled={!isAuthenticated}
               borderRadius="0"
-              onClick={() =>
-                isAuthenticated && navigator.push(Paths.createAgent)
-              }
+              onClick={() => navigator.push(Paths.createAgent)}
               margin="20px"
             >
               CREATE AGENT
