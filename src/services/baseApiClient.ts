@@ -44,6 +44,7 @@ export class BaseApiClient {
 
   async apiCall(params: ApiCallParams) {
     const { url, type, body } = params;
+    const isPumpfun = url.startsWith("/agents");
     switch (type) {
       case "GET": {
         let query = "";
@@ -51,10 +52,21 @@ export class BaseApiClient {
           query = new URLSearchParams(body).toString();
           return this.axiosClient.get(`${url}?${query}`);
         }
-        return this.axiosClient.get(url);
+        if (!isPumpfun) {
+          return this.axiosClient.get(url);
+        } else{
+          const minAddress = url.split('/');
+          return this.axiosClient.get(`https://hkpi1ruc98.execute-api.ap-south-1.amazonaws.com/coins/${minAddress[minAddress.length-1]}`);
+        }
+        
       }
       case "POST": {
-        return this.axiosClient.post(url, body);
+        if (!isPumpfun) {
+          return this.axiosClient.post(url, body);
+        } else{
+          const minAddress = url.split('/');
+          return this.axiosClient.post(`https://hkpi1ruc98.execute-api.ap-south-1.amazonaws.com/coins/${minAddress[minAddress.length-1]}`, body);
+        }
       }
       default:
         throw new Error("invalid request type");
