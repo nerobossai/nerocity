@@ -6,7 +6,11 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  TorusWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -18,6 +22,7 @@ import { tabsTheme } from "@/styles/tabsTheme";
 import type { ProfileObject } from "@/utils/AuthUtils";
 import { getProfileFromStorage } from "@/utils/AuthUtils";
 import { RPC_NODE_URL } from "@/constants/platform";
+import { BackpackWalletAdapter } from "@solana/wallet-adapter-backpack";
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
 
@@ -84,17 +89,20 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     }
   }, []);
 
-  // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
   const network = WalletAdapterNetwork.Mainnet;
 
-  // You can also provide a custom RPC endpoint.
-  const endpoint = useMemo(() => RPC_NODE_URL, [network]);
+  const endpoint = useMemo(() => RPC_NODE_URL || clusterApiUrl(network), [network]);
 
-  const wallets = useMemo(
-    () =>
-      [new PhantomWalletAdapter()],
-    [network],
-  );
+  const wallets = useMemo(() => {
+    const availableWallets = [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter({ network }),
+      new TorusWalletAdapter(),
+      new BackpackWalletAdapter(),
+    ];
+
+    return availableWallets;
+  }, [network]);
 
   if (!isMounted) {
     return null;
