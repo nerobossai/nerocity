@@ -5,11 +5,12 @@ import {
   Spinner,
   Stack,
   Text,
+  Textarea,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaRegComment } from "react-icons/fa6";
 
 import ChatModelComponent from "@/components/ChatModel";
@@ -30,6 +31,15 @@ const AddComment = ({
   posting,
 }: any) => {
   const [value, setValue] = useState("");
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const adjustHeight = () => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = "auto"; // Reset height
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`; // Adjust to fit content
+    }
+  };
+
   return (
     <Box
       width="100%"
@@ -37,15 +47,23 @@ const AddComment = ({
       display="flex"
       padding="0.5rem"
       my="10px"
+      gap="10px"
       border="0.5px solid #959595"
+      flexWrap="wrap"
+      alignItems="center"
+      justifyContent="flex-end"
     >
-      <Input
+      <Textarea
+        ref={textAreaRef}
         value={value}
         onChange={(e) => {
           setValue(e.target.value);
           setComment(e.target.value);
+          adjustHeight();
         }}
+        rows={1}
         flexGrow="1"
+        width="400px" 
         placeholder={
           isAuthenticated
             ? "Add a comment"
@@ -62,7 +80,6 @@ const AddComment = ({
         }}
       />
       <Button
-        // padding="10px 20px"
         bg="white"
         fontSize="12px"
         color="black"
@@ -73,12 +90,7 @@ const AddComment = ({
           setValue("");
         }}
         opacity={posting ? 0.7 : 1}
-        // display="flex"
-        // gap="10px"
-        // alignItems="center"
       >
-        {/* <Spinner size="sm" mr="10px"/> */}
-        {/* {true ? <Spinner /> : <></>} */}
         {isAuthenticated ? (posting ? "POSTING..." : "POST") : "CONNECT WALLET"}
       </Button>
     </Box>
