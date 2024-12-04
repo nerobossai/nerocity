@@ -10,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaRegComment } from "react-icons/fa6";
 
 import ChatModelComponent from "@/components/ChatModel";
@@ -35,8 +35,8 @@ const AddComment = ({
 
   const adjustHeight = () => {
     if (textAreaRef.current) {
-      textAreaRef.current.style.height = "auto"; // Reset height
-      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`; // Adjust to fit content
+      textAreaRef.current.style.height = "auto";
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
     }
   };
 
@@ -96,6 +96,7 @@ const AddComment = ({
     </Box>
   );
 };
+
 function ChatModule(props: { agentId: string }) {
   const toast = useToast();
   const { publicKey } = useWallet();
@@ -109,6 +110,7 @@ function ChatModule(props: { agentId: string }) {
   const [loading, setLoading] = useState(false);
 
   const { isAuthenticated } = useUserStore();
+  const websocketRef = useRef<WebSocket | null>(null);
 
   const fetchChats = async () => {
     try {
@@ -119,7 +121,6 @@ function ChatModule(props: { agentId: string }) {
           ? undefined
           : chats.chats[chats.chats.length - 1]?.message_id
       );
-      console.log(chats);
       setChats(chats);
     } catch (err) {
       console.log(err);
@@ -128,24 +129,64 @@ function ChatModule(props: { agentId: string }) {
     }
   };
 
+  const connectWebSocket = () => {
+    if (websocketRef.current) {
+      websocketRef.current.close();
+    }
+
+    const ws = new WebSocket(`wss://wss.neroboss.ai?agentId=${props.agentId}`);
+
+    ws.onopen = () => {
+      console.log("WebSocket connection established");
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+
+        fetchChats();
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+
+    websocketRef.current = ws;
+  };
+
   const handleSubmit = async () => {
     if (!isAuthenticated) {
       toast({
-        title: "Wallet not connect!",
-        description: "Please connect wallet to comment!<",
+        title: "Wallet not connected!",
+        description: "Please connect wallet to comment!",
         status: "error",
         position: "bottom-right",
       });
       return;
     }
+
     try {
       setPosting(true);
-      const resp = await coinApiClient.sendMessage({
-        message_id: selectedMessageId,
-        message: comment,
-        agent_id: props.agentId,
-        is_reply: !!selectedMessageId,
-      });
+
+      if (
+        websocketRef.current &&
+        websocketRef.current.readyState === WebSocket.OPEN
+      ) {
+        websocketRef.current.send(
+          JSON.stringify({
+            agentId: props.agentId,
+            message: comment,
+          })
+        );
+      }
+
       if (selectedMessageId) {
         trackReply({
           agent_address: props.agentId,
@@ -159,35 +200,48 @@ function ChatModule(props: { agentId: string }) {
           timestamp: Date.now(),
         });
       }
+
+      await coinApiClient.sendMessage({
+        message_id: selectedMessageId,
+        message: comment,
+        agent_id: props.agentId,
+        is_reply: !!selectedMessageId,
+      });
+
       onClose();
       toast({
         title: "Success",
-        description: "message added successfully",
+        description: "Message added successfully",
         status: "success",
         position: "bottom-right",
       });
+
       fetchChats();
     } catch (err) {
       console.log(err);
       toast({
         title: "Error",
-        description: "something went wrong!",
+        description: "Something went wrong!",
         status: "error",
         position: "bottom-right",
       });
     } finally {
       setPosting(false);
+      setComment("");
     }
   };
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      console.log("polling chats ser");
-      fetchChats();
-    }, 5000);
+    fetchChats();
 
-    return () => clearInterval(intervalId);
-  }, []);
+    connectWebSocket();
+
+    return () => {
+      if (websocketRef.current) {
+        websocketRef.current.close();
+      }
+    };
+  }, [props.agentId]);
 
   return (
     <Stack paddingTop="1rem" flexGrow="1" marginBottom="4rem">
@@ -203,7 +257,6 @@ function ChatModule(props: { agentId: string }) {
         return (
           <Stack key={r} gap="0.5rem">
             <ChatRowComponent {...data} />
-            Display this Stack only if reply button is clicked
             {selectedMessageId === data.message_id && (
               <Stack marginLeft="3rem">
                 {data.replies
@@ -213,16 +266,13 @@ function ChatModule(props: { agentId: string }) {
                   )
                   .map((rData, v: number) => {
                     return <ChatRowComponent {...rData} key={v} />;
-                  })}{" "}
+                  })}
                 <AddComment
                   comment={comment}
                   setComment={setComment}
                   isAuthenticated={isAuthenticated}
                   onSubmit={() => handleSubmit()}
                   posting={posting}
-                  onBlur={() => {
-                    // setSelectedMessageId(undefined);
-                  }}
                 />
               </Stack>
             )}
@@ -232,27 +282,6 @@ function ChatModule(props: { agentId: string }) {
               gap="10px"
               marginLeft="0.5rem"
             >
-              {/* <Box
-                fontSize="12px"
-                color="#8C8C8C"
-                backgroundColor="transparent"
-                _hover={{
-                  opacity: 0.8,
-                }}
-                onClick={() => {
-                  setSelectedMessageId(
-                    data.message_id === selectedMessageId
-                      ? undefined
-                      : data.message_id,
-                  );
-                }}
-                display="flex"
-                gap="5px"
-                alignItems="center"
-                cursor="pointer"
-              >
-                <FaRegHeart />
-              </Box> */}
               <Box
                 fontSize="12px"
                 color="#8C8C8C"

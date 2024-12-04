@@ -15,9 +15,8 @@ import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-import SubscriptText from "@/components/SubscriptText";
 import { FEES, pumpFunSdk } from "@/services/pumpfun";
-import { getGeckoterminalLink } from "@/utils";
+import { getRaydiumLink } from "@/utils";
 import { logger } from "@/utils/Logger";
 
 import type {
@@ -46,7 +45,7 @@ function TradeModule(props: TradeModuleProps) {
   const toast = useToast();
   const router = useRouter();
   const { publicKey, sendTransaction } = useWallet();
-  const {profile} = useUserStore();
+  const { profile } = useUserStore();
   const { connection } = useConnection();
   const [active, setActive] = useState("buy");
   const [solPrice, setSolPrice] = useState<SolanaPriceResponse>();
@@ -63,7 +62,7 @@ function TradeModule(props: TradeModuleProps) {
     bought: true,
     tickerAmount: 0,
     solAmount: 0,
-    txn: ""
+    txn: "",
   });
 
   const buttons = [0.1, 0.5, 1, 5];
@@ -91,20 +90,21 @@ function TradeModule(props: TradeModuleProps) {
   const fetchBalance = async () => {
     if (profile?.profile?.public_key) {
       const coinsHeld = await getUserTokens(
-        profile?.profile?.public_key as string,
+        profile?.profile?.public_key as string
       );
-      const balanceObj = coinsHeld.find((b) => b.mint === props.tokenDetails.mint_public_key);
+      const balanceObj = coinsHeld.find(
+        (b) => b.mint === props.tokenDetails.mint_public_key
+      );
       setWalletBalance(balanceObj ? balanceObj.balance : 0);
     }
-  }
+  };
 
   const fetchSolBalance = async () => {
     if (publicKey) {
       const solBalance = await connection.getBalance(new PublicKey(publicKey));
-      setSolBalance(solBalance/1000000000);
+      setSolBalance(solBalance / 1000000000);
     }
-
-  }
+  };
 
   useEffect(() => {
     fetchBalance();
@@ -117,7 +117,6 @@ function TradeModule(props: TradeModuleProps) {
 
     return () => clearInterval(intervalId);
   }, []);
-
 
   const setToken = async (amount: string) => {
     try {
@@ -164,10 +163,9 @@ function TradeModule(props: TradeModuleProps) {
   const placeTrade = async () => {
     try {
       if (props.pumpfunData?.complete) {
-        window.open(getGeckoterminalLink(props.pumpfunData?.raydium_pool));
+        window.open(getRaydiumLink(props.tokenDetails.mint_public_key));
         return;
       }
-
       if (!publicKey) {
         throw new Error("connect your wallet");
       }
@@ -212,7 +210,6 @@ function TradeModule(props: TradeModuleProps) {
         signature: txnResp,
       });
 
-
       switch (active) {
         case "buy": {
           const platformFeesInSol =
@@ -238,7 +235,7 @@ function TradeModule(props: TradeModuleProps) {
             bought: true,
             tickerAmount: parseFloat(output ?? "0"),
             solAmount: parseFloat(input),
-            txn: txnResp
+            txn: txnResp,
           });
           break;
         }
@@ -262,7 +259,7 @@ function TradeModule(props: TradeModuleProps) {
             bought: false,
             tickerAmount: parseFloat(input),
             solAmount: parseFloat(output ?? "0"),
-            txn: txnResp
+            txn: txnResp,
           });
           break;
         }
@@ -349,28 +346,30 @@ function TradeModule(props: TradeModuleProps) {
             <Text color="text.100" fontSize="10px">
               YOU PAY
             </Text>
-            {active === "buy" && <HStack width="100%" gap="5px">
-              {buttons.map((button, index) => (
-                <Button
-                  key={index}
-                  borderRadius="0"
-                  onClick={() => {
-                    setInput(button as any);
-                    setToken(button as any);
-                    setSelectedSol(button);
-                  }}
-                  bg={selectedSol === button ? "white" : "#222227"}
-                  color={selectedSol === button ? "black" : "#818181"}
-                  _hover={{
-                    bg: selectedSol === button ? "white" : "#333",
-                  }}
-                  padding="10px 20px"
-                  fontSize="12px"
-                >
-                  {button} SOL
-                </Button>
-              ))}
-            </HStack>}
+            {active === "buy" && (
+              <HStack width="100%" gap="5px">
+                {buttons.map((button, index) => (
+                  <Button
+                    key={index}
+                    borderRadius="0"
+                    onClick={() => {
+                      setInput(button as any);
+                      setToken(button as any);
+                      setSelectedSol(button);
+                    }}
+                    bg={selectedSol === button ? "white" : "#222227"}
+                    color={selectedSol === button ? "black" : "#818181"}
+                    _hover={{
+                      bg: selectedSol === button ? "white" : "#333",
+                    }}
+                    padding="10px 20px"
+                    fontSize="12px"
+                  >
+                    {button} SOL
+                  </Button>
+                ))}
+              </HStack>
+            )}
           </VStack>
 
           <InputGroup
@@ -399,8 +398,13 @@ function TradeModule(props: TradeModuleProps) {
             </InputRightAddon>
           </InputGroup>
           <HStack justifyContent="flex-end">
-                <Text fontSize="12px">Bal: {active == "buy" ? solBalance +" SOL" : `${walletBalance} $${props.tokenDetails.ticker}`}</Text>
-            </HStack>
+            <Text fontSize="12px">
+              Bal:{" "}
+              {active == "buy"
+                ? solBalance + " SOL"
+                : `${walletBalance} $${props.tokenDetails.ticker}`}
+            </Text>
+          </HStack>
 
           <VStack alignItems="flex-start" gap="4px">
             <Text color="text.100" fontSize="10px">
@@ -428,8 +432,13 @@ function TradeModule(props: TradeModuleProps) {
             </InputGroup>
           </VStack>
           <HStack justifyContent="flex-end">
-                <Text fontSize="12px">Bal: {active == "sell" ? solBalance +"SOL" : `${walletBalance} $${props.tokenDetails.ticker}`}</Text>
-            </HStack>
+            <Text fontSize="12px">
+              Bal:{" "}
+              {active == "sell"
+                ? solBalance + "SOL"
+                : `${walletBalance} $${props.tokenDetails.ticker}`}
+            </Text>
+          </HStack>
 
           <Button
             mt="4px"
@@ -472,13 +481,33 @@ function TradeModule(props: TradeModuleProps) {
               &nbsp;
               {active === "buy" ? (
                 //@ts-ignore
-                `${solPrice?.solana.usd/(props.currentPrice === 0 ? 1 : props.currentPrice)} ${props.tokenDetails.ticker}` || "$164.84"
+                `${solPrice?.solana.usd / (props.currentPrice === 0 ? 1 : props.currentPrice)} ${props.tokenDetails.ticker}` ||
+                "$164.84"
               ) : (
-                <><span> {(parseFloat(props.currentPrice)*10/(solPrice?.solana.usd ?? 237)).toFixed(15)}&nbsp;SOL</span></>
+                <>
+                  <span>
+                    {" "}
+                    {(
+                      (parseFloat(props.currentPrice) * 10) /
+                      (solPrice?.solana.usd ?? 237)
+                    ).toFixed(15)}
+                    &nbsp;SOL
+                  </span>
+                </>
               )}
             </Text>
-            {active === "sell" && Number(input ?? 0) > walletBalance  &&<Text fontSize="12px" color="red.500">*You currently have {walletBalance} ${props.tokenDetails.ticker} in your wallet. Insufficient amount.</Text>}
-            {active === "buy" && Number(input ?? 0) > solBalance  &&<Text fontSize="12px" color="red.500">*You currently have {solBalance} SOL in your wallet. Insufficient amount.</Text>}
+            {active === "sell" && Number(input ?? 0) > walletBalance && (
+              <Text fontSize="12px" color="red.500">
+                *You currently have {walletBalance} ${props.tokenDetails.ticker}{" "}
+                in your wallet. Insufficient amount.
+              </Text>
+            )}
+            {active === "buy" && Number(input ?? 0) > solBalance && (
+              <Text fontSize="12px" color="red.500">
+                *You currently have {solBalance} SOL in your wallet.
+                Insufficient amount.
+              </Text>
+            )}
 
             {/* <HStack
               width="100%"
