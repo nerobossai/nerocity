@@ -152,10 +152,10 @@ function MainCard(props: CardProps) {
           base: "repeat(2, 1fr)",
           sm: "repeat(3, 1fr)",
           md: "repeat(3, 1fr)",
-          lg: "repeat(6, 1fr)",
+          lg: "repeat(5, 1fr)",
         }}
         textTransform="uppercase"
-        gap="2rem"
+        gap={{base: "2rem", lg:"4rem"}}
       >
         <CreatedAtComponent
           timeStamp={parseInt(props.created_at.toString())}
@@ -187,12 +187,12 @@ function MainCard(props: CardProps) {
           </Text>
           <Text fontSize="14px">{props.replies}</Text>
         </VStack>
-        <VStack alignItems={{ base: "flex-start", md: "flex-end" }}>
+        {/* <VStack alignItems={{ base: "flex-start", md: "flex-end" }}>
           <Text fontSize="12px" color="text.100">
             24H
           </Text>
           <Text fontSize="14px">{props.twenty_four_hr_changes ?? "--"}</Text>
-        </VStack>
+        </VStack> */}
         <Box position="absolute" bottom="0" right="0">
           <StarSticker />
         </Box>

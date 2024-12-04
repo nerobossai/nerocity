@@ -235,6 +235,7 @@ function Header() {
               border: "none",
               boxShadow: "none",
             }}
+            autoFocus
           />
         </Box>
 
@@ -249,7 +250,7 @@ function Header() {
       pl="40px"
       py="1rem"
       align="center"
-      gap={{ base: "5px", sm: "40px" }}
+      gap={{ base: "5px", md: "40px" }}
       justifyContent={{ base: "space-between", md: "block" }}
     >
       <Link href="/app">
