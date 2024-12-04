@@ -19,6 +19,7 @@ const Index = () => {
           <Meta title={AppConfig.title} description={AppConfig.description} />
         }
         nofooter
+        nopadding
       >
         <Script
           src="/static/datafeeds/udf/dist/bundle.js"
