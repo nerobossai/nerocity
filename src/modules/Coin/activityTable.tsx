@@ -107,7 +107,13 @@ function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
                 <Text>{activity.sol_amount / 1000000000}</Text>
               </Td>
               <Td color="white" border="0">
-                <Text>${price! * (activity.sol_amount / 1000000000)}</Text>
+                <Text>
+                  $
+                  {(
+                    Number(price) *
+                    (Number(activity.sol_amount) / 1000000000)
+                  ).toFixed(3)}
+                </Text>
               </Td>
             </Box>
           ))}
