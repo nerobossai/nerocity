@@ -33,7 +33,6 @@ function ChatModule(props: { agentId: string }) {
     try {
       setLoading(true);
       const chatsResponse = await coinApiClient.fetchChats(props.agentId);
-      console.log("chat res", chatsResponse);
       setChats(chatsResponse);
     } catch (err) {
       console.log(err);
@@ -86,7 +85,7 @@ function ChatModule(props: { agentId: string }) {
       }
     };
   }, [props.agentId]);
-
+    
   useEffect(() => {
     fetchChats();
   }, [])
