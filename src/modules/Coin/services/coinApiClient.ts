@@ -38,9 +38,19 @@ export type SendMessageData = {
   message_id: string | undefined;
 };
 
-export type ChatsResponse = {
-  status: string;
-  chats: [
+export type Chat = {
+  created_by: string;
+  user_details: {
+    profile_pic: string;
+    public_key: string;
+  };
+  message_id: string;
+  timestamp: string;
+  image: string;
+  message: string;
+  is_reply: boolean;
+  is_agent: boolean;
+  replies: [
     {
       created_by: string;
       user_details: {
@@ -53,23 +63,13 @@ export type ChatsResponse = {
       message: string;
       is_reply: boolean;
       is_agent: boolean;
-      replies: [
-        {
-          created_by: string;
-          user_details: {
-            profile_pic: string;
-            public_key: string;
-          };
-          message_id: string;
-          timestamp: string;
-          image: string;
-          message: string;
-          is_reply: boolean;
-          is_agent: boolean;
-        },
-      ];
     },
   ];
+}
+
+export type ChatsResponse = {
+  status: string;
+  chats: Chat[];
 };
 
 export type PumpfunCoinResponse = {

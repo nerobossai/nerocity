@@ -11,17 +11,18 @@ import { FaRegComment } from "react-icons/fa6";
 import ChatRowComponent from "@/components/ChatRow";
 import useUserStore from "@/stores/useUserStore";
 
-import type { ChatsResponse } from "./services/coinApiClient";
+import type { Chat, ChatsResponse } from "./services/coinApiClient";
 import { coinApiClient } from "./services/coinApiClient";
 import AddCommentUpdated from "./addComment";
 
-function ChatModule(props: { agentId: string }) {
+function ChatModule(props: { agentId: string, agentImage: string, agentName: string}) {
+
   const { publicKey } = useWallet();
   const [comment, setComment] = useState("");
   const [selectedMessageId, setSelectedMessageId] = useState<
     string | undefined
   >();
-  const [chats, setChats] = useState<ChatsResponse>();
+  const [chats, setChats] = useState<Chat[]>([]);
   const [loading, setLoading] = useState(false);
   const [openedComments, setOpenedComments] = useState<string[]>([]);
 
@@ -33,7 +34,8 @@ function ChatModule(props: { agentId: string }) {
     try {
       setLoading(true);
       const chatsResponse = await coinApiClient.fetchChats(props.agentId);
-      setChats(chatsResponse);
+      // console.log("chats response", chatsResponse);
+      setChats(chatsResponse.chats ?? []);
     } catch (err) {
       console.log(err);
     } finally {
@@ -111,8 +113,12 @@ function ChatModule(props: { agentId: string }) {
         agentId={props.agentId}
         selectedMessageId={selectedMessageId}
         websocketRef={websocketRef}
+        setChats={setChats}
+        chats={chats}
+        agentImage={props.agentImage}
+        agentName={props.agentName}
       />
-      {(chats?.chats || []).map((data, r) => {
+      {chats.map((data, r) => {
         return (
           <Stack key={r} gap="0.5rem">
             <ChatRowComponent {...data} />
@@ -136,6 +142,11 @@ function ChatModule(props: { agentId: string }) {
                   agentId={props.agentId}
                   websocketRef={websocketRef}
                   selectedMessageId={selectedMessageId}
+                  setChats={setChats}
+                  chats={chats}
+                  agentImage={props.agentImage}
+                  agentName={props.agentName}
+                  setSelectedMessageId={setSelectedMessageId}
                 />
               </Stack>
             )}
@@ -170,7 +181,7 @@ function ChatModule(props: { agentId: string }) {
           </Stack>
         );
       })}
-      {(loading && (chats?.chats.length ?? 0) === 0) && (
+      {(loading && chats.length === 0) && (
         <Box
           width="100%"
           display="flex"
