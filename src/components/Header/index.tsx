@@ -17,7 +17,7 @@ import {
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { CiLogout } from "react-icons/ci";
 import { FaWallet } from "react-icons/fa";
@@ -83,6 +83,7 @@ function Header() {
   );
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [openHelp, setOpenHelp] = useState(false);
   const fontSize = useBreakpointValue({ base: "10px", sm: "12px", md: "16px" });
@@ -175,6 +176,10 @@ function Header() {
   }, []);
 
   useEffect(() => {
+    setMounted(true);
+  }, [])
+
+  useEffect(() => {
     if (connected && !isAuthenticated && !isSigningIn) {
       setIsSigningIn(true);
       handleSignin()
@@ -207,6 +212,18 @@ function Header() {
       setIsDisconnecting(false);
     }
   };
+  if (!mounted) {
+    return <HStack
+    bg="brown.100"
+    height="70px"
+    py="1rem"
+    align="center"
+    gap={{ base: "5px", sm: "40px" }}
+    px="1rem"
+    width="100vw"
+    justifyContent={{ base: "space-between", md: "block" }}
+  ></HStack>;
+  }
   if (inputFocus) {
     return (
       <HStack

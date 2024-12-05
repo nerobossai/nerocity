@@ -75,16 +75,18 @@ function DataTable({ feed }: { feed: CardProps[] }) {
     return 0;
   });
 
-  const getSortArrow = (column: string) =>
-    sortColumn === column ? (
-      sortOrder === "asc" ? (
-        <IoIosArrowRoundUp cursor="pointer" size={20} />
-      ) : (
-        <IoIosArrowRoundDown cursor="pointer" size={20} />
-      )
-    ) : (
-      <IoIosArrowRoundUp cursor="pointer" size={20} />
-    );
+  // const getSortArrow = (column: string) =>
+  //   sortColumn === column ? (
+  //     sortOrder === "asc" ? (
+  //       <IoIosArrowRoundUp cursor="pointer" size={20} />
+  //     ) : (
+  //       <IoIosArrowRoundDown cursor="pointer" size={20} />
+  //     )
+  //   ) : (
+  //     <IoIosArrowRoundUp cursor="pointer" size={20} />
+  //   );
+
+  const getSortArrow = (column: string) => null
 
   const getTableProps = (): TableProps => ({
     variant: "unstyled",

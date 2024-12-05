@@ -155,7 +155,7 @@ const AddCommentUpdated = ({
                 }}
                 opacity={posting ? 0.7 : 1}
             >
-                {isAuthenticated ? (posting ? "POSTING..." : "POST") : "CONNECT WALLET"}
+                {posting ? "POSTING..." : "POST"}
             </Button>
         </Box>
     );

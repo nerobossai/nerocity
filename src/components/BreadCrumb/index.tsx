@@ -1,4 +1,5 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 interface BreadcrumbProps {
@@ -17,24 +18,24 @@ interface BreadcrumbProps {
     return (
       <HStack width="100%" alignItems="center" p="20px" mt="12px">
         {!loading && (
+          <Link href="/app">
           <Box
             display="flex"
             alignItems="center"
             gap="20px"
             cursor="pointer"
-            onClick={() => router.push("/app")}
             className="knf"
           >
             <Text fontSize="18px" cursor="pointer">
               <span
                 style={{ color: "#959595" }}
-                onClick={() => router.push("/app")}
               >
                 HOME /
               </span>{" "}
               {ticker}
             </Text>
           </Box>
+          </Link>
         )}
       </HStack>
     );
