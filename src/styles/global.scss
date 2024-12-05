@@ -107,6 +107,12 @@ body {
   }
 }
 
+.gradient-border {
+  border-style: solid;
+  border-width: 1px;
+  border-image: linear-gradient(to top, white, transparent 50%, white) 1;
+  border-image-slice: 1;
+}
 /* styles.css */
 .gradient-background {
   width: 100vw;
