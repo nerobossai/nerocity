@@ -5,13 +5,13 @@ import {
   Button,
   HStack,
   Input,
-  Link,
   Text,
   useBreakpointValue,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import Link from "next/link";
 import {
   WalletModalProvider,
   WalletMultiButton,
