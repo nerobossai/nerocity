@@ -33,6 +33,7 @@ import { trackAgentCreation } from "./services/analytics";
 import SuccessScreen from "./successScreen";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { cloudflareSitekey } from "@/constants/storageKeys";
+import Link from "next/link";
 
 const Container = styled.div`
   width: 100%;
@@ -474,12 +475,13 @@ function CreateAgentModule() {
           className="knf"
         >
           <Text fontSize="18px" cursor="pointer">
+            <Link href="/app">
             <span
               style={{ color: "#959595" }}
               onClick={() => router.push("/app")}
             >
               HOME /{" "}
-            </span>{" "}
+            </span></Link>{" "}
             CREATE AGENT
           </Text>
         </Box>

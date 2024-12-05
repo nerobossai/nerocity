@@ -87,19 +87,19 @@ function MainScreen() {
               BUILDING NEW WORLDS.
             </Text>
           </VStack>
-          <Box zIndex="0" left="-3" position="absolute" top="35%">
+          <Box zIndex="0" left="-3" position="absolute" top="35%" display={{ base: "none", md: "block" }}>
             <Tongue />
           </Box>
-          <Box zIndex="1" position="absolute" right="-3" top="28%">
+          <Box zIndex="1" position="absolute" right="-3" top="28%" display={{ base: "none", md: "block" }}>
             <ThumbsUp />
           </Box>
 
           <Image
             objectFit="cover"
-            src="/assets/imgs/computer.png"
+            src="/assets/imgs/computerupdated.svg"
             alt="ai agent image"
-            width="250"
-            height="250"
+            width="220"
+            height="220"
             style={{ zIndex: "5" }}
           />
           <VStack gap="1.5rem" width="100%">
