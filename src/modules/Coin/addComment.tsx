@@ -12,7 +12,8 @@ const AddCommentUpdated = ({
     onBlur,
     selectedMessageId,
     agentId,
-    publicKey
+    publicKey,
+    websocketRef
 }: any) => {
     const [value, setValue] = useState("");
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -28,57 +29,73 @@ const AddCommentUpdated = ({
 
     const handleSubmit = async () => {
         if (!isAuthenticated) {
-            toast({
-                title: "Wallet not connect!",
-                description: "Please connect wallet to comment!<",
-                status: "error",
-                position: "bottom-right",
-            });
-            return;
+          toast({
+            title: "Wallet not connected!",
+            description: "Please connect wallet to comment!",
+            status: "error",
+            position: "bottom-right",
+          });
+          return;
         }
         if (value.trim() === "") return;
         try {
-            setPosting(true);
-            const resp = await coinApiClient.sendMessage({
-                message_id: selectedMessageId,
+          setPosting(true);
+    
+          if (
+            websocketRef.current &&
+            websocketRef.current.readyState === WebSocket.OPEN
+          ) {
+            websocketRef.current.send(
+              JSON.stringify({
+                agentId: agentId,
                 message: comment,
-                agent_id: agentId,
-                is_reply: !!selectedMessageId,
+              })
+            );
+          }
+    
+          if (selectedMessageId) {
+            trackReply({
+              agent_address: agentId,
+              wallet_address: publicKey?.toString() || "",
+              timestamp: Date.now(),
             });
-            console.log("comments added response", resp);
-            if (selectedMessageId) {
-                trackReply({
-                    agent_address: agentId,
-                    wallet_address: publicKey?.toString() || "",
-                    timestamp: Date.now(),
-                });
-            } else {
-                trackComment({
-                    agent_address: agentId,
-                    wallet_address: publicKey?.toString() || "",
-                    timestamp: Date.now(),
-                });
-            }
-            toast({
-                title: "Success",
-                description: "Added your message!",
-                status: "success",
-                position: "bottom-right",
+          } else {
+            trackComment({
+              agent_address: agentId,
+              wallet_address: publicKey?.toString() || "",
+              timestamp: Date.now(),
             });
-            setValue("");
-            onSubmit(true);
+          }
+    
+          await coinApiClient.sendMessage({
+            message_id: selectedMessageId,
+            message: comment,
+            agent_id: agentId,
+            is_reply: !!selectedMessageId,
+          });
+    
+          toast({
+            title: "Success",
+            description: "Your message is added!",
+            status: "success",
+            position: "bottom-right",
+          });
+          setValue("");
+          onSubmit();
         } catch (err) {
-            console.log(err);
-            toast({
-                title: "Error",
-                description: "something went wrong!",
-                status: "error",
-                position: "bottom-right",
-            });
+          console.log(err);
+          toast({
+            title: "Error",
+            description: "Something went wrong!",
+            status: "error",
+            position: "bottom-right",
+          });
         } finally {
-            setPosting(false);
+          setPosting(false);
+          setComment("");
         }
-    };
+      };
+    
 
 
     return (

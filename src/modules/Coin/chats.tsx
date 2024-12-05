@@ -5,7 +5,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaRegComment } from "react-icons/fa6";
 
 import ChatRowComponent from "@/components/ChatRow";
@@ -27,6 +27,7 @@ function ChatModule(props: { agentId: string }) {
 
 
   const { isAuthenticated } = useUserStore();
+  const websocketRef = useRef<WebSocket | null>(null);
 
   const fetchChats = async () => {
     try {
@@ -41,13 +42,50 @@ function ChatModule(props: { agentId: string }) {
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      fetchChats();
-    }, 5000);
+  const connectWebSocket = () => {
+    if (websocketRef.current) {
+      websocketRef.current.close();
+    }
 
-    return () => clearInterval(intervalId);
-  }, []);
+    const ws = new WebSocket(`wss://wss.neroboss.ai?agentId=${props.agentId}`);
+
+    ws.onopen = () => {
+      console.log("WebSocket connection established");
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+
+        fetchChats();
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+
+    websocketRef.current = ws;
+  };
+
+
+  useEffect(() => {
+    fetchChats();
+
+    connectWebSocket();
+
+    return () => {
+      if (websocketRef.current) {
+        websocketRef.current.close();
+      }
+    };
+  }, [props.agentId]);
 
   useEffect(() => {
     fetchChats();
@@ -73,12 +111,12 @@ function ChatModule(props: { agentId: string }) {
         publicKey={publicKey}
         agentId={props.agentId}
         selectedMessageId={selectedMessageId}
+        websocketRef={websocketRef}
       />
       {(chats?.chats || []).map((data, r) => {
         return (
           <Stack key={r} gap="0.5rem">
             <ChatRowComponent {...data} />
-            Display this Stack only if reply button is clicked
             {openedComments.includes(data.message_id) && (
               <Stack marginLeft="3rem">
                 {data.replies
@@ -97,6 +135,7 @@ function ChatModule(props: { agentId: string }) {
                   onSubmit={() => fetchChats()}
                   publicKey={publicKey}
                   agentId={props.agentId}
+                  websocketRef={websocketRef}
                   selectedMessageId={selectedMessageId}
                 />
               </Stack>
@@ -107,27 +146,6 @@ function ChatModule(props: { agentId: string }) {
               gap="10px"
               marginLeft="0.5rem"
             >
-              {/* <Box
-                fontSize="12px"
-                color="#8C8C8C"
-                backgroundColor="transparent"
-                _hover={{
-                  opacity: 0.8,
-                }}
-                onClick={() => {
-                  setSelectedMessageId(
-                    data.message_id === selectedMessageId
-                      ? undefined
-                      : data.message_id,
-                  );
-                }}
-                display="flex"
-                gap="5px"
-                alignItems="center"
-                cursor="pointer"
-              >
-                <FaRegHeart />
-              </Box> */}
               <Box
                 fontSize="12px"
                 color="#8C8C8C"
