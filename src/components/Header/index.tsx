@@ -5,13 +5,13 @@ import {
   Button,
   HStack,
   Input,
-  Link,
   Text,
   useBreakpointValue,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import Link from "next/link";
 import {
   WalletModalProvider,
   WalletMultiButton,
@@ -38,6 +38,11 @@ function formatToShortLink(number: any) {
   if (number >= 1_000_000) {
     return (number / 1_000_000).toFixed(1) + "M";
   }
+
+  if (number >= 1_000) {
+    return (number / 1_000).toFixed(1) + "K";
+  }
+
   return number?.toString();
 }
 
