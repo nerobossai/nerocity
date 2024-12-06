@@ -136,6 +136,7 @@ function CoinModule() {
       await router.replace(Paths.home);
       return;
     }
+
     if (tmp.complete) {
       return RAYDIUM_MIGRATION_COMPLETED;
     }
