@@ -74,6 +74,12 @@ export type FeedSuccessResponse = {
   ];
 };
 
+export type PlatformStatsResponse = {
+  status: string;
+  agents_launched: string;
+  x_agents_launched: string;
+};
+
 export type ErrorResponse = {
   status: string;
   message: string;
@@ -132,8 +138,8 @@ class ApiClient extends BaseApiClient {
     try {
       const resp = await this.apiCall({
         type: "POST",
-        url:  ApiEndpoints.public.checkNft,
-        body
+        url: ApiEndpoints.public.checkNft,
+        body,
       });
       return resp.data;
     } catch (err: any) {
@@ -188,6 +194,18 @@ class ApiClient extends BaseApiClient {
       const resp = await this.apiCall({
         type: "GET",
         url: ApiEndpoints.public.candlestick.replace(":mint", mint),
+      });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async getPlatformStats(): Promise<PlatformStatsResponse> {
+    try {
+      const resp = await this.apiCall({
+        type: "GET",
+        url: ApiEndpoints.public.platformStats,
       });
       return resp.data;
     } catch (err: any) {

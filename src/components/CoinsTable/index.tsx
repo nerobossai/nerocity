@@ -15,10 +15,17 @@ const buttonData = [
   { label: "Gainers", value: "gainers" },
   { label: "Losers", value: "losers" },
   { label: "Migrated", value: "migrated" },
-  { label: "X-Born Agents", value: "xfeed" }
+  { label: "X-Born Agents", value: "xfeed" },
 ];
 
-function CoinsTable({ feed, setFeedLoading, setFeed, filter, setFilter }: any) {
+function CoinsTable({
+  feed,
+  setFeedLoading,
+  setFeed,
+  filter,
+  setFilter,
+  platformStats,
+}: any) {
   const isMediumScreen = useBreakpointValue({ base: false, md: true });
 
   return (
@@ -30,9 +37,20 @@ function CoinsTable({ feed, setFeedLoading, setFeed, filter, setFilter }: any) {
         gap="15px"
         alignItems="flex-start"
       >
-        <Text className="knf" fontSize="18px">
-          {feed.length} {filter} THIS WEEK
-        </Text>
+        {filter === "" ? (
+          <Text className="knf" fontSize="18px">
+            {platformStats?.agents_launched || feed.length} Agents Live
+          </Text>
+        ) : filter === "xfeed" ? (
+          <Text className="knf" fontSize="18px">
+            {platformStats?.x_agents_launched || feed.length} X-Born Agents Live
+          </Text>
+        ) : (
+          <Text className="knf" fontSize="18px">
+            {feed.length} {filter} THIS WEEK
+          </Text>
+        )}
+
         <HStack gap="1rem" flexWrap="wrap">
           {buttonData.map((button, index) => (
             <Box key={index} position="relative" display="inline-block">
