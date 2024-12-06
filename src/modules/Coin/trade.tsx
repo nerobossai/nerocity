@@ -173,14 +173,27 @@ function TradeModule(props: TradeModuleProps) {
         throw new Error("invalid input");
       }
       setSubmitting(true);
+      const pumpFunData = await coinApiClient.fetchPumpfunData(
+        props.tokenDetails.mint_public_key
+      );
       let txn;
       if (active === "buy") {
-        txn = await pumpFunSdk.buy(
-          new PublicKey(publicKey),
-          new PublicKey(props.tokenDetails.mint_public_key),
-          parseFloat(input) * LAMPORTS_PER_SOL,
-          100
-        );
+        if (pumpFunData?.not_on_pumpfun) {
+          console.log("not on pump fun");
+          txn = await pumpFunSdk.createAndBuyXAgent(
+            new PublicKey(publicKey),
+            new PublicKey(props.tokenDetails.mint_public_key),
+            parseFloat(input) * LAMPORTS_PER_SOL,
+            100
+          );
+        } else {
+          txn = await pumpFunSdk.buy(
+            new PublicKey(publicKey),
+            new PublicKey(props.tokenDetails.mint_public_key),
+            parseFloat(input) * LAMPORTS_PER_SOL,
+            100
+          );
+        }
       } else {
         txn = await pumpFunSdk.sell(
           new PublicKey(publicKey),

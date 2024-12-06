@@ -74,6 +74,7 @@ export type ChatsResponse = {
 
 export type PumpfunCoinResponse = {
   mint: string;
+  not_on_pumpfun?: boolean;
   name: string;
   symbol: string;
   description: string;
@@ -213,6 +214,19 @@ class ApiClient extends BaseApiClient {
       const resp = await this.apiCall({
         type: "POST",
         url: ApiEndpoints.coins.trade,
+        body: data,
+      });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async createAndBuyInstructionSerialized(data: any): Promise<any> {
+    try {
+      const resp = await this.secureApiCall({
+        type: "POST",
+        url: ApiEndpoints.agents.createAndBuyXAgent,
         body: data,
       });
       return resp.data;

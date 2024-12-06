@@ -6,11 +6,7 @@ import {
   getAccount,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
-import type {
-  Commitment,
-  Keypair,
-  VersionedTransaction,
-} from "@solana/web3.js";
+import { Commitment, Keypair, VersionedTransaction } from "@solana/web3.js";
 import {
   Connection,
   LAMPORTS_PER_SOL,
@@ -50,6 +46,8 @@ import {
   DEFAULT_COMMITMENT,
   sendTx,
 } from "./utils";
+import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
+import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 
 const PROGRAM_ID = "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P";
 const MPL_TOKEN_METADATA_PROGRAM_ID =
@@ -153,6 +151,25 @@ export class PumpFunSDK {
       commitment
     );
     return { createResults, tokenMetadata: tokenMetadata.metadata };
+  }
+
+  async createAndBuyXAgent(
+    buyer: PublicKey,
+    mint: PublicKey,
+    buyAmountSol: number,
+    slippageBasisPoints: number = 100,
+    priorityFees?: PriorityFee,
+    commitment: Commitment = DEFAULT_COMMITMENT
+  ): Promise<VersionedTransaction> {
+    const resp = await coinApiClient.createAndBuyInstructionSerialized({
+      isFreeCoinCreation: true,
+      mint: mint.toString(),
+      payer: buyer.toString(),
+      buyAmountSol,
+    });
+    const { serializedTx } = resp;
+    const txn = VersionedTransaction.deserialize(bs58.decode(serializedTx));
+    return txn;
   }
 
   async buy(
@@ -421,7 +438,7 @@ export class PumpFunSDK {
       commitment
     );
     if (!tokenAccount) {
-      return null;
+      return BondingCurveAccount.default();
     }
     return BondingCurveAccount.fromBuffer(tokenAccount!.data);
   }
