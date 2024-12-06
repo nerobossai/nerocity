@@ -31,7 +31,7 @@ function CoinsTable({ feed, setFeedLoading, setFeed, filter, setFilter }: any) {
         alignItems="flex-start"
       >
         <Text className="knf" fontSize="18px">
-          {feed.length} AGENTS LIVE
+          {feed.length} {filter} THIS WEEK
         </Text>
         <HStack gap="1rem" flexWrap="wrap">
           {buttonData.map((button, index) => (
