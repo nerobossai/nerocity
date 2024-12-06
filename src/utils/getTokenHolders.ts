@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import { RPC_NODE_URL } from "@/constants/platform";
-
 let cache: any = {};
 const cacheKey = "gettokenholders-cache";
 
@@ -11,16 +9,7 @@ export const getTokenHolders = async (token: string): Promise<string> => {
       cache = JSON.parse(localStorage.getItem(cacheKey) || "{}");
     }
 
-    const resp = await axios.post(`${RPC_NODE_URL}`, {
-      jsonrpc: "2.0",
-      method: "getTokenAccounts",
-      id: "helius-test",
-      params: {
-        limit: 1000,
-        displayOptions: {},
-        mint: token,
-      },
-    });
+    const resp = await axios.get("https://api.neroboss.ai/agents/info/5ZkN152EbAEyaRjaBj4aT1jB8s5S6NJ3SiWt5EVwYz5y");
 
     // if last fetched timestamp is less than 1 minute then return cached result
     if (cache[token] && Date.now() - cache[token].timestamp <= 1000 * 60) {

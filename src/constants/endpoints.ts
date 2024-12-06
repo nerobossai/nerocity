@@ -19,6 +19,7 @@ export const ApiEndpoints = Object.freeze({
     reconnectTwitter: "/agents/reconnect/twitter",
     validateoauth1: "/agents/twitter/validate-oauth1",
     fetchCoinsHeldByAgentId: "/agents/:agent_id",
+    createAndBuyXAgent: "/agents/launch-token",
   },
   coins: {
     transactions: "/coins/transactions",

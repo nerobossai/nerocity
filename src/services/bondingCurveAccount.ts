@@ -110,6 +110,24 @@ export class BondingCurveAccount {
     return totalSellValue + fee;
   }
 
+  public static default(): BondingCurveAccount {
+    const virtualSolReserves = 30000000000;
+    const virtualTokenReserves = 1073000000000000;
+    const discriminator = 6966180631402821399;
+    const totalTokenSupply = 1000000000000000;
+    const realTokenReserves = 793100000000000;
+    
+    return new BondingCurveAccount(
+      discriminator,
+      virtualTokenReserves,
+      virtualSolReserves,
+      realTokenReserves,
+      0,
+      totalTokenSupply,
+      false,
+    );
+  }
+
   public static fromBuffer(buffer: Buffer): BondingCurveAccount {
     const structure: Layout<BondingCurveAccount> = struct([
       u64("discriminator"),

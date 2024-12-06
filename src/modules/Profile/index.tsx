@@ -28,6 +28,7 @@ import { AiOutlineGlobal } from "react-icons/ai";
 import { LiaTelegram } from "react-icons/lia";
 import { RiTwitterXFill } from "react-icons/ri";
 import SocialModalComponent from "@/components/SocialModal";
+import Link from "next/link";
 
 const Container = styled.div`
   width: 100%;
@@ -163,12 +164,12 @@ function ProfileModule() {
           className="knf"
         >
           <Text fontSize="18px" cursor="pointer">
+            <Link href="/app">
             <span
               style={{ color: "#959595" }}
-              onClick={() => router.push("/app")}
             >
               HOME /{" "}
-            </span>{" "}
+            </span></Link>{" "}
             PROFILE
           </Text>
         </Box>

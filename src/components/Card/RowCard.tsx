@@ -75,16 +75,18 @@ function DataTable({ feed }: { feed: CardProps[] }) {
     return 0;
   });
 
-  const getSortArrow = (column: string) =>
-    sortColumn === column ? (
-      sortOrder === "asc" ? (
-        <IoIosArrowRoundUp cursor="pointer" size={20} />
-      ) : (
-        <IoIosArrowRoundDown cursor="pointer" size={20} />
-      )
-    ) : (
-      <IoIosArrowRoundUp cursor="pointer" size={20} />
-    );
+  // const getSortArrow = (column: string) =>
+  //   sortColumn === column ? (
+  //     sortOrder === "asc" ? (
+  //       <IoIosArrowRoundUp cursor="pointer" size={20} />
+  //     ) : (
+  //       <IoIosArrowRoundDown cursor="pointer" size={20} />
+  //     )
+  //   ) : (
+  //     <IoIosArrowRoundUp cursor="pointer" size={20} />
+  //   );
+
+  const getSortArrow = (column: string) => null;
 
   const getTableProps = (): TableProps => ({
     variant: "unstyled",
@@ -199,22 +201,24 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                 </>
               )}
 
-              {!isLargeScreen && <Th
-                color="#656565"
-                textAlign="right"
-                onClick={() => handleSort("market_cap")}
-                cursor="pointer"
-                paddingRight={isSmallScreen ? "0.5rem" : "1rem"}
-              >
-                <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  alignItems="center"
-                  gap="10px"
+              {!isLargeScreen && (
+                <Th
+                  color="#656565"
+                  textAlign="right"
+                  onClick={() => handleSort("market_cap")}
+                  cursor="pointer"
+                  paddingRight={isSmallScreen ? "0.5rem" : "1rem"}
                 >
-                  MCAP {getSortArrow("market_cap")}
-                </Box>
-              </Th>}
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    alignItems="center"
+                    gap="10px"
+                  >
+                    MCAP {getSortArrow("market_cap")}
+                  </Box>
+                </Th>
+              )}
             </Tr>
           </Thead>
           <Tbody>
@@ -304,7 +308,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                         borderBottom="1px solid #343434"
                         fontSize="16px"
                       >
-                        ${data.market_cap}
+                        ${data.market_cap ?? 0}
                       </Td>
                       <Td
                         textAlign="right"
@@ -326,7 +330,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     </>
                   )}
 
-                  {!isLargeScreen &&
+                  {!isLargeScreen && (
                     <Td
                       textAlign="right"
                       color="white"
@@ -335,9 +339,9 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                       fontSize="12px"
                       borderRight="1px solid #343434"
                     >
-                      ${data.market_cap}
+                      ${data.market_cap ?? 0}
                     </Td>
-                  }
+                  )}
                 </Tr>
               ) : null
             )}

@@ -9,6 +9,8 @@ import { IndexFinger } from "@/components/Svgs/HomeScreen/indexFinger";
 import { SingleEye } from "@/components/Svgs/HomeScreen/singleEye";
 import { Logo } from "@/components/Svgs/Logo";
 import { useRouter } from "next/router";
+import { Tongue } from "@/components/Svgs/Tongue";
+import { ThumbsUp } from "@/components/Svgs/ThumbsUp";
 
 const Container = styled.div`
   width: 100vw;
@@ -57,6 +59,8 @@ function MainScreen() {
           alignItems="center"
           justifyContent="center"
           display={{ base: "none", md: "flex" }}
+          flexGrow="1"
+          gap="50px"
         >
           <Box flexGrow="1">
             <Hands />
@@ -70,9 +74,10 @@ function MainScreen() {
         </HStack>
         <VStack
           p="20px 40px"
-          border="1px solid white"
           height="100%"
           minWidth={{ base: "auto", sm: "450px" }}
+          className="gradient-border"
+          position="relative"
         >
           <VStack gap="2rem">
             <Logo width="250px" height="60px" />
@@ -82,13 +87,20 @@ function MainScreen() {
               BUILDING NEW WORLDS.
             </Text>
           </VStack>
-          {/* <Computer /> */}
+          <Box zIndex="0" left="-3" position="absolute" top="35%" display={{ base: "none", md: "block" }}>
+            <Tongue />
+          </Box>
+          <Box zIndex="1" position="absolute" right="-3" top="28%" display={{ base: "none", md: "block" }}>
+            <ThumbsUp />
+          </Box>
+
           <Image
             objectFit="cover"
-            src="/assets/imgs/computer.png"
+            src="/assets/imgs/computerupdated.svg"
             alt="ai agent image"
-            width="250"
-            height="250"
+            width="220"
+            height="220"
+            style={{ zIndex: "5" }}
           />
           <VStack gap="1.5rem" width="100%">
             <Button
@@ -126,6 +138,8 @@ function MainScreen() {
           alignItems="center"
           justifyContent="center"
           display={{ base: "none", md: "flex" }}
+          gap="50px"
+          flexGrow="1"
         >
           <Box flexGrow="1">
             <SingleEye />
