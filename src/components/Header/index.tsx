@@ -33,6 +33,7 @@ import * as AuthUtils from "@/utils/AuthUtils";
 import { Logo } from "../Svgs/Logo";
 import { LogoSmall } from "../Svgs/LogoSmall";
 import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
+import SearchResults from "./SearchResults";
 
 function formatToShortLink(number: any) {
   if (number >= 1_000_000) {
@@ -241,6 +242,7 @@ function Header() {
           alignItems="center"
           gap="20px"
           px="1rem"
+          position="relative"
         >
           <BiSearch size={20} />
           <Input
@@ -259,6 +261,7 @@ function Header() {
             }}
             autoFocus
           />
+          <SearchResults searchText={searchText} />
         </Box>
 
 
@@ -287,6 +290,7 @@ function Header() {
           bg="brown.200"
           alignItems="center"
           gap="20px"
+          position="relative"
         >
           <BiSearch size={20} />
           <Input
@@ -303,6 +307,7 @@ function Header() {
               boxShadow: "none",
             }}
           />
+          <SearchResults searchText={searchText} />
         </Box>
       </Box>}
       <HStack display={{ base: "none", md: "flex" }}>
