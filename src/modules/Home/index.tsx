@@ -20,7 +20,10 @@ import useUserStore from "@/stores/useUserStore";
 import { getTokenHolders } from "@/utils/getTokenHolders";
 import useDebounce from "@/utils/useDebounce";
 
-import type { AgentResponse } from "./services/homeApiClient";
+import type {
+  AgentResponse,
+  PlatformStatsResponse,
+} from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
 
 const Container = styled.div`
@@ -39,6 +42,7 @@ function HomeModule() {
   const [filter, setFilter] = useState("");
   const { isAuthenticated } = useUserStore();
   const [first, setFirst] = useState(true);
+  const [platformStats, setPlatformStats] = useState<PlatformStatsResponse>();
   const toast = useToast();
   const debouncedQuery = useDebounce(searchText, 2000);
 
@@ -89,14 +93,14 @@ function HomeModule() {
     }
   };
 
-  // useEffect(() => {
-  //   let intervalId = setInterval(() => {
-  //     console.log("poll completed");
-  //     fetchFeed(filter);
-  //   }, 50000);
+  const fetchPlatformStats = async () => {
+    const resp = await homeApiClient.getPlatformStats();
+    setPlatformStats(resp);
+  };
 
-  //   return () => clearInterval(intervalId);
-  // }, []);
+  useEffect(() => {
+    fetchPlatformStats();
+  }, []);
 
   useEffect(() => {
     fetchFeed(filter);
@@ -178,6 +182,7 @@ function HomeModule() {
               setFeedLoading={setFeedLoading}
               filter={filter}
               setFilter={setFilter}
+              platformStats={platformStats}
             />
           )}
         </Stack>

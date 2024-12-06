@@ -4,6 +4,7 @@ export const ApiEndpoints = Object.freeze({
     overlord: "/public/overlord",
     candlestick: "/public/candlestick/:mint",
     checkNft: "/leaderboard/api/v1/checkNft",
+    platformStats: "/public/platform-stats",
   },
   auth: {
     login: "/auth/login",
