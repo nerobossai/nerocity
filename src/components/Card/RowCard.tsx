@@ -308,7 +308,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                         borderBottom="1px solid #343434"
                         fontSize="16px"
                       >
-                        ${data.market_cap}
+                        ${data.market_cap ?? 0}
                       </Td>
                       <Td
                         textAlign="right"
@@ -339,7 +339,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                       fontSize="12px"
                       borderRight="1px solid #343434"
                     >
-                      ${data.market_cap}
+                      ${data.market_cap ?? 0}
                     </Td>
                   )}
                 </Tr>
