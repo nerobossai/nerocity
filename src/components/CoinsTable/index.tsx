@@ -9,16 +9,13 @@ import {
 import React from "react";
 
 import DataTable from "../Card/RowCard";
-import { AllCoins } from "../Svgs/AllCoins";
-import { GainerIcon } from "../Svgs/GainerIcon";
-import { LoserIcon } from "../Svgs/LoserIcon";
-import { MigrationIcon } from "../Svgs/MigrationIcon";
 
 const buttonData = [
-  { label: "All", icon: <AllCoins />, value: "" },
-  { label: "Gainers", icon: <GainerIcon />, value: "gainers" },
-  { label: "Losers", icon: <LoserIcon />, value: "losers" },
-  { label: "Migrated", icon: <MigrationIcon />, value: "migrated" },
+  { label: "All", value: "" },
+  { label: "Gainers", value: "gainers" },
+  { label: "Losers", value: "losers" },
+  { label: "Migrated", value: "migrated" },
+  { label: "X-Born Agents", value: "xfeed" }
 ];
 
 function CoinsTable({ feed, setFeedLoading, setFeed, filter, setFilter }: any) {
@@ -36,7 +33,7 @@ function CoinsTable({ feed, setFeedLoading, setFeed, filter, setFilter }: any) {
         <Text className="knf" fontSize="18px">
           {feed.length} AGENTS LIVE
         </Text>
-        <HStack gap="1rem">
+        <HStack gap="1rem" flexWrap="wrap">
           {buttonData.map((button, index) => (
             <Box key={index} position="relative" display="inline-block">
               <Button
