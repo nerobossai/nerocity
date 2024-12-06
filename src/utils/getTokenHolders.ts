@@ -18,7 +18,7 @@ export const getTokenHolders = async (token: string): Promise<string> => {
     }
 
     const resp = await axios.get(url);
-    const { data } = resp;
+    const { data } = resp.data;
 
     cache[token] = {
       result: data.holder || 0,
