@@ -256,10 +256,9 @@ function Header() {
         justifyContent={{ base: "space-between", md: "block" }}
       >
         <Box cursor="pointer" marginLeft="24px">
-        <Link href="/app">
-
-          {isLargeScreen ? <Logo /> : <LogoSmall />}      </Link>
-
+          <Link href="/app">
+            {isLargeScreen ? <Logo /> : <LogoSmall />}      
+          </Link>
         </Box>
         <Box
           display="flex"
@@ -279,7 +278,7 @@ function Header() {
             placeholder="Search for agents"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            onBlur={() => { setTimeout(() => setInputFocus(false), 500)}}
+            onBlur={() => { setTimeout(() => setInputFocus(false), 500) }}
             onFocus={() => setDisplaySearchResults(true)}
             _focus={{
               outline: "none",
