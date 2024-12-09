@@ -261,7 +261,7 @@ function Header() {
             }}
             autoFocus
           />
-          <SearchResults searchText={searchText} />
+          <SearchResults searchText={searchText} setSearchText={setSearchText} />
         </Box>
 
 
@@ -307,7 +307,7 @@ function Header() {
               boxShadow: "none",
             }}
           />
-          <SearchResults searchText={searchText} />
+          <SearchResults searchText={searchText} setSearchText={setSearchText} />
         </Box>
       </Box>}
       <HStack display={{ base: "none", md: "flex" }}>
