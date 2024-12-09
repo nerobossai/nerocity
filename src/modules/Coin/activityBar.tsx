@@ -9,9 +9,13 @@ import { coinApiClient } from "./services/coinApiClient";
 function ActivityBar({
   agentId,
   replies,
+  agentImage,
+  agentName
 }: {
   agentId: string;
   replies: string;
+  agentImage?: string;
+  agentName?: string;
 }) {
   const [activeTab, setActiveTab] = useState(0);
   const [activities, setActivities] = useState<ActivityDetails[]>([]);
@@ -94,7 +98,7 @@ function ActivityBar({
 
         <TabPanels>
           <TabPanel>
-            <ChatModule agentId={agentId} />
+            <ChatModule agentId={agentId} agentImage={agentImage ?? ""} agentName={agentName ?? ""}/>
           </TabPanel>
           {/* <TabPanel>
             <TopHolders />

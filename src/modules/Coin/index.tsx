@@ -136,6 +136,7 @@ function CoinModule() {
       await router.replace(Paths.home);
       return;
     }
+
     if (tmp.complete) {
       return RAYDIUM_MIGRATION_COMPLETED;
     }
@@ -303,6 +304,8 @@ function CoinModule() {
             <ActivityBar
               agentId={agentDetails.id}
               replies={agentDetails.replies}
+              agentImage={agentDetails.image}
+              agentName={agentDetails.ticker}
             />
           </Box>{" "}
           <TabBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
@@ -358,6 +361,7 @@ function CoinModule() {
             <ActivityBar
               agentId={agentDetails.id}
               replies={agentDetails.replies}
+              agentImage={agentDetails.image}
             />
           ) : null}
         </VStack>

@@ -173,7 +173,7 @@ function MainCard(props: CardProps) {
           <Text fontSize="12px" color="text.100">
             MCAP
           </Text>
-          <Text fontSize="14px">${props.market_cap}</Text>
+          <Text fontSize="14px">${props.market_cap ?? 0}</Text>
         </VStack>
         <VStack alignItems={{ base: "flex-start", md: "flex-end" }}>
           <Text fontSize="12px" color="text.100">

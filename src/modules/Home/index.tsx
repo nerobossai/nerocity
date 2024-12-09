@@ -20,7 +20,10 @@ import useUserStore from "@/stores/useUserStore";
 import { getTokenHolders } from "@/utils/getTokenHolders";
 import useDebounce from "@/utils/useDebounce";
 
-import type { AgentResponse } from "./services/homeApiClient";
+import type {
+  AgentResponse,
+  PlatformStatsResponse,
+} from "./services/homeApiClient";
 import { homeApiClient } from "./services/homeApiClient";
 
 const Container = styled.div`
@@ -38,6 +41,7 @@ function HomeModule() {
   const [overlord, setOverlord] = useState<AgentResponse>();
   const [filter, setFilter] = useState("");
   const { isAuthenticated } = useUserStore();
+  const [platformStats, setPlatformStats] = useState<PlatformStatsResponse>();
 
   const fetchFeed = async (filter: string) => {
     try {
@@ -83,6 +87,15 @@ function HomeModule() {
       setFeedLoading(false);
     }
   };
+
+  const fetchPlatformStats = async () => {
+    const resp = await homeApiClient.getPlatformStats();
+    setPlatformStats(resp);
+  };
+
+  useEffect(() => {
+    fetchPlatformStats();
+  }, []);
 
   useEffect(() => {
     fetchFeed(filter);
@@ -164,6 +177,7 @@ function HomeModule() {
               setFeedLoading={setFeedLoading}
               filter={filter}
               setFilter={setFilter}
+              platformStats={platformStats}
             />
           )}
         </Stack>

@@ -38,9 +38,19 @@ export type SendMessageData = {
   message_id: string | undefined;
 };
 
-export type ChatsResponse = {
-  status: string;
-  chats: [
+export type Chat = {
+  created_by: string;
+  user_details: {
+    profile_pic: string;
+    public_key: string;
+  };
+  message_id: string;
+  timestamp: string;
+  image: string;
+  message: string;
+  is_reply: boolean;
+  is_agent: boolean;
+  replies: [
     {
       created_by: string;
       user_details: {
@@ -53,27 +63,18 @@ export type ChatsResponse = {
       message: string;
       is_reply: boolean;
       is_agent: boolean;
-      replies: [
-        {
-          created_by: string;
-          user_details: {
-            profile_pic: string;
-            public_key: string;
-          };
-          message_id: string;
-          timestamp: string;
-          image: string;
-          message: string;
-          is_reply: boolean;
-          is_agent: boolean;
-        },
-      ];
     },
   ];
+}
+
+export type ChatsResponse = {
+  status: string;
+  chats: Chat[];
 };
 
 export type PumpfunCoinResponse = {
   mint: string;
+  not_on_pumpfun?: boolean;
   name: string;
   symbol: string;
   description: string;
@@ -213,6 +214,19 @@ class ApiClient extends BaseApiClient {
       const resp = await this.apiCall({
         type: "POST",
         url: ApiEndpoints.coins.trade,
+        body: data,
+      });
+      return resp.data;
+    } catch (err: any) {
+      return Promise.reject(getErrorMessageFromAxios(err));
+    }
+  }
+
+  async createAndBuyInstructionSerialized(data: any): Promise<any> {
+    try {
+      const resp = await this.secureApiCall({
+        type: "POST",
+        url: ApiEndpoints.agents.createAndBuyXAgent,
         body: data,
       });
       return resp.data;

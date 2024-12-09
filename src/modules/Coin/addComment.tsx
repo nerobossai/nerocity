@@ -1,7 +1,20 @@
 import { Box, Button, Textarea, useToast } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { trackComment, trackReply } from "./services/analytics";
-import { coinApiClient } from './services/coinApiClient';
+import { Chat, coinApiClient } from './services/coinApiClient';
+import useUserStore from '@/stores/useUserStore';
+
+function addReplyToChat(chats: Chat[], message_id: string, reply: any): any[] {
+  return chats.map(chat => {
+    if (chat.message_id === message_id) {
+      return {
+        ...chat,
+        replies: [...chat.replies, reply],
+      };
+    }
+    return chat;
+  });
+}
 
 const AddCommentUpdated = ({
     comment,
@@ -13,12 +26,18 @@ const AddCommentUpdated = ({
     selectedMessageId,
     agentId,
     publicKey,
-    websocketRef
+    websocketRef,
+    setChats,
+    chats,
+    agentImage,
+    agentName,
+    setSelectedMessageId
 }: any) => {
     const [value, setValue] = useState("");
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const [posting, setPosting] = useState(false);
     const toast = useToast();
+    const { profile } = useUserStore();
 
     const adjustHeight = () => {
         if (textAreaRef.current) {
@@ -80,6 +99,57 @@ const AddCommentUpdated = ({
             status: "success",
             position: "bottom-right",
           });
+          const agentReply =  {
+            created_by: profile?.profile?.username,
+            user_details: {
+              profile_pic: agentImage,
+              public_key: "key2",
+              username: agentName ??"Test"
+            },
+            message_id: selectedMessageId,
+            timestamp: Date.now().toString(),
+            image: agentImage,
+            message: "Agent is Typing ...",
+            is_reply: selectedMessageId ? true : false,
+            is_agent: true,
+          };
+
+          if (selectedMessageId) {            
+            const userReply =  {
+              created_by: profile?.profile?.username,
+              user_details: {
+                profile_pic: profile?.profile?.profile_pic,
+                public_key: "key2",
+                username: profile?.profile?.username
+              },
+              message_id: selectedMessageId,
+              timestamp: Date.now().toString(),
+              image: profile?.profile?.profile_pic,
+              message: value,
+              is_reply: selectedMessageId ? true : false,
+              is_agent: false,
+            };
+            const updatedChats = addReplyToChat(chats, selectedMessageId, userReply);
+            // const updatedChatsWithAgent = addReplyToChat(updatedChats, selectedMessageId, agentReply);
+            setChats(updatedChats);
+          } else {
+            const newChat = {
+              created_by: profile?.profile?.username,
+              user_details: {
+                profile_pic: profile?.profile?.profile_pic,
+                public_key: "key2",
+                username: profile?.profile?.username
+              },
+              message_id: "insertedMessage",
+              timestamp: Date.now().toString(),
+              image: profile?.profile?.profile_pic,
+              message: value,
+              is_reply: false,
+              is_agent: false,
+              replies: [],
+            }
+            setChats([...chats, newChat]);
+          }
           setValue("");
           onSubmit();
         } catch (err) {
