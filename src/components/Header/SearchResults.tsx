@@ -3,13 +3,20 @@ import { timeDifference } from '@/utils/timeDifference';
 import useDebounce from '@/utils/useDebounce';
 import { Box, HStack, Image, Spinner, Text, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-function SearchResults({ searchText, setSearchText }: { searchText: string, setSearchText: (v: string) => void }) {
+interface ISearchResults { 
+    searchText: string; 
+    setSearchText: (v: string) => void; 
+    displaySearchResults: boolean; 
+}
+
+function SearchResults({ searchText, setSearchText, displaySearchResults }: ISearchResults) {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const debouncedQuery = useDebounce(searchText, 1000);
     const [feed, setFeed] = useState<any>([]);
+    const vStackRef = useRef<HTMLDivElement>(null);
 
     const fetchFeed = async () => {
         try {
@@ -20,6 +27,8 @@ function SearchResults({ searchText, setSearchText }: { searchText: string, setS
                 if (searchRes.agents.length > 0) {
                     resp = searchRes.agents;
                     setFeed(resp);
+                } else{
+                    setFeed([]);
                 }
             }
             setLoading(false);
@@ -33,13 +42,13 @@ function SearchResults({ searchText, setSearchText }: { searchText: string, setS
         debouncedQuery !== "" && fetchFeed()
     }, [debouncedQuery])
 
-    if (searchText === "") {
+    if (searchText === "" || !displaySearchResults) {
         return null;
     }
     
 
     return (
-        <VStack className="scrollbar" py="5px" position="absolute" mt="5px" border="1px solid #6F5034" maxHeight="250px" overflowY="auto" top="100%" left="0" width="100%" display="flex" flexDirection="column" gap="10px" p="4" zIndex="100" bg="brown.200">
+        <VStack className="scrollbar" py="5px" ref={vStackRef} position="absolute" mt="5px" border="1px solid #6F5034" maxHeight="250px" overflowY="auto" top="100%" left="0" minWidth="100%" display="flex" flexDirection="column" gap="10px" p="4" zIndex="100" bg="brown.200">
             {loading ? <Box my="10px">
                 <Spinner />
             </Box> : feed.length === 0 ? <Text>No results found!</Text> : feed.map((data: any) => (
@@ -56,7 +65,7 @@ function SearchResults({ searchText, setSearchText }: { searchText: string, setS
                         <Text color="white" fontSize="14px">${data.ticker}</Text>
                     </HStack>
                     <Text color="white">${data.market_cap}</Text>
-                    <Text>{timeDifference(
+                    <Text display={{base:"none", lg:"block"}}>{timeDifference(
                         Date.now(),
                         parseInt(data.created_at.toString(), 10),
                     )}</Text>

@@ -55,7 +55,7 @@ const Container = styled.header`
 function Header() {
   const router = useRouter();
   const toast = useToast();
-  const { searchText, setSearchText } = useSearchStore();
+  const { searchText, setSearchText, displaySearchResults, setDisplaySearchResults } = useSearchStore();
   const {
     isAuthenticated,
     profile,
@@ -91,6 +91,7 @@ function Header() {
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   const isSmallScreen = useBreakpointValue({ base: true, sm: false });
   const vStackRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
   const [marketCap, setMarketCap] = useState("");
   const [inputFocus, setInputFocus] = useState(false);
 
@@ -176,6 +177,24 @@ function Header() {
     };
   }, []);
 
+
+  useEffect(() => {
+    const handleClickOutsideInput = (event: MouseEvent) => {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        setDisplaySearchResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutsideInput);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideInput);
+    };
+  }, []);
+
   useEffect(() => {
     setMounted(true);
   }, [])
@@ -215,15 +234,15 @@ function Header() {
   };
   if (!mounted) {
     return <HStack
-    bg="brown.100"
-    height="70px"
-    py="1rem"
-    align="center"
-    gap={{ base: "5px", sm: "40px" }}
-    px="1rem"
-    width="100vw"
-    justifyContent={{ base: "space-between", md: "block" }}
-  ></HStack>;
+      bg="brown.100"
+      height="70px"
+      py="1rem"
+      align="center"
+      gap={{ base: "5px", sm: "40px" }}
+      px="1rem"
+      width="100vw"
+      justifyContent={{ base: "space-between", md: "block" }}
+    ></HStack>;
   }
   if (inputFocus) {
     return (
@@ -243,6 +262,7 @@ function Header() {
           gap="20px"
           px="1rem"
           position="relative"
+          ref={inputRef}
         >
           <BiSearch size={20} />
           <Input
@@ -254,6 +274,7 @@ function Header() {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             onBlur={() => setInputFocus(false)}
+            onFocus={() => setDisplaySearchResults(true)}
             _focus={{
               outline: "none",
               border: "none",
@@ -261,7 +282,7 @@ function Header() {
             }}
             autoFocus
           />
-          <SearchResults searchText={searchText} setSearchText={setSearchText} />
+          <SearchResults searchText={searchText} setSearchText={setSearchText} displaySearchResults={displaySearchResults} />
         </Box>
 
 
@@ -291,6 +312,7 @@ function Header() {
           alignItems="center"
           gap="20px"
           position="relative"
+          ref={inputRef}
         >
           <BiSearch size={20} />
           <Input
@@ -306,8 +328,9 @@ function Header() {
               border: "none",
               boxShadow: "none",
             }}
+            onFocus={() => setDisplaySearchResults(true)}
           />
-          <SearchResults searchText={searchText} setSearchText={setSearchText} />
+          <SearchResults searchText={searchText} setSearchText={setSearchText} displaySearchResults={displaySearchResults} />
         </Box>
       </Box>}
       <HStack display={{ base: "none", md: "flex" }}>
