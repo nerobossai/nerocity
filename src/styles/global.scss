@@ -85,6 +85,30 @@ body {
   background-color: transparent !important;
 }
 
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #6F5034 transparent;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px; /* Add border-radius to the track */
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #6F5034;
+  border-radius: 8px; /* Rounded scrollbar thumb */
+  border: 2px solid transparent;
+}
+
+.scrollbar::-webkit-scrollbar-button {
+  display: none; /* Removes the up/down arrows */
+}
+
 .page-faq {
   @media (max-width: 992px) {
     * {

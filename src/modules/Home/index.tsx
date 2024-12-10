@@ -41,39 +41,36 @@ function HomeModule() {
   const [overlord, setOverlord] = useState<AgentResponse>();
   const [filter, setFilter] = useState("");
   const { isAuthenticated } = useUserStore();
-  const [first, setFirst] = useState(true);
   const [platformStats, setPlatformStats] = useState<PlatformStatsResponse>();
-  const toast = useToast();
-  const debouncedQuery = useDebounce(searchText, 2000);
 
   const fetchFeed = async (filter: string) => {
     try {
       setFeedLoading(true);
       let resp;
-      if (searchText !== "") {
-        const searchRes = await homeApiClient.searchFeed(searchText);
-        if (searchRes.agents.length > 0) {
-          resp = searchRes;
-        } else {
-          toast({
-            title: `No results found for the search query!`,
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-            position: "bottom-right",
-          });
-          return;
-        }
-      } else {
-        resp = await homeApiClient.feed(filter);
-      }
+      // if (searchText !== "") {
+      //   const searchRes = await homeApiClient.searchFeed(searchText);
+      //   if (searchRes.agents.length > 0) {
+      //     resp = searchRes;
+      //   } else {
+      //     toast({
+      //       title: `No results found for the search query!`,
+      //       status: "error",
+      //       duration: 3000,
+      //       isClosable: true,
+      //       position: "bottom-right",
+      //     });
+      //     return;
+      //   }
+      // } else {
+      //   resp = await homeApiClient.feed(filter);
+      // }
 
+      resp = await homeApiClient.feed(filter);
       const sortedAgents = [...resp.agents].sort(
         (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap)
       );
       // if (first) {
       setOverlord(sortedAgents[0]);
-      setFirst(false);
       // }
       const { agents } = resp;
       const agentsWithHolders = await Promise.all(
@@ -84,8 +81,6 @@ function HomeModule() {
       );
 
       setFeed(agentsWithHolders);
-
-      // setFeed(resp.agents);
     } catch (err) {
       console.log(err);
     } finally {
@@ -104,7 +99,7 @@ function HomeModule() {
 
   useEffect(() => {
     fetchFeed(filter);
-  }, [filter, debouncedQuery]);
+  }, [filter]);
 
   return (
     <Container>
