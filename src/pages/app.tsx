@@ -5,6 +5,7 @@ import { Meta } from "@/layouts/Meta";
 import HomeModule from "@/modules/Home";
 import Main from "@/templates/Main";
 import { AppConfig } from "@/utils/AppConfig";
+import TermsModal from "@/components/Modals/TermsModal";
 
 const Index = () => {
   useEffect(() => {
@@ -20,6 +21,7 @@ const Index = () => {
           <Meta title={AppConfig.title} description={AppConfig.description} />
         }
       >
+        <TermsModal />
         <HomeModule />
       </Main>
     </>
