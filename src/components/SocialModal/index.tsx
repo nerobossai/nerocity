@@ -1,5 +1,3 @@
-import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
-import { profileApiClient } from "@/modules/Profile/services/profileApiClient";
 import {
   Button,
   HStack,
@@ -16,6 +14,9 @@ import {
 import { useWallet } from "@solana/wallet-adapter-react";
 import React, { useEffect, useState } from "react";
 import { RiTwitterXFill } from "react-icons/ri";
+
+import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
+import { profileApiClient } from "@/modules/Profile/services/profileApiClient";
 
 export type SocialModalProps = {
   isOpen: boolean;
@@ -59,7 +60,7 @@ function SocialModalComponent(props: SocialModalProps) {
     try {
       setLoading(true);
       const { authUrl } = await profileApiClient.getLinkTwitterUrl(
-        props.data.mint_public_key
+        props.data.mint_public_key,
       );
       window.open(authUrl, "_blank");
 
@@ -95,7 +96,7 @@ function SocialModalComponent(props: SocialModalProps) {
             description: "This functionality will be available soon.",
             status: "info",
             containerStyle: {
-              backgroundColor: "blue"
+              backgroundColor: "blue",
             },
             position: "bottom-right",
           });
@@ -135,11 +136,11 @@ function SocialModalComponent(props: SocialModalProps) {
         alignItems="center"
         borderWidth="1px"
       >
-        <ModalHeader textTransform={"capitalize"}>{props.name}</ModalHeader>
+        <ModalHeader textTransform="capitalize">{props.name}</ModalHeader>
         <ModalCloseButton onClick={props.onClose} />
-        <ModalBody width={"100%"}>
-          <HStack justifyContent={"center"}>
-            <Text marginRight={"1rem"}>Status:</Text>
+        <ModalBody width="100%">
+          <HStack justifyContent="center">
+            <Text marginRight="1rem">Status:</Text>
             <Text
               color={props.data?.social?.[props.name] !== "" ? "green" : "red"}
             >

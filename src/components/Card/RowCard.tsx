@@ -1,25 +1,24 @@
+import type { TableProps } from "@chakra-ui/react";
 import {
   Box,
   Heading,
   HStack,
   Image,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Th,
+  Thead,
+  Tr,
   useBreakpointValue,
   VStack,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  TableProps,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import CreatedAtComponent from "../Created";
-import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
 
 interface CardProps {
   id: string;
@@ -343,7 +342,7 @@ function DataTable({ feed }: { feed: CardProps[] }) {
                     </Td>
                   )}
                 </Tr>
-              ) : null
+              ) : null,
             )}
           </Tbody>
         </Table>

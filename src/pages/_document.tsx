@@ -1,7 +1,7 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
+import Script from "next/script";
 
 import { AppConfig } from "@/utils/AppConfig";
-import Script from "next/script";
 
 // Need to create a custom _document because i18n support is not compatible with `next export`.
 class MyDocument extends Document {

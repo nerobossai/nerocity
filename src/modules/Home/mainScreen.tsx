@@ -1,5 +1,6 @@
 import { Box, Button, HStack, Link, Text, VStack } from "@chakra-ui/react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
 
@@ -8,9 +9,8 @@ import { Hands } from "@/components/Svgs/HomeScreen/Hands";
 import { IndexFinger } from "@/components/Svgs/HomeScreen/indexFinger";
 import { SingleEye } from "@/components/Svgs/HomeScreen/singleEye";
 import { Logo } from "@/components/Svgs/Logo";
-import { useRouter } from "next/router";
-import { Tongue } from "@/components/Svgs/Tongue";
 import { ThumbsUp } from "@/components/Svgs/ThumbsUp";
+import { Tongue } from "@/components/Svgs/Tongue";
 
 const Container = styled.div`
   width: 100vw;
@@ -87,10 +87,22 @@ function MainScreen() {
               BUILDING NEW WORLDS.
             </Text>
           </VStack>
-          <Box zIndex="0" left="-3" position="absolute" top="35%" display={{ base: "none", md: "block" }}>
+          <Box
+            zIndex="0"
+            left="-3"
+            position="absolute"
+            top="35%"
+            display={{ base: "none", md: "block" }}
+          >
             <Tongue />
           </Box>
-          <Box zIndex="1" position="absolute" right="-3" top="28%" display={{ base: "none", md: "block" }}>
+          <Box
+            zIndex="1"
+            position="absolute"
+            right="-3"
+            top="28%"
+            display={{ base: "none", md: "block" }}
+          >
             <ThumbsUp />
           </Box>
 

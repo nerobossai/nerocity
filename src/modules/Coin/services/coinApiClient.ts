@@ -65,7 +65,7 @@ export type Chat = {
       is_agent: boolean;
     },
   ];
-}
+};
 
 export type ChatsResponse = {
   status: string;

@@ -82,7 +82,7 @@ class ApiClient extends BaseApiClient {
   }
 
   async getTwitterOauthLink(
-    body: TwitterOauthBody
+    body: TwitterOauthBody,
   ): Promise<TwitterOauthResponse> {
     try {
       const resp = await this.secureApiCall({
@@ -97,7 +97,7 @@ class ApiClient extends BaseApiClient {
   }
 
   async validateOauth(
-    body: TwitterValidateOauthBody
+    body: TwitterValidateOauthBody,
   ): Promise<TwitterValidateOauthResponse> {
     try {
       const resp = await this.secureApiCall({

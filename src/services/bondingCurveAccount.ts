@@ -116,7 +116,7 @@ export class BondingCurveAccount {
     const discriminator = 6966180631402821399;
     const totalTokenSupply = 1000000000000000;
     const realTokenReserves = 793100000000000;
-    
+
     return new BondingCurveAccount(
       discriminator,
       virtualTokenReserves,

@@ -1,7 +1,9 @@
 import "@/styles/global.scss";
 
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { BackpackWalletAdapter } from "@solana/wallet-adapter-backpack";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { GlowWalletAdapter } from "@solana/wallet-adapter-glow";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -16,14 +18,12 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useMemo, useState } from "react";
 
+import { RPC_NODE_URL } from "@/constants/platform";
 import useUserStore from "@/stores/useUserStore";
 import { tailwindConfig } from "@/styles/global";
 import { tabsTheme } from "@/styles/tabsTheme";
 import type { ProfileObject } from "@/utils/AuthUtils";
 import { getProfileFromStorage } from "@/utils/AuthUtils";
-import { RPC_NODE_URL } from "@/constants/platform";
-import { BackpackWalletAdapter } from "@solana/wallet-adapter-backpack";
-import { GlowWalletAdapter } from "@solana/wallet-adapter-glow";
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
 
@@ -92,7 +92,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   const network = WalletAdapterNetwork.Mainnet;
 
-  const endpoint = useMemo(() => RPC_NODE_URL || clusterApiUrl(network), [network]);
+  const endpoint = useMemo(
+    () => RPC_NODE_URL || clusterApiUrl(network),
+    [network],
+  );
 
   const wallets = useMemo(() => {
     const availableWallets = [
@@ -102,13 +105,15 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       new BackpackWalletAdapter(),
       new GlowWalletAdapter(),
     ];
-  
+
     if (typeof window !== "undefined" && window.solana) {
-      if (window.solana.isPhantom) availableWallets.push(new PhantomWalletAdapter());
+      if (window.solana.isPhantom)
+        availableWallets.push(new PhantomWalletAdapter());
       if (window.solana.isGlow) availableWallets.push(new GlowWalletAdapter());
-      if (window.solana.isBackpack) availableWallets.push(new BackpackWalletAdapter());
+      if (window.solana.isBackpack)
+        availableWallets.push(new BackpackWalletAdapter());
     }
-  
+
     return availableWallets;
   }, [network]);
 

@@ -1,4 +1,5 @@
 import { ed25519 } from "@noble/curves/ed25519";
+import { createBurnInstruction } from "@solana/spl-token";
 import type {
   Commitment,
   Connection,
@@ -16,7 +17,7 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 
-import { FEE_ADDRESS } from "@/constants/platform";
+import { FEE_ADDRESS, NEROBOSS_MINT } from "@/constants/platform";
 
 import type { PriorityFee } from "./types";
 
@@ -51,6 +52,8 @@ export async function sendTx(
   partialSigners: Keypair[],
   platformFees: number,
   priorityFees?: PriorityFee,
+  nerobossBurn?: number,
+  tokenOwner?: PublicKey,
   commitment: Commitment = DEFAULT_COMMITMENT,
 ): Promise<VersionedTransaction> {
   const newTx = new Transaction();
@@ -76,6 +79,17 @@ export async function sendTx(
       lamports: platformFees * LAMPORTS_PER_SOL,
     });
     newTx.add(sendFeesInstruction);
+  }
+
+  if (nerobossBurn) {
+    const burnInstruction = createBurnInstruction(
+      payer,
+      new PublicKey(NEROBOSS_MINT),
+      tokenOwner!,
+      nerobossBurn,
+    );
+
+    newTx.add(burnInstruction);
   }
 
   const versionedTx = await buildVersionedTx(

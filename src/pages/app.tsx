@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
+import TermsModal from "@/components/Modals/TermsModal";
 import Seo from "@/components/Seo";
 import { Meta } from "@/layouts/Meta";
 import HomeModule from "@/modules/Home";
 import Main from "@/templates/Main";
 import { AppConfig } from "@/utils/AppConfig";
-import TermsModal from "@/components/Modals/TermsModal";
 
 const Index = () => {
   useEffect(() => {

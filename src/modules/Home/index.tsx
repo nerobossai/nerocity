@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  HStack,
-  Spinner,
-  Stack,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Button, HStack, Spinner, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -18,7 +10,6 @@ import { Paths } from "@/constants/paths";
 import { useSearchStore } from "@/stores/useSearchStore";
 import useUserStore from "@/stores/useUserStore";
 import { getTokenHolders } from "@/utils/getTokenHolders";
-import useDebounce from "@/utils/useDebounce";
 
 import type {
   AgentResponse,
@@ -67,7 +58,7 @@ function HomeModule() {
 
       resp = await homeApiClient.feed(filter);
       const sortedAgents = [...resp.agents].sort(
-        (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap)
+        (a, b) => parseFloat(b.market_cap) - parseFloat(a.market_cap),
       );
       // if (first) {
       setOverlord(sortedAgents[0]);
@@ -77,7 +68,7 @@ function HomeModule() {
         agents.map(async (agent) => {
           const holder = await getTokenHolders(agent.mint_public_key);
           return { ...agent, holder };
-        })
+        }),
       );
 
       setFeed(agentsWithHolders);

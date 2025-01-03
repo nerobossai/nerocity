@@ -49,7 +49,8 @@ export class GlobalAccount {
     }
 
     return Math.floor(
-      (amount * this.initialVirtualTokenReserves) / this.initialVirtualSolReserves,
+      (amount * this.initialVirtualTokenReserves) /
+        this.initialVirtualSolReserves,
     );
   }
 
