@@ -834,7 +834,7 @@ function CreateAgentModule() {
             />
           </Center>
           <Text color="#4A4A55" fontSize="14px" fontStyle="italic">
-            1000 $NEROBOSS will be burned to launch new token
+            10000 $NEROBOSS will be burned to launch new token
           </Text>
           <Center>
             <Button

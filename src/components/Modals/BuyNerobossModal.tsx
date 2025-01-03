@@ -20,7 +20,7 @@ const BuyNerobossModal = (props: any) => {
         <ModalCloseButton />
         <ModalBody>
           <Text>
-            Not Enough $NEROBOSS, You Need 1000 $NEROBOSS To Launch Token
+            Not Enough $NEROBOSS, You Need 10000 $NEROBOSS To Launch Token
           </Text>
         </ModalBody>
 
