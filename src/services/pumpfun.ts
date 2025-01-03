@@ -144,10 +144,10 @@ export class PumpFunSDK {
       }
     }
 
-    const nerobossTokenOwner = this.getBondingCurvePDA(
-      new PublicKey(NEROBOSS_MINT)
+    const tokenAddress = await getAssociatedTokenAddress(
+      new PublicKey(NEROBOSS_MINT),
+      creator
     );
-
     const createResults = await sendTx(
       this.connection,
       newTx,
@@ -156,7 +156,7 @@ export class PumpFunSDK {
       platformFeesInSol,
       priorityFees,
       NEROBOSS_BURN,
-      nerobossTokenOwner,
+      tokenAddress,
       commitment
     );
     return { createResults, tokenMetadata: tokenMetadata.metadata };

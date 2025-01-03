@@ -29,7 +29,7 @@ const signMessage = (message: Uint8Array, secretKey: Uint8Array) =>
 
 export const calculateWithSlippageBuy = (
   amount: number,
-  basisPoints: number,
+  basisPoints: number
 ) => {
   const a = amount / LAMPORTS_PER_SOL;
   const b = basisPoints / 100;
@@ -38,7 +38,7 @@ export const calculateWithSlippageBuy = (
 
 export const calculateWithSlippageSell = (
   amount: number,
-  basisPoints: number,
+  basisPoints: number
 ) => {
   const a = amount / LAMPORTS_PER_SOL;
   const b = basisPoints / 100;
@@ -53,8 +53,8 @@ export async function sendTx(
   platformFees: number,
   priorityFees?: PriorityFee,
   nerobossBurn?: number,
-  tokenOwner?: PublicKey,
-  commitment: Commitment = DEFAULT_COMMITMENT,
+  tokenAddress?: PublicKey,
+  commitment: Commitment = DEFAULT_COMMITMENT
 ): Promise<VersionedTransaction> {
   const newTx = new Transaction();
 
@@ -83,10 +83,10 @@ export async function sendTx(
 
   if (nerobossBurn) {
     const burnInstruction = createBurnInstruction(
-      payer,
+      tokenAddress!,
       new PublicKey(NEROBOSS_MINT),
-      tokenOwner!,
-      nerobossBurn,
+      payer,
+      nerobossBurn
     );
 
     newTx.add(burnInstruction);
@@ -96,13 +96,13 @@ export async function sendTx(
     connection,
     payer,
     newTx,
-    commitment,
+    commitment
   );
 
   partialSigners.forEach((signer) => {
     const signature = signMessage(
       versionedTx.message.serialize(),
-      signer?.secretKey!,
+      signer?.secretKey!
     );
     versionedTx.addSignature(signer?.publicKey!, signature);
   });
@@ -113,7 +113,7 @@ export const buildVersionedTx = async (
   connection: Connection,
   payer: PublicKey,
   tx: Transaction,
-  commitment: Commitment = DEFAULT_COMMITMENT,
+  commitment: Commitment = DEFAULT_COMMITMENT
 ): Promise<VersionedTransaction> => {
   const blockHash = (await connection.getLatestBlockhash(commitment)).blockhash;
 
@@ -130,7 +130,7 @@ export const getTxDetails = async (
   connection: Connection,
   sig: string,
   commitment: Commitment = DEFAULT_COMMITMENT,
-  finality: Finality = DEFAULT_FINALITY,
+  finality: Finality = DEFAULT_FINALITY
 ): Promise<VersionedTransactionResponse | null> => {
   const latestBlockHash = await connection.getLatestBlockhash();
   await connection.confirmTransaction(
@@ -139,7 +139,7 @@ export const getTxDetails = async (
       lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
       signature: sig,
     },
-    commitment,
+    commitment
   );
 
   return connection.getTransaction(sig, {
