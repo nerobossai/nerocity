@@ -216,7 +216,7 @@ function CreateAgentModule() {
       let nerocheckPass = false;
 
       tokensData.map((td: any) => {
-        if (td.mint === NEROBOSS_MINT && td.balance > NEROBOSS_BURN) {
+        if (td.mint === NEROBOSS_MINT && td.balance * 1e6 > NEROBOSS_BURN) {
           nerocheckPass = true;
         }
       });
