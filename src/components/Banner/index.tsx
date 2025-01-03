@@ -1,4 +1,3 @@
-import { Box, HStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 function Banner() {

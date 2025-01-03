@@ -1,13 +1,12 @@
+import styled from "styled-components";
+
 import { Breadcrumb } from "@/components/BreadCrumb";
 import Footer from "@/components/Footer";
 import PrivacyPage from "@/components/PrivacyPage";
 import Seo from "@/components/Seo";
 import { Meta } from "@/layouts/Meta";
-import CreateAgentModule from "@/modules/CreateAgent";
 import Main from "@/templates/Main";
 import { AppConfig } from "@/utils/AppConfig";
-import { HStack } from "@chakra-ui/react";
-import styled from "styled-components";
 
 const Container = styled.div`
   padding: 2rem;
@@ -31,11 +30,11 @@ const Index = () => {
         }
         nofooter
       >
-            <Container>
-      <Breadcrumb loading={false} ticker="PRIVACY AND POLICY" />
+        <Container>
+          <Breadcrumb loading={false} ticker="PRIVACY AND POLICY" />
 
           <PrivacyPage />
-      </Container>
+        </Container>
         <Footer />
       </Main>
     </>

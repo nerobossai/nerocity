@@ -10,23 +10,22 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { CiStar } from "react-icons/ci";
+import { AiOutlineGlobal } from "react-icons/ai";
 import { FaCheckCircle, FaCopy } from "react-icons/fa";
 import { IoIosLink } from "react-icons/io";
 import { LiaTelegram } from "react-icons/lia";
 import { RiTwitterXFill } from "react-icons/ri";
-import { AiOutlineGlobal } from "react-icons/ai";
 
 import type { CardProps } from "@/components/Card";
 
 function extractFirstAndLastFour(url: string) {
-  const extractedPart = url.split('/').pop();
+  const extractedPart = url.split("/").pop();
 
   const first4 = extractedPart?.slice(0, 4);
   const last4 = extractedPart?.slice(-4);
 
-  return first4 + "...." + last4
-};
+  return `${first4}....${last4}`;
+}
 
 function CoinHeaderModule(props: CardProps) {
   const isLargeScreen = useBreakpointValue({ base: false, md: true });
@@ -49,8 +48,8 @@ function CoinHeaderModule(props: CardProps) {
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
-    }, 3000)
-  }
+    }, 3000);
+  };
 
   return (
     <HStack
@@ -136,12 +135,18 @@ function CoinHeaderModule(props: CardProps) {
                 transform="translateY(2px)"
               >
                 <HStack cursor="pointer" onClick={handleCopy}>
-                  <Text>CA:{extractFirstAndLastFour(props.id)}{" "}</Text>
-                  {copied ? <FaCheckCircle /> : <FaCopy
-                    className="cursor-pointer"
-                  />}
+                  <Text>CA:{extractFirstAndLastFour(props.id)} </Text>
+                  {copied ? (
+                    <FaCheckCircle />
+                  ) : (
+                    <FaCopy className="cursor-pointer" />
+                  )}
                 </HStack>
-                <a href={"https://solscan.io/account/" + props.id} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={`https://solscan.io/account/${props.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <IoIosLink size={15} style={{ marginLeft: "6px" }} />
                 </a>
               </Box>
@@ -158,9 +163,7 @@ function CoinHeaderModule(props: CardProps) {
             >
               CA:{extractFirstAndLastFour(props.id)}{" "}
               <FaCopy
-                onClick={() =>
-                  navigator.clipboard.writeText(props.id)
-                }
+                onClick={() => navigator.clipboard.writeText(props.id)}
                 className="cursor-pointer"
               />
               <IoIosLink size={15} />

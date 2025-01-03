@@ -14,21 +14,21 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { AiOutlineGlobal } from "react-icons/ai";
+import { LiaTelegram } from "react-icons/lia";
+import { RiTwitterXFill } from "react-icons/ri";
 import styled from "styled-components";
 
+import SocialModalComponent from "@/components/SocialModal";
 import SubscriptText from "@/components/SubscriptText";
 import { pumpFunSdk } from "@/services/pumpfun";
 import { getUserTokens } from "@/utils/getUserToken";
 
 import { homeApiClient } from "../Home/services/homeApiClient";
 import { profileApiClient } from "./services/profileApiClient";
-import { AiOutlineGlobal } from "react-icons/ai";
-import { LiaTelegram } from "react-icons/lia";
-import { RiTwitterXFill } from "react-icons/ri";
-import SocialModalComponent from "@/components/SocialModal";
-import Link from "next/link";
 
 const Container = styled.div`
   width: 100%;
@@ -72,25 +72,41 @@ function ProfileModule() {
         setLoading(true);
 
         // Fetch profile
-        const profileData = await profileApiClient.fetchProfileByUserName(username as string);
+        const profileData = await profileApiClient.fetchProfileByUserName(
+          username as string,
+        );
         const fetchedProfile = profileData.user;
         setProfile(fetchedProfile);
 
         // Fetch Agents Created Data
-        const coinDataResponse = await profileApiClient.fetchCoinsByPublicKey(fetchedProfile.public_key as string);
+        const coinDataResponse = await profileApiClient.fetchCoinsByPublicKey(
+          fetchedProfile.public_key as string,
+        );
         const solPrice = (await homeApiClient.solPrice()).solana.usd;
 
-        const agentsPromises = coinDataResponse.agents.map(async (agent: any) => {
-          const tmp = await pumpFunSdk.getBondingCurveAccount(new PublicKey(agent.mint_public_key));
-          if (!tmp || tmp.complete) return null;
+        const agentsPromises = coinDataResponse.agents.map(
+          async (agent: any) => {
+            const tmp = await pumpFunSdk.getBondingCurveAccount(
+              new PublicKey(agent.mint_public_key),
+            );
+            if (!tmp || tmp.complete) return null;
 
-          const price = (((await tmp.getSellPrice(1, 0)) || 0) / 100) * solPrice;
-          const marketcap = ((tmp.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) * solPrice;
+            const price =
+              (((await tmp.getSellPrice(1, 0)) || 0) / 100) * solPrice;
+            const marketcap =
+              ((tmp.getMarketCapSOL() || 0) / LAMPORTS_PER_SOL) * solPrice;
 
-          return { ...agent, price: price.toExponential(1), marketcap: marketcap.toFixed(3) };
-        });
+            return {
+              ...agent,
+              price: price.toExponential(1),
+              marketcap: marketcap.toFixed(3),
+            };
+          },
+        );
 
-        const agentsCreated = (await Promise.all(agentsPromises)).filter(Boolean);
+        const agentsCreated = (await Promise.all(agentsPromises)).filter(
+          Boolean,
+        );
         setAgentsCreated(agentsCreated);
 
         if (!isCoinsHeldFetched) {
@@ -99,18 +115,23 @@ function ProfileModule() {
           isAgentsCreatedFetched = true;
         }
 
-
         // Fetch Coins Held Data
-        const tokensData = await getUserTokens(fetchedProfile.public_key as string);
+        const tokensData = await getUserTokens(
+          fetchedProfile.public_key as string,
+        );
         const coinsHeldPromises = tokensData.map(async (data) => {
           try {
-            const coinInfo = await profileApiClient.fetchCoinsCreatedByAgent(data.mint);
+            const coinInfo = await profileApiClient.fetchCoinsCreatedByAgent(
+              data.mint,
+            );
             return coinInfo ? { ...data, ...coinInfo } : null;
           } catch {
             return null;
           }
         });
-        const coinsHeld = (await Promise.all(coinsHeldPromises)).filter(Boolean) as CoinsHeldData[];
+        const coinsHeld = (await Promise.all(coinsHeldPromises)).filter(
+          Boolean,
+        ) as CoinsHeldData[];
         setCoinsHeldData(coinsHeld);
 
         if (!isAgentsCreatedFetched) {
@@ -165,11 +186,8 @@ function ProfileModule() {
         >
           <Text fontSize="18px" cursor="pointer">
             <Link href="/app">
-            <span
-              style={{ color: "#959595" }}
-            >
-              HOME /{" "}
-            </span></Link>{" "}
+              <span style={{ color: "#959595" }}>HOME / </span>
+            </Link>{" "}
             PROFILE
           </Text>
         </Box>
@@ -231,90 +249,93 @@ function ProfileModule() {
           </Tabs>
           {loading ? (
             <Spinner marginTop={20} />
-          ) : ((selectedTab === 0 && coinsHeldData.length === 0) || (selectedTab === 1 && agentsCreated.length === 0)) ?
+          ) : (selectedTab === 0 && coinsHeldData.length === 0) ||
+            (selectedTab === 1 && agentsCreated.length === 0) ? (
             <VStack alignItems="center" pt="50px" justifyContent="center">
-              <Text>{selectedTab === 0 ? "No Coins Held!" : "No Agents Created!"}</Text>
+              <Text>
+                {selectedTab === 0 ? "No Coins Held!" : "No Agents Created!"}
+              </Text>
             </VStack>
-            : (
-              <VStack bg="#1B1B1E" width="100%" overflowX="auto">
-                <table
-                  style={{
-                    width: "100%",
-                    borderCollapse: "separate",
-                    borderSpacing: "0 20px",
-                    padding: "0 20px",
-                  }}
-                >
-                  <thead>
-                    <tr>
-                      <th
-                        style={{
-                          color: "#656565",
-                          textAlign: "left",
-                          padding: "1rem",
-                        }}
-                      >
-                        Name
-                      </th>
-                      {selectedTab === 0 ? (
-                        <>
+          ) : (
+            <VStack bg="#1B1B1E" width="100%" overflowX="auto">
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "separate",
+                  borderSpacing: "0 20px",
+                  padding: "0 20px",
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style={{
+                        color: "#656565",
+                        textAlign: "left",
+                        padding: "1rem",
+                      }}
+                    >
+                      Name
+                    </th>
+                    {selectedTab === 0 ? (
+                      <>
+                        <th
+                          style={{
+                            color: "#656565",
+                            textAlign: "left",
+                            padding: "1rem",
+                          }}
+                        >
+                          Coins
+                        </th>
+                        <th
+                          style={{
+                            color: "#656565",
+                            textAlign: "left",
+                            padding: "1rem",
+                          }}
+                        >
+                          Value
+                        </th>
+                      </>
+                    ) : (
+                      <>
+                        <th
+                          style={{
+                            color: "#656565",
+                            textAlign: "left",
+                            padding: "1rem",
+                          }}
+                        >
+                          Price
+                        </th>
+                        <th
+                          style={{
+                            color: "#656565",
+                            padding: "1rem",
+                            textAlign: "left",
+                          }}
+                        >
+                          Market Cap
+                        </th>
+                        {selectedTab === 1 && (
                           <th
                             style={{
                               color: "#656565",
-                              textAlign: "left",
-                              padding: "1rem",
-                            }}
-                          >
-                            Coins
-                          </th>
-                          <th
-                            style={{
-                              color: "#656565",
-                              textAlign: "left",
-                              padding: "1rem",
-                            }}
-                          >
-                            Value
-                          </th>
-                        </>
-                      ) : (
-                        <>
-                          <th
-                            style={{
-                              color: "#656565",
-                              textAlign: "left",
-                              padding: "1rem",
-                            }}
-                          >
-                            Price
-                          </th>
-                          <th
-                            style={{
-                              color: "#656565",
                               padding: "1rem",
                               textAlign: "left",
                             }}
                           >
-                            Market Cap
+                            Social
                           </th>
-                          {selectedTab === 1 && (
-                            <th
-                              style={{
-                                color: "#656565",
-                                padding: "1rem",
-                                textAlign: "left",
-                              }}
-                            >
-                              Social
-                            </th>
-                          )}
-                        </>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {selectedTab === 0
-                      ? coinsHeldData.map((coin, id) => (
+                        )}
+                      </>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedTab === 0
+                    ? coinsHeldData.map((coin, id) => (
                         <tr
                           key={id}
                           // @ts-ignore
@@ -359,7 +380,7 @@ function ProfileModule() {
                           </td>
                         </tr>
                       ))
-                      : agentsCreated.map((coin, id) => (
+                    : agentsCreated.map((coin, id) => (
                         <tr
                           key={coin.ticker}
                           // @ts-ignore
@@ -427,7 +448,7 @@ function ProfileModule() {
                             <HStack>
                               <Icon
                                 as={RiTwitterXFill}
-                                size={"1.2rem"}
+                                size="1.2rem"
                                 _hover={{ opacity: "0.8" }}
                                 onClick={() => {
                                   setSelectedSocial(coin);
@@ -437,7 +458,7 @@ function ProfileModule() {
                               />
                               <Icon
                                 as={LiaTelegram}
-                                size={"1.5rem"}
+                                size="1.5rem"
                                 _hover={{ opacity: "0.8" }}
                                 onClick={() => {
                                   setSelectedSocial(coin);
@@ -447,7 +468,7 @@ function ProfileModule() {
                               />
                               <Icon
                                 as={AiOutlineGlobal}
-                                size={"1.5rem"}
+                                size="1.5rem"
                                 _hover={{ opacity: "0.8" }}
                                 onClick={() => {
                                   setSelectedSocial(coin);
@@ -459,10 +480,10 @@ function ProfileModule() {
                           </td>
                         </tr>
                       ))}
-                  </tbody>
-                </table>
-              </VStack>
-            )}
+                </tbody>
+              </table>
+            </VStack>
+          )}
         </VStack>
       </Stack>
       <SocialModalComponent

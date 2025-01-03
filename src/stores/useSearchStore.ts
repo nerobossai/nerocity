@@ -11,5 +11,6 @@ export const useSearchStore = create<InputState>()((set) => ({
   searchText: "",
   setSearchText: (searchText: string) => set(() => ({ searchText })),
   displaySearchResults: false,
-  setDisplaySearchResults: (displaySearchResults: boolean) => set(() => ({ displaySearchResults })),
+  setDisplaySearchResults: (displaySearchResults: boolean) =>
+    set(() => ({ displaySearchResults })),
 }));

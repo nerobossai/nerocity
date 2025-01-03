@@ -6,7 +6,7 @@ import { timeDifference } from "@/utils/timeDifference";
 
 function ChatRowComponent(props: any) {
   const router = useRouter();
-    return (
+  return (
     <VStack
       width="100%"
       alignItems="flex-start"

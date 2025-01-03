@@ -11,19 +11,20 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import Link from "next/link";
 import {
   WalletModalProvider,
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { CiLogout } from "react-icons/ci";
 import { FaWallet } from "react-icons/fa";
 import { MdArrowOutward } from "react-icons/md";
 import styled from "styled-components";
 
+import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
 import { trackWalletConnect } from "@/modules/Home/services/analytics";
 import { authApiClient } from "@/modules/Home/services/authApiClient";
 import { useSearchStore } from "@/stores/useSearchStore";
@@ -32,16 +33,15 @@ import * as AuthUtils from "@/utils/AuthUtils";
 
 import { Logo } from "../Svgs/Logo";
 import { LogoSmall } from "../Svgs/LogoSmall";
-import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
 import SearchResults from "./SearchResults";
 
 function formatToShortLink(number: any) {
   if (number >= 1_000_000) {
-    return (number / 1_000_000).toFixed(1) + "M";
+    return `${(number / 1_000_000).toFixed(1)}M`;
   }
 
   if (number >= 1_000) {
-    return (number / 1_000).toFixed(1) + "K";
+    return `${(number / 1_000).toFixed(1)}K`;
   }
 
   return number?.toString();
@@ -55,7 +55,12 @@ const Container = styled.header`
 function Header() {
   const router = useRouter();
   const toast = useToast();
-  const { searchText, setSearchText, displaySearchResults, setDisplaySearchResults } = useSearchStore();
+  const {
+    searchText,
+    setSearchText,
+    displaySearchResults,
+    setDisplaySearchResults,
+  } = useSearchStore();
   const {
     isAuthenticated,
     profile,
@@ -76,7 +81,7 @@ function Header() {
     connect,
     disconnect,
     signIn,
-    signMessage
+    signMessage,
   } = useWallet();
 
   const [previousKey, setPreviousKey] = useState<string | undefined>(
@@ -109,7 +114,9 @@ function Header() {
   const handleSignin = async () => {
     try {
       if (!signMessage || !publicKey) {
-        console.error("Wallet not connected or does not support message signing");
+        console.error(
+          "Wallet not connected or does not support message signing",
+        );
         return;
       }
 
@@ -159,7 +166,6 @@ function Header() {
     }
   };
 
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -176,7 +182,6 @@ function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
 
   useEffect(() => {
     const handleClickOutsideInput = (event: MouseEvent) => {
@@ -197,7 +202,7 @@ function Header() {
 
   useEffect(() => {
     setMounted(true);
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (connected && !isAuthenticated && !isSigningIn) {
@@ -213,11 +218,13 @@ function Header() {
   useEffect(() => {
     const fetchMarketCap = async () => {
       // Market Cap for Neroboss
-      const data = await coinApiClient.fetchPumpfunData("5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump");
-      setMarketCap(formatToShortLink(data.usd_market_cap))
-    }
+      const data = await coinApiClient.fetchPumpfunData(
+        "5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump",
+      );
+      setMarketCap(formatToShortLink(data.usd_market_cap));
+    };
     fetchMarketCap();
-  }, [])
+  }, []);
 
   const handleDisconnect = async () => {
     try {
@@ -233,16 +240,18 @@ function Header() {
     }
   };
   if (!mounted) {
-    return <HStack
-      bg="brown.100"
-      height="70px"
-      py="1rem"
-      align="center"
-      gap={{ base: "5px", sm: "40px" }}
-      px="1rem"
-      width="100vw"
-      justifyContent={{ base: "space-between", md: "block" }}
-    ></HStack>;
+    return (
+      <HStack
+        bg="brown.100"
+        height="70px"
+        py="1rem"
+        align="center"
+        gap={{ base: "5px", sm: "40px" }}
+        px="1rem"
+        width="100vw"
+        justifyContent={{ base: "space-between", md: "block" }}
+      />
+    );
   }
   if (inputFocus) {
     return (
@@ -256,9 +265,7 @@ function Header() {
         justifyContent={{ base: "space-between", md: "block" }}
       >
         <Box cursor="pointer" marginLeft="24px">
-          <Link href="/app">
-            {isLargeScreen ? <Logo /> : <LogoSmall />}      
-          </Link>
+          <Link href="/app">{isLargeScreen ? <Logo /> : <LogoSmall />}</Link>
         </Box>
         <Box
           display="flex"
@@ -278,7 +285,9 @@ function Header() {
             placeholder="Search for agents"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            onBlur={() => { setTimeout(() => setInputFocus(false), 500) }}
+            onBlur={() => {
+              setTimeout(() => setInputFocus(false), 500);
+            }}
             onFocus={() => setDisplaySearchResults(true)}
             _focus={{
               outline: "none",
@@ -287,12 +296,14 @@ function Header() {
             }}
             autoFocus
           />
-          <SearchResults searchText={searchText} setSearchText={setSearchText} displaySearchResults={displaySearchResults} />
+          <SearchResults
+            searchText={searchText}
+            setSearchText={setSearchText}
+            displaySearchResults={displaySearchResults}
+          />
         </Box>
-
-
       </HStack>
-    )
+    );
   }
   return (
     <HStack
@@ -305,39 +316,51 @@ function Header() {
       justifyContent={{ base: "space-between", md: "block" }}
     >
       <Link href="/app">
-        <Box cursor="pointer">
-          {isLargeScreen ? <Logo /> : <LogoSmall />}
-        </Box>
+        <Box cursor="pointer">{isLargeScreen ? <Logo /> : <LogoSmall />}</Box>
       </Link>
-      {isSmallScreen ? <Box ml="20px"><BiSearch size={20} style={{ cursor: "pointer" }} onClick={() => setInputFocus(true)} /> </Box> : <Box padding="20px">
-        <Box
-          px="2rem"
-          display="flex"
-          bg="brown.200"
-          alignItems="center"
-          gap="20px"
-          position="relative"
-          ref={inputRef}
-        >
-          <BiSearch size={20} />
-          <Input
-            outline="none"
-            border="0"
-            flexGrow="1"
-            padding="0"
-            placeholder="Search for agents"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            _focus={{
-              outline: "none",
-              border: "none",
-              boxShadow: "none",
-            }}
-            onFocus={() => setDisplaySearchResults(true)}
-          />
-          <SearchResults searchText={searchText} setSearchText={setSearchText} displaySearchResults={displaySearchResults} />
+      {isSmallScreen ? (
+        <Box ml="20px">
+          <BiSearch
+            size={20}
+            style={{ cursor: "pointer" }}
+            onClick={() => setInputFocus(true)}
+          />{" "}
         </Box>
-      </Box>}
+      ) : (
+        <Box padding="20px">
+          <Box
+            px="2rem"
+            display="flex"
+            bg="brown.200"
+            alignItems="center"
+            gap="20px"
+            position="relative"
+            ref={inputRef}
+          >
+            <BiSearch size={20} />
+            <Input
+              outline="none"
+              border="0"
+              flexGrow="1"
+              padding="0"
+              placeholder="Search for agents"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              _focus={{
+                outline: "none",
+                border: "none",
+                boxShadow: "none",
+              }}
+              onFocus={() => setDisplaySearchResults(true)}
+            />
+            <SearchResults
+              searchText={searchText}
+              setSearchText={setSearchText}
+              displaySearchResults={displaySearchResults}
+            />
+          </Box>
+        </Box>
+      )}
       <HStack display={{ base: "none", md: "flex" }}>
         <a
           href="https://raydium.io/swap/?inputMint=sol&outputMint=5HTp1ebDeBcuRaP4J6cG3r4AffbP4dtcrsS7YYT7pump"
@@ -391,9 +414,7 @@ function Header() {
                 cursor="pointer"
                 justifyContent="flex-start"
               >
-                <Text color="text.100">
-                  {walletAddress}
-                </Text>
+                <Text color="text.100">{walletAddress}</Text>
                 <MdArrowOutward color="#737373" />
               </HStack>
 

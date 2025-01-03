@@ -16,7 +16,9 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 import { FEES, pumpFunSdk } from "@/services/pumpfun";
+import useUserStore from "@/stores/useUserStore";
 import { getRaydiumLink } from "@/utils";
+import { getUserTokens } from "@/utils/getUserToken";
 import { logger } from "@/utils/Logger";
 
 import type {
@@ -31,8 +33,6 @@ import {
 } from "./services/coinApiClient";
 import TradeFailure from "./tradeFailure";
 import TradeSuccess from "./tradeSuccess";
-import { getUserTokens } from "@/utils/getUserToken";
-import useUserStore from "@/stores/useUserStore";
 
 export type TradeModuleProps = {
   currentPrice: string;
@@ -90,10 +90,10 @@ function TradeModule(props: TradeModuleProps) {
   const fetchBalance = async () => {
     if (profile?.profile?.public_key) {
       const coinsHeld = await getUserTokens(
-        profile?.profile?.public_key as string
+        profile?.profile?.public_key as string,
       );
       const balanceObj = coinsHeld.find(
-        (b) => b.mint === props.tokenDetails.mint_public_key
+        (b) => b.mint === props.tokenDetails.mint_public_key,
       );
       setWalletBalance(balanceObj ? balanceObj.balance : 0);
     }
@@ -123,11 +123,11 @@ function TradeModule(props: TradeModuleProps) {
       if (!amount) return;
 
       const tmp = await pumpFunSdk.getBondingCurveAccount(
-        new PublicKey(props.tokenDetails.mint_public_key)
+        new PublicKey(props.tokenDetails.mint_public_key),
       );
 
       const pumpdata = await coinApiClient.fetchPumpfunData(
-        props.tokenDetails.mint_public_key
+        props.tokenDetails.mint_public_key,
       );
 
       if (active === "buy") {
@@ -135,7 +135,7 @@ function TradeModule(props: TradeModuleProps) {
         setOutput((buy / 10 ** 6).toFixed(8));
         setDollarInput(
           parseFloat(amount) *
-            parseFloat(solPrice?.solana.usd.toString() || "1")
+            parseFloat(solPrice?.solana.usd.toString() || "1"),
         );
       } else {
         const feeBasisPoints = 100;
@@ -174,7 +174,7 @@ function TradeModule(props: TradeModuleProps) {
       }
       setSubmitting(true);
       const pumpFunData = await coinApiClient.fetchPumpfunData(
-        props.tokenDetails.mint_public_key
+        props.tokenDetails.mint_public_key,
       );
       let txn;
       if (active === "buy") {
@@ -184,14 +184,14 @@ function TradeModule(props: TradeModuleProps) {
             new PublicKey(publicKey),
             new PublicKey(props.tokenDetails.mint_public_key),
             parseFloat(input) * LAMPORTS_PER_SOL,
-            100
+            100,
           );
         } else {
           txn = await pumpFunSdk.buy(
             new PublicKey(publicKey),
             new PublicKey(props.tokenDetails.mint_public_key),
             parseFloat(input) * LAMPORTS_PER_SOL,
-            100
+            100,
           );
         }
       } else {
@@ -199,7 +199,7 @@ function TradeModule(props: TradeModuleProps) {
           new PublicKey(publicKey),
           new PublicKey(props.tokenDetails.mint_public_key),
           parseFloat(input) * 10 ** 6,
-          100
+          100,
         );
       }
 
@@ -258,7 +258,7 @@ function TradeModule(props: TradeModuleProps) {
             timestamp: Date.now(),
             wallet_address: publicKey.toString(),
             amount_of_coins_sold_dollar: parseFloat(
-              dollarInput?.toString() || "0"
+              dollarInput?.toString() || "0",
             ),
             amount_of_coins_sold_token: parseFloat(input),
           });
@@ -414,7 +414,7 @@ function TradeModule(props: TradeModuleProps) {
             <Text fontSize="12px">
               Bal:{" "}
               {active == "buy"
-                ? solBalance + " SOL"
+                ? `${solBalance} SOL`
                 : `${walletBalance} $${props.tokenDetails.ticker}`}
             </Text>
           </HStack>
@@ -448,7 +448,7 @@ function TradeModule(props: TradeModuleProps) {
             <Text fontSize="12px">
               Bal:{" "}
               {active == "sell"
-                ? solBalance + "SOL"
+                ? `${solBalance}SOL`
                 : `${walletBalance} $${props.tokenDetails.ticker}`}
             </Text>
           </HStack>
@@ -493,20 +493,18 @@ function TradeModule(props: TradeModuleProps) {
               1 {active === "buy" ? "SOL" : `${props.tokenDetails.ticker}`} =
               &nbsp;
               {active === "buy" ? (
-                //@ts-ignore
+                // @ts-ignore
                 `${solPrice?.solana.usd / (props.currentPrice === 0 ? 1 : props.currentPrice)} ${props.tokenDetails.ticker}` ||
                 "$164.84"
               ) : (
-                <>
-                  <span>
-                    {" "}
-                    {(
-                      (parseFloat(props.currentPrice) * 10) /
-                      (solPrice?.solana.usd ?? 237)
-                    ).toFixed(15)}
-                    &nbsp;SOL
-                  </span>
-                </>
+                <span>
+                  {" "}
+                  {(
+                    (parseFloat(props.currentPrice) * 10) /
+                    (solPrice?.solana.usd ?? 237)
+                  ).toFixed(15)}
+                  &nbsp;SOL
+                </span>
               )}
             </Text>
             {active === "sell" && Number(input ?? 0) > walletBalance && (

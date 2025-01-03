@@ -10,13 +10,13 @@ import {
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+import { getErrorMessageFromAxios } from "@/utils/getErrorMessage";
 import { timeDifference } from "@/utils/timeDifference";
 
 import type { ActivityDetails } from "./services/coinApiClient";
-import { getErrorMessageFromAxios } from "@/utils/getErrorMessage";
-import axios from "axios";
 
 function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
   const [price, setPrice] = useState();
@@ -26,7 +26,7 @@ function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
   const getSolUSDPrice = async () => {
     try {
       const resp = await axios.get(
-        "https://api.martianwallet.xyz/v1/prices?ids=solana"
+        "https://api.martianwallet.xyz/v1/prices?ids=solana",
       );
 
       return resp.data.solana.usd;
@@ -94,7 +94,7 @@ function ActivityTable({ activities }: { activities: ActivityDetails[] }) {
                   &nbsp;
                   {timeDifference(
                     Date.now(),
-                    parseInt((activity.timestamp * 1000).toString(), 10)
+                    parseInt((activity.timestamp * 1000).toString(), 10),
                   )}
                 </Text>
               </Td>

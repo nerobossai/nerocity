@@ -10,7 +10,7 @@ function ActivityBar({
   agentId,
   replies,
   agentImage,
-  agentName
+  agentName,
 }: {
   agentId: string;
   replies: string;
@@ -98,7 +98,11 @@ function ActivityBar({
 
         <TabPanels>
           <TabPanel>
-            <ChatModule agentId={agentId} agentImage={agentImage ?? ""} agentName={agentName ?? ""}/>
+            <ChatModule
+              agentId={agentId}
+              agentImage={agentImage ?? ""}
+              agentName={agentName ?? ""}
+            />
           </TabPanel>
           {/* <TabPanel>
             <TopHolders />

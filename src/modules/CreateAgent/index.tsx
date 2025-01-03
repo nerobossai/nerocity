@@ -6,15 +6,17 @@ import {
   GridItem,
   HStack,
   Input,
-  Progress,
   Stack,
   Text,
   Textarea,
+  useDisclosure,
   useToast,
   VStack,
 } from "@chakra-ui/react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -22,18 +24,19 @@ import { RiTwitterXFill } from "react-icons/ri";
 import styled from "styled-components";
 import z from "zod";
 
-import { pumpFunSdk } from "@/services/pumpfun";
+import BuyNerobossModal from "@/components/Modals/BuyNerobossModal";
+import { NEROBOSS_MINT } from "@/constants/platform";
+import { cloudflareSitekey } from "@/constants/storageKeys";
+import { NEROBOSS_BURN, pumpFunSdk } from "@/services/pumpfun";
 import type { CreateTokenMetadata, TokenMetadata } from "@/services/types";
 import { tailwindConfig } from "@/styles/global";
+import { getUserTokens } from "@/utils/getUserToken";
 import { logger } from "@/utils/Logger";
 
 import PromptScreen from "./promptScreen";
 import { agentApiClient } from "./services/agentApiClient";
 import { trackAgentCreation } from "./services/analytics";
 import SuccessScreen from "./successScreen";
-import { Turnstile } from "@marsidev/react-turnstile";
-import { cloudflareSitekey } from "@/constants/storageKeys";
-import Link from "next/link";
 
 const Container = styled.div`
   width: 100%;
@@ -67,7 +70,7 @@ const nameSchema = z
   .string()
   .regex(
     /^[a-zA-Z0-9]+$/,
-    "Name can only contain letters and numbers with no spaces."
+    "Name can only contain letters and numbers with no spaces.",
   )
   .min(1, "Name is required.");
 
@@ -79,7 +82,7 @@ const tickerSchema = z
   .string()
   .regex(
     /^[A-Za-z]{1,6}$/,
-    "Ticker must be 1-6 alphabetic characters with no spaces or numbers."
+    "Ticker must be 1-6 alphabetic characters with no spaces or numbers.",
   );
 
 const linkSchema = z.string().url("Please enter a valid URL.").optional();
@@ -97,6 +100,7 @@ const sampleData = {
 
 function CreateAgentModule() {
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigator = useRouter();
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
@@ -135,7 +139,7 @@ function CreateAgentModule() {
     setSelectedTraits((prev) =>
       prev.includes(trait)
         ? prev.filter((item) => item !== trait)
-        : [...prev, trait]
+        : [...prev, trait],
     );
   };
 
@@ -207,6 +211,21 @@ function CreateAgentModule() {
         return;
       }
 
+      const tokensData = await getUserTokens(publicKey.toString());
+
+      let nerocheckPass = false;
+
+      tokensData.map((td: any) => {
+        if (td.mint === NEROBOSS_MINT && td.balance < NEROBOSS_BURN) {
+          nerocheckPass = true;
+        }
+      });
+
+      if (!nerocheckPass) {
+        onOpen();
+        return;
+      }
+
       if (!file && !tokenM) {
         setImageError("No image is selected!");
         return;
@@ -239,7 +258,7 @@ function CreateAgentModule() {
         publicKey,
         tokenMint,
         tMeta,
-        amount * LAMPORTS_PER_SOL
+        amount * LAMPORTS_PER_SOL,
       );
       const txnResp = await sendTransaction(createResults, connection, {
         preflightCommitment: "finalized",
@@ -375,7 +394,7 @@ function CreateAgentModule() {
         file: file!,
         // twitter: twitterHandle,
         telegram: telegramHandle,
-        website: website,
+        website,
         prompt: promptDescription,
       };
 
@@ -476,12 +495,13 @@ function CreateAgentModule() {
         >
           <Text fontSize="18px" cursor="pointer">
             <Link href="/app">
-            <span
-              style={{ color: "#959595" }}
-              onClick={() => router.push("/app")}
-            >
-              HOME /{" "}
-            </span></Link>{" "}
+              <span
+                style={{ color: "#959595" }}
+                onClick={() => router.push("/app")}
+              >
+                HOME /{" "}
+              </span>
+            </Link>{" "}
             CREATE AGENT
           </Text>
         </Box>
@@ -813,6 +833,9 @@ function CreateAgentModule() {
               siteKey={cloudflareSitekey}
             />
           </Center>
+          <Text color="#4A4A55" fontSize="14px" fontStyle="italic">
+            1000 $NEROBOSS will be burned to launch new token
+          </Text>
           <Center>
             <Button
               width="100%"
@@ -844,6 +867,8 @@ function CreateAgentModule() {
           website={website}
         />
       )}
+
+      <BuyNerobossModal isOpen={isOpen} onClose={onClose} />
     </Container>
   );
 }

@@ -9,13 +9,13 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { GoArrowUpRight } from "react-icons/go";
+import { IoRefresh } from "react-icons/io5";
 import { RiTwitterXFill } from "react-icons/ri";
 
-import SubscriptText from "@/components/SubscriptText";
 import { BoughtTrade } from "@/components/Svgs/BoughtTrade";
 
 import type { AgentResponse } from "../Home/services/homeApiClient";
-import { IoRefresh } from "react-icons/io5";
+
 interface ISuccessDetails {
   bought: boolean;
   tickerAmount: number;
@@ -26,7 +26,7 @@ interface ISuccessDetails {
 function TradeSuccess({
   tokenDetails,
   successDetails,
-  setScreen
+  setScreen,
 }: {
   tokenDetails: AgentResponse;
   successDetails: ISuccessDetails;
@@ -109,9 +109,7 @@ Find this absolute unit: ${window.location.href}`);
       >
         <HStack width="100%" justifyContent="space-between">
           <Text>Sol {successDetails.bought ? "paid" : "received"}</Text>
-          <Text>
-              {successDetails.solAmount.toFixed(9)}
-          </Text>
+          <Text>{successDetails.solAmount.toFixed(9)}</Text>
         </HStack>
         {/* <HStack width="100%" justifyContent="space-between">
           <Text>SLIPPAGE</Text> <Text>1%</Text>
@@ -121,16 +119,21 @@ Find this absolute unit: ${window.location.href}`);
         </HStack> */}
         <HStack width="100%" justifyContent="space-between">
           <Text>Txn</Text>{" "}
-          <a href={"https://solscan.io/tx/" + successDetails.txn} target="_blank" rel="noopener noreferrer">
-          <Text
-            color="creator"
-            cursor="pointer"
-            display="flex"
-            alignItems="center"
-            gap="4px"
+          <a
+            href={`https://solscan.io/tx/${successDetails.txn}`}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            {successDetails.txn.slice(0, 8)} <GoArrowUpRight />
-          </Text></a>
+            <Text
+              color="creator"
+              cursor="pointer"
+              display="flex"
+              alignItems="center"
+              gap="4px"
+            >
+              {successDetails.txn.slice(0, 8)} <GoArrowUpRight />
+            </Text>
+          </a>
         </HStack>
       </VStack>
     </Stack>

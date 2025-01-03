@@ -1,22 +1,20 @@
-import {
-  Box,
-  Spinner,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Spinner, Stack, Text } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaRegComment } from "react-icons/fa6";
 
 import ChatRowComponent from "@/components/ChatRow";
 import useUserStore from "@/stores/useUserStore";
 
-import type { Chat, ChatsResponse } from "./services/coinApiClient";
-import { coinApiClient } from "./services/coinApiClient";
 import AddCommentUpdated from "./addComment";
+import type { Chat } from "./services/coinApiClient";
+import { coinApiClient } from "./services/coinApiClient";
 
-function ChatModule(props: { agentId: string, agentImage: string, agentName: string}) {
-
+function ChatModule(props: {
+  agentId: string;
+  agentImage: string;
+  agentName: string;
+}) {
   const { publicKey } = useWallet();
   const [comment, setComment] = useState("");
   const [selectedMessageId, setSelectedMessageId] = useState<
@@ -25,7 +23,6 @@ function ChatModule(props: { agentId: string, agentImage: string, agentName: str
   const [chats, setChats] = useState<Chat[]>([]);
   const [loading, setLoading] = useState(false);
   const [openedComments, setOpenedComments] = useState<string[]>([]);
-
 
   const { isAuthenticated } = useUserStore();
   const websocketRef = useRef<WebSocket | null>(null);
@@ -75,7 +72,6 @@ function ChatModule(props: { agentId: string, agentImage: string, agentName: str
     websocketRef.current = ws;
   };
 
-
   useEffect(() => {
     fetchChats();
 
@@ -87,17 +83,16 @@ function ChatModule(props: { agentId: string, agentImage: string, agentName: str
       }
     };
   }, [props.agentId]);
-    
+
   useEffect(() => {
     fetchChats();
-  }, [])
-
+  }, []);
 
   const toggleComment = (id: string) => {
     setOpenedComments((prev) =>
       prev.includes(id)
         ? prev.filter((commentId) => commentId !== id)
-        : [...prev, id]
+        : [...prev, id],
     );
   };
 
@@ -127,7 +122,7 @@ function ChatModule(props: { agentId: string, agentImage: string, agentName: str
                 {data.replies
                   .sort(
                     (a, b) =>
-                      parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10)
+                      parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10),
                   )
                   .map((rData, v: number) => {
                     return <ChatRowComponent {...rData} key={v} />;
@@ -181,7 +176,7 @@ function ChatModule(props: { agentId: string, agentImage: string, agentName: str
           </Stack>
         );
       })}
-      {(loading && chats.length === 0) && (
+      {loading && chats.length === 0 && (
         <Box
           width="100%"
           display="flex"

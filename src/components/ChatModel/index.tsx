@@ -11,8 +11,9 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import React from "react";
 import { Turnstile } from "@marsidev/react-turnstile";
+import React from "react";
+
 import { cloudflareCommentsSitekey } from "@/constants/storageKeys";
 
 export type ChatModelProps = {

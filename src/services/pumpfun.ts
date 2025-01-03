@@ -1,21 +1,24 @@
 // import type { Provider } from "@coral-xyz/anchor";
 import type { Provider } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
+import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import {
   createAssociatedTokenAccountInstruction,
   getAccount,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
-import { Commitment, Keypair, VersionedTransaction } from "@solana/web3.js";
+import type { Commitment, Keypair } from "@solana/web3.js";
 import {
   Connection,
   LAMPORTS_PER_SOL,
   PublicKey,
   Transaction,
+  VersionedTransaction,
 } from "@solana/web3.js";
 import { BN } from "bn.js";
 
-import { RPC_NODE_URL } from "@/constants/platform";
+import { NEROBOSS_MINT, RPC_NODE_URL } from "@/constants/platform";
+import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
 import { homeApiClient } from "@/modules/Home/services/homeApiClient";
 
 import { ENDPOINT } from "./baseApiClient";
@@ -46,8 +49,6 @@ import {
   DEFAULT_COMMITMENT,
   sendTx,
 } from "./utils";
-import { coinApiClient } from "@/modules/Coin/services/coinApiClient";
-import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 
 const PROGRAM_ID = "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P";
 const MPL_TOKEN_METADATA_PROGRAM_ID =
@@ -71,6 +72,8 @@ export const FEES = Object.freeze({
   },
 });
 
+export const NEROBOSS_BURN = 1000 * 1e6;
+
 export class PumpFunSDK {
   public program: Program<PumpFun>;
 
@@ -91,7 +94,7 @@ export class PumpFunSDK {
     buyAmountSol: number,
     slippageBasisPoints: number = 500,
     priorityFees?: PriorityFee,
-    commitment: Commitment = DEFAULT_COMMITMENT
+    commitment: Commitment = DEFAULT_COMMITMENT,
   ): Promise<{
     createResults: VersionedTransaction;
     tokenMetadata: TokenMetadata;
@@ -101,7 +104,7 @@ export class PumpFunSDK {
       tokenMetadata.metadata.name,
       tokenMetadata.metadata.symbol,
       tokenMetadata.metadataUri,
-      mint
+      mint,
     );
 
     const newTx = new Transaction().add(createTx);
@@ -111,7 +114,7 @@ export class PumpFunSDK {
       const buyAmount = globalAccount.getInitialBuyPrice(buyAmountSol);
       const buyAmountWithSlippage = calculateWithSlippageBuy(
         buyAmountSol,
-        slippageBasisPoints
+        slippageBasisPoints,
       );
 
       const buyTx = await this.getBuyInstructions(
@@ -119,7 +122,7 @@ export class PumpFunSDK {
         mint.publicKey,
         globalAccount.feeRecipient,
         buyAmount,
-        buyAmountWithSlippage
+        buyAmountWithSlippage,
       );
 
       newTx.add(buyTx);
@@ -141,6 +144,10 @@ export class PumpFunSDK {
       }
     }
 
+    const nerobossTokenOwner = this.getBondingCurvePDA(
+      new PublicKey(NEROBOSS_MINT),
+    );
+
     const createResults = await sendTx(
       this.connection,
       newTx,
@@ -148,7 +155,9 @@ export class PumpFunSDK {
       [mint],
       platformFeesInSol,
       priorityFees,
-      commitment
+      NEROBOSS_BURN,
+      nerobossTokenOwner,
+      commitment,
     );
     return { createResults, tokenMetadata: tokenMetadata.metadata };
   }
@@ -159,7 +168,7 @@ export class PumpFunSDK {
     buyAmountSol: number,
     slippageBasisPoints: number = 100,
     priorityFees?: PriorityFee,
-    commitment: Commitment = DEFAULT_COMMITMENT
+    commitment: Commitment = DEFAULT_COMMITMENT,
   ): Promise<VersionedTransaction> {
     const resp = await coinApiClient.createAndBuyInstructionSerialized({
       isFreeCoinCreation: true,
@@ -178,14 +187,14 @@ export class PumpFunSDK {
     buyAmountSol: number,
     slippageBasisPoints: number = 100,
     priorityFees?: PriorityFee,
-    commitment: Commitment = DEFAULT_COMMITMENT
+    commitment: Commitment = DEFAULT_COMMITMENT,
   ): Promise<VersionedTransaction> {
     const buyTx = await this.getBuyInstructionsBySolAmount(
       buyer,
       mint,
       buyAmountSol,
       slippageBasisPoints,
-      commitment
+      commitment,
     );
 
     let platformFeesInSol;
@@ -195,8 +204,8 @@ export class PumpFunSDK {
       platformFeesInSol =
         parseFloat(
           parseFloat(
-            ((FEES.trade_fees.amount / 100) * buyAmountSol).toString()
-          ).toFixed(8)
+            ((FEES.trade_fees.amount / 100) * buyAmountSol).toString(),
+          ).toFixed(8),
         ) / LAMPORTS_PER_SOL;
     }
 
@@ -207,7 +216,9 @@ export class PumpFunSDK {
       [],
       platformFeesInSol,
       priorityFees,
-      commitment
+      0,
+      undefined,
+      commitment,
     );
     return buyResults;
   }
@@ -218,14 +229,14 @@ export class PumpFunSDK {
     sellTokenAmount: number,
     slippageBasisPoints: number = 100,
     priorityFees?: PriorityFee,
-    commitment: Commitment = DEFAULT_COMMITMENT
+    commitment: Commitment = DEFAULT_COMMITMENT,
   ): Promise<VersionedTransaction> {
     const sellTx = await this.getSellInstructionsByTokenAmount(
       seller,
       mint,
       sellTokenAmount,
       slippageBasisPoints,
-      commitment
+      commitment,
     );
 
     const platformFeesInSol = 0;
@@ -237,7 +248,9 @@ export class PumpFunSDK {
       [],
       platformFeesInSol,
       priorityFees,
-      commitment
+      0,
+      undefined,
+      commitment,
     );
     return sellResults;
   }
@@ -248,7 +261,7 @@ export class PumpFunSDK {
     name: string,
     symbol: string,
     uri: string,
-    mint: Keypair
+    mint: Keypair,
   ) {
     const mplTokenMetadata = new PublicKey(MPL_TOKEN_METADATA_PROGRAM_ID);
 
@@ -258,13 +271,13 @@ export class PumpFunSDK {
         mplTokenMetadata.toBuffer(),
         mint.publicKey.toBuffer(),
       ],
-      mplTokenMetadata
+      mplTokenMetadata,
     );
 
     const associatedBondingCurve = await getAssociatedTokenAddress(
       mint.publicKey,
       this.getBondingCurvePDA(mint.publicKey),
-      true
+      true,
     );
 
     return this.program.methods
@@ -284,11 +297,11 @@ export class PumpFunSDK {
     mint: PublicKey,
     buyAmountSol: number,
     slippageBasisPoints: number = 100,
-    commitment: Commitment = DEFAULT_COMMITMENT
+    commitment: Commitment = DEFAULT_COMMITMENT,
   ) {
     const bondingCurveAccount = await this.getBondingCurveAccount(
       mint,
-      commitment
+      commitment,
     );
     if (!bondingCurveAccount) {
       throw new Error(`Bonding curve account not found: ${mint.toBase58()}`);
@@ -297,7 +310,7 @@ export class PumpFunSDK {
     const buyAmount = bondingCurveAccount.getBuyPrice(buyAmountSol);
     const buyAmountWithSlippage = calculateWithSlippageBuy(
       buyAmountSol,
-      slippageBasisPoints
+      slippageBasisPoints,
     );
 
     const globalAccount = await this.getGlobalAccount(commitment);
@@ -307,7 +320,7 @@ export class PumpFunSDK {
       mint,
       globalAccount.feeRecipient,
       buyAmount,
-      buyAmountWithSlippage
+      buyAmountWithSlippage,
     );
   }
 
@@ -318,12 +331,12 @@ export class PumpFunSDK {
     feeRecipient: PublicKey,
     amount: number,
     solAmount: number,
-    commitment: Commitment = DEFAULT_COMMITMENT
+    commitment: Commitment = DEFAULT_COMMITMENT,
   ) {
     const associatedBondingCurve = await getAssociatedTokenAddress(
       mint,
       this.getBondingCurvePDA(mint),
-      true
+      true,
     );
 
     const associatedUser = await getAssociatedTokenAddress(mint, buyer, false);
@@ -338,8 +351,8 @@ export class PumpFunSDK {
           buyer,
           associatedUser,
           buyer,
-          mint
-        )
+          mint,
+        ),
       );
     }
 
@@ -353,7 +366,7 @@ export class PumpFunSDK {
           associatedUser,
           user: buyer,
         })
-        .transaction()
+        .transaction(),
     );
 
     return transaction;
@@ -365,11 +378,11 @@ export class PumpFunSDK {
     mint: PublicKey,
     sellTokenAmount: number,
     slippageBasisPoints: number = 100,
-    commitment: Commitment = DEFAULT_COMMITMENT
+    commitment: Commitment = DEFAULT_COMMITMENT,
   ) {
     const bondingCurveAccount = await this.getBondingCurveAccount(
       mint,
-      commitment
+      commitment,
     );
     if (!bondingCurveAccount) {
       throw new Error(`Bonding curve account not found: ${mint.toBase58()}`);
@@ -379,12 +392,12 @@ export class PumpFunSDK {
 
     const minSolOutput = bondingCurveAccount.getSellPrice(
       sellTokenAmount,
-      globalAccount.feeBasisPoints
+      globalAccount.feeBasisPoints,
     );
 
     const sellAmountWithSlippage = calculateWithSlippageSell(
       minSolOutput,
-      slippageBasisPoints
+      slippageBasisPoints,
     );
 
     return this.getSellInstructions(
@@ -392,7 +405,7 @@ export class PumpFunSDK {
       mint,
       globalAccount.feeRecipient,
       sellTokenAmount,
-      sellAmountWithSlippage
+      sellAmountWithSlippage,
     );
   }
 
@@ -401,12 +414,12 @@ export class PumpFunSDK {
     mint: PublicKey,
     feeRecipient: PublicKey,
     amount: number,
-    minSolOutput: number
+    minSolOutput: number,
   ) {
     const associatedBondingCurve = await getAssociatedTokenAddress(
       mint,
       this.getBondingCurvePDA(mint),
-      true
+      true,
     );
 
     const associatedUser = await getAssociatedTokenAddress(mint, seller, false);
@@ -423,7 +436,7 @@ export class PumpFunSDK {
           associatedUser,
           user: seller,
         })
-        .transaction()
+        .transaction(),
     );
 
     return transaction;
@@ -431,11 +444,11 @@ export class PumpFunSDK {
 
   async getBondingCurveAccount(
     mint: PublicKey,
-    commitment: Commitment = DEFAULT_COMMITMENT
+    commitment: Commitment = DEFAULT_COMMITMENT,
   ) {
     const tokenAccount = await this.connection.getAccountInfo(
       this.getBondingCurvePDA(mint),
-      commitment
+      commitment,
     );
     if (!tokenAccount) {
       return BondingCurveAccount.default();
@@ -446,12 +459,12 @@ export class PumpFunSDK {
   async getGlobalAccount(commitment: Commitment = DEFAULT_COMMITMENT) {
     const [globalAccountPDA] = PublicKey.findProgramAddressSync(
       [Buffer.from(GLOBAL_ACCOUNT_SEED)],
-      new PublicKey(PROGRAM_ID)
+      new PublicKey(PROGRAM_ID),
     );
 
     const tokenAccount = await this.connection.getAccountInfo(
       globalAccountPDA,
-      commitment
+      commitment,
     );
 
     return GlobalAccount.fromBuffer(tokenAccount!.data);
@@ -460,7 +473,7 @@ export class PumpFunSDK {
   getBondingCurvePDA(mint: PublicKey) {
     return PublicKey.findProgramAddressSync(
       [Buffer.from(BONDING_CURVE_SEED), mint.toBuffer()],
-      this.program.programId
+      this.program.programId,
     )[0];
   }
 
@@ -487,8 +500,8 @@ export class PumpFunSDK {
     callback: (
       event: PumpFunEventHandlers[T],
       slot: number,
-      signature: string
-    ) => void
+      signature: string,
+    ) => void,
   ) {
     return this.program.addEventListener(
       eventType,
@@ -500,7 +513,7 @@ export class PumpFunSDK {
             callback(
               processedEvent as PumpFunEventHandlers[T],
               slot,
-              signature
+              signature,
             );
             break;
           case "tradeEvent":
@@ -508,7 +521,7 @@ export class PumpFunSDK {
             callback(
               processedEvent as PumpFunEventHandlers[T],
               slot,
-              signature
+              signature,
             );
             break;
           case "completeEvent":
@@ -516,7 +529,7 @@ export class PumpFunSDK {
             callback(
               processedEvent as PumpFunEventHandlers[T],
               slot,
-              signature
+              signature,
             );
             console.log("completeEvent", event, slot, signature);
             break;
@@ -525,13 +538,13 @@ export class PumpFunSDK {
             callback(
               processedEvent as PumpFunEventHandlers[T],
               slot,
-              signature
+              signature,
             );
             break;
           default:
             console.error("Unhandled event type:", eventType);
         }
-      }
+      },
     );
   }
 

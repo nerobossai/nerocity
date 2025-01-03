@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import Seo from "@/components/Seo";
 import MainScreen from "@/modules/Home/mainScreen";
 
-
 const Index = () => {
   useEffect(() => {
     document.body.classList.add("home");
@@ -12,7 +11,7 @@ const Index = () => {
   return (
     <>
       <Seo />
-        <MainScreen />
+      <MainScreen />
     </>
   );
 };
