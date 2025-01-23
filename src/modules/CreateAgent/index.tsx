@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Center,
+  Checkbox,
   Grid,
   GridItem,
   HStack,
@@ -134,6 +135,7 @@ function CreateAgentModule() {
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
   const [amount, setAmount] = useState<number>(0);
   const [promptDescription, setPromptDescription] = useState("");
+  const [soonEnabled, setSoonEnabled] = useState(false);
 
   const toggleTrait = (trait: string) => {
     setSelectedTraits((prev) =>
@@ -294,6 +296,7 @@ function CreateAgentModule() {
           ticker,
           image: tokenMetadata.image,
           tokenMetadata,
+          soonEnabled,
         },
       });
 
@@ -824,6 +827,14 @@ function CreateAgentModule() {
                 onChange={(e) => setAmount(Number(e.target.value))}
               />
             </Box>
+          </VStack>
+          <VStack alignItems={"flex-start"}>
+            <Checkbox
+              isChecked={soonEnabled}
+              onChange={(e) => setSoonEnabled(e.target.checked)}
+            >
+              Enable SOON Support
+            </Checkbox>
           </VStack>
           <Center>
             <Turnstile
